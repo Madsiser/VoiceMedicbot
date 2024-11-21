@@ -1,5 +1,6 @@
 from SpeechLibrary import *
 import logging
+from AiModel import AiModel
 
 class MedicalChat:
 
@@ -18,6 +19,8 @@ class MedicalChat:
         self.check_syndroms = {}
         self.first_info_pack = True
         self.prev_question = None
+
+        self.ai_model = AiModel()
 
     # Funkcja odpowiadająca poczatkowy monolog klienta
     def analyze_monolog(self, user_input):
@@ -79,4 +82,6 @@ class MedicalChat:
         for disease in self.symptoms_table:
             if all(disease[symptom] == self.user_symptoms[symptom] for symptom in self.required_symptoms):
                 return SpeechLibrary.find_disease(disease)
-        return SpeechLibrary.not_find_disease()
+        response = self.ai_model.ask(f"Jaka to może być choroba i jakie zalecenia mi dasz. Odpowiedz mi bardzo krótko w dwóch zdaniach. Objawy:{self.user_symptoms}")
+        return response
+        # return SpeechLibrary.not_find_disease()
