@@ -53,6 +53,11 @@ class SpeechLibrary:
         #Dodajcie pozostałe choroby z tabelki
     ]
 
+    # Lista zwrotów do zakończenia rozmowy
+    end_speech_phrases = [
+        "koniec"
+    ]
+
     # Listra objawów do odpytania
     required_symptoms = [
         "Ból głowy", "Wymioty", "Gorączka", "Ból kości i stawów",

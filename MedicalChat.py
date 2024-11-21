@@ -1,7 +1,17 @@
 from SpeechLibrary import *
+import logging
 
 class MedicalChat:
-    def __init__(self):
+
+    def __init__(self, debug=False):
+        # Ustawienie poziomu logowania
+        self.logger = logging.getLogger(__name__)
+        if debug:
+            logging.basicConfig(level=logging.DEBUG)
+        else:
+            logging.basicConfig(level=logging.INFO)
+        
+        # Parametry
         self.symptoms_table = SpeechLibrary.symptoms_table
         self.required_symptoms = SpeechLibrary.required_symptoms
         self.user_symptoms = {}
@@ -30,8 +40,8 @@ class MedicalChat:
                 self.user_symptoms[self.prev_question] = None
             self.prev_question = ""
 
-        print(self.check_syndroms)
-        print(self.user_symptoms)
+        logging.info(self.check_syndroms)
+        logging.info(self.user_symptoms)
 
         # Sprawdzenie, czy wszystkie objawy są obecne
         if all(self.check_syndroms.values()):
@@ -45,8 +55,8 @@ class MedicalChat:
     
     # Funkcja sprawdzająca czy klient odpowiedział twierdzaco czy zaprzeczył
     def does_agree(self,message):
-        print(message)
-        print(self.prev_question)
+        logging.info(message)
+        logging.info(self.prev_question)
         switcher = SpeechLibrary.response_yes_no_pettern
         for key in switcher:
             if key in message.lower(): 
