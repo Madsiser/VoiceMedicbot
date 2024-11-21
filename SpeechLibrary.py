@@ -93,7 +93,7 @@ class SpeechLibrary:
 
     # Powtórne pytanie o konkretny syndrom.
     def ask_error(symptom):
-        return f"Czy możesz powrórzyć bo nie zrozumiałem, występują u Ciebie {symptom.lower()}?"
+        return f"Czy możesz powtórzyć bo nie zrozumiałem, występują u Ciebie {symptom.lower()}?"
 
     # Komunikat gdy coś sie zepsuje.
     def error():

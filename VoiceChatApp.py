@@ -8,6 +8,7 @@ from SpeechLibrary import SpeechLibrary
 import threading
 import logging
 from ChatGUI import ChatGUI
+from SoundEngine import SoundEngine
 
 class VoiceChatApp:
     
@@ -21,6 +22,7 @@ class VoiceChatApp:
 
         # Parametry
         self.gui = ChatGUI(parent=self, debug=debug)
+        self.lector = SoundEngine()
         self.medic = MedicalChat(debug)
         self.user_input = ""
         self.is_speaking = False
@@ -93,6 +95,8 @@ class VoiceChatApp:
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
         result, message = self.medic.analyze_symptoms(user_text)
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.lector.say(message)
+
 
     # Zamykanie aplikacji
     def on_closing(self):
