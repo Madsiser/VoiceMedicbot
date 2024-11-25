@@ -1,10 +1,7 @@
-import tkinter as tk
-from tkinter import scrolledtext
 from MedicalChat import MedicalChat
 from vosk import Model, KaldiRecognizer
 import pyaudio
 import json
-from SpeechLibrary import SpeechLibrary
 import threading
 import logging
 from ChatGUI import *
