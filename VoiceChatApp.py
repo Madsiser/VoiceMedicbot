@@ -1,5 +1,5 @@
-from tkinter import scrolledtext
 import tkinter as tk
+from tkinter import scrolledtext
 from MedicalChat import MedicalChat
 from vosk import Model, KaldiRecognizer
 import pyaudio
@@ -7,107 +7,145 @@ import json
 from SpeechLibrary import SpeechLibrary
 import threading
 import logging
-from ChatGUI import ChatGUI
+from ChatGUI import *
 from SoundEngine import SoundEngine
 
-class VoiceChatApp:
-    
-    def __init__(self,debug=False):
-        # Ustawienie poziomu logowania
-        self.logger = logging.getLogger(__name__)
-        if debug:
-            logging.basicConfig(level=logging.DEBUG)
-        else:
-            logging.basicConfig(level=logging.INFO)
 
-        # Parametry
+class VoiceChatApp:
+    """
+    Główna klasa aplikacji VoiceChatApp.
+
+    Zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu
+    oraz integracją z modułem medycznym.
+    """
+
+    def __init__(self, debug=False):
+        """
+        Inicjalizuje aplikację.
+
+        Args:
+            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
+        """
+        # Konfiguracja loggera
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
+
+        # Inicjalizacja komponentów
         self.gui = ChatGUI(parent=self, debug=debug)
         self.lector = SoundEngine()
         self.medic = MedicalChat(debug)
         self.user_input = ""
         self.is_speaking = False
-
         self.threads = []
 
-        # Wymagane do rozpoznawania głosu
-        model = Model("model")
+        # Konfiguracja rozpoznawania mowy
+        self.model = Model("model")
         self.p = pyaudio.PyAudio()
-        self.stream = self.p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=8000)
+        self.stream = self.p.open(
+            format=pyaudio.paInt16,
+            channels=1,
+            rate=16000,
+            input=True,
+            frames_per_buffer=8000
+        )
         self.stream.start_stream()
-        self.recognizer = KaldiRecognizer(model, 16000)
+        self.recognizer = KaldiRecognizer(self.model, 16000)
 
-        
-    
     def start(self):
+        """Uruchamia interfejs graficzny aplikacji."""
         self.gui.start()
 
-    # Rozpoczecie watku mówienia
     def start_speaking_button(self):
+        """
+        Obsługuje przycisk rozpoczęcia mówienia.
+
+        Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
+        """
         self.logger.debug("Wywołanie start_speaking_button")
         if not self.is_speaking:
             self.is_speaking = True
             thread = threading.Thread(target=self.hear, daemon=True)
             thread.start()
             self.threads.append(thread)
-            
-    # Zatrzymanie nagrywania
+
     def stop_speaking_button(self):
+        """Obsługuje przycisk zatrzymania nagrywania mowy."""
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
         self.gui.user_input_voice.config(text=self.user_input)
 
-    # Czyszczenie bufora
     def clear_user_input(self):
+        """Czyści bufor tekstowy użytkownika."""
         self.logger.debug("Wywołanie clear_user_input")
         self.user_input = ""
 
-    # Wątek słuchania
     def hear(self):
+        """
+        Wątek nasłuchujący, odpowiedzialny za przetwarzanie dźwięku na tekst.
+
+        Dane są odczytywane z mikrofonu i rozpoznawane przy użyciu modelu VOSK.
+        """
         self.logger.debug("Wywołanie hear")
         self.user_input = ""
         partial_result = ""
+
         while self.is_speaking:
             try:
-                data = self.stream.read(4000, exception_on_overflow=False)  # Użyj exception_on_overflow=False
+                data = self.stream.read(4000, exception_on_overflow=False)
                 if self.recognizer.AcceptWaveform(data):
                     result = self.recognizer.Result()
                     self.user_input += json.loads(result)["text"]
                     self.gui.user_input_voice.config(text=self.user_input)
                 else:
                     partial_result = self.recognizer.PartialResult()
-                    self.gui.user_input_voice_partial.config(text=json.loads(partial_result)["partial"])
+                    self.gui.user_input_voice_partial.config(
+                        text=json.loads(partial_result)["partial"]
+                    )
             except Exception as e:
-                print(f"Error while reading stream: {e}")
+                self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
                 break
 
         if self.user_input == "":
-            self.user_input += json.loads(partial_result)["partial"]
+            self.user_input += json.loads(partial_result).get("partial", "")
         self.logger.debug("hear zakończył działanie")
 
-    # Przetwarzanie tekstu i wyswietlanie
     def process_text(self):
+        """
+        Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.
+
+        Przesyła tekst do modułu analizy medycznej i wyświetla odpowiedź w GUI.
+        """
         self.logger.debug("Wywołanie process_text")
         self.stop_speaking_button()
         user_text = self.user_input
         self.user_input = ""
-        if not user_text:  # Sprawdzenie, czy pole nie jest puste
+
+        if not user_text.strip():
             return
+
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
         result, message = self.medic.analyze_symptoms(user_text)
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.lector.say(message)
 
-
-    # Zamykanie aplikacji
     def on_closing(self):
+        """
+        Zamyka aplikację i zwalnia zasoby.
+
+        Zatrzymuje wątki, zamyka strumień audio oraz zatrzymuje GUI.
+        """
         self.logger.debug("Wywołanie on_closing")
         self.is_speaking = False
-        self.stream.stop_stream()
-        self.stream.close()
-        self.p.terminate()
+
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
+        if self.p:
+            self.p.terminate()
+
         for thread in self.threads:
             thread.join()
 
     def __del__(self):
+        """Destruktor klasy, wywołuje funkcję on_closing w celu zwolnienia zasobów."""
         self.on_closing()
-    

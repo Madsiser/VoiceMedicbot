@@ -1,64 +1,76 @@
-from tkinter import scrolledtext
 import tkinter as tk
+from tkinter import scrolledtext
 import logging
-import VoiceChatApp
+
 
 class ChatGUI:
-    def __init__(self, parent: VoiceChatApp, debug=False):
-        self.parent = parent
-        # Ustawienie poziomu logowania
-        self.logger = logging.getLogger(__name__)
-        if debug:
-            logging.basicConfig(level=logging.DEBUG)
-        else:
-            logging.basicConfig(level=logging.INFO)
+    """
+    Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
+    """
 
-        # Parametry
+    def __init__(self, parent, debug=False):
+        """
+        Inicjalizuje obiekt GUI i jego komponenty.
+
+        Args:
+            parent (VoiceChatApp): Referencja do rodzica (głównej aplikacji).
+            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
+        """
+        from VoiceChatApp import VoiceChatApp
+        if not isinstance(parent, VoiceChatApp):
+            raise TypeError(f"Expected parent to be an instance of VoiceChatApp, got {type(parent).__name__} instead.")
+        self.parent = parent
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
+
+        # Inicjalizacja głównego okna aplikacji
         self.root = tk.Tk()
         self.root.title("Czat Głosowy")
         self.create_widgets()
-    
-    # Uruchomienie GUI
+
     def start(self):
+        """
+        Uruchamia główną pętlę GUI.
+        """
         self.root.mainloop()
 
     def create_widgets(self):
-        self.logger.debug("Rozpoczynam działanie metody create_widgets")
-        # Panel do wyświetlania czatu
-        self.chat_display = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, width=50, height=20)
+        """
+        Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna.
+        """
+        self.logger.debug("Rozpoczynam tworzenie widżetów GUI")
+
+        # Wyświetlacz czatu
+        self.chat_display = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, width=50, height=20, state='normal')
         self.chat_display.pack(padx=10, pady=10)
 
-        # Panel do wyświetlania tekstu użytkownika
-        # self.user_input = tk.Entry(self.root, width=50)
-        # self.user_input.pack(padx=10, pady=10)
-        
-
-        # Panel do wyświetlania głosu użytkownika
-        self.user_input_voice = tk.Label(self.root, width=50, text="Tekst główny")
+        # Panel do wyświetlania rozpoznanego tekstu
+        self.user_input_voice = tk.Label(self.root, width=50, text="Tekst główny", anchor="w")
         self.user_input_voice.pack(padx=10, pady=10)
 
-        # Panel do wyświetlania głosu użytkownika now
-        self.user_input_voice_partial = tk.Label(self.root, width=50, text="Teskt pomocniczy")
+        # Panel do wyświetlania częściowo rozpoznanego tekstu
+        self.user_input_voice_partial = tk.Label(self.root, width=50, text="Tekst pomocniczy", anchor="w")
         self.user_input_voice_partial.pack(padx=10, pady=10)
-        
 
-        # Przycisk do rozpoczęcia mówienia
+        # Przycisk: Rozpocznij mówienie
         self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.start_speaking_button)
-        self.start_button.pack(padx=10, pady=10)
+        self.start_button.pack(padx=10, pady=5)
 
-        # Przycisk do potwierdzenia co powiedziane
-        self.start_button = tk.Button(self.root, text="Potwierdź", command=self.parent.process_text)
-        self.start_button.pack(padx=10, pady=10)
-        
-        # Przycisk do potwierdzenia co powiedziane
-        self.start_button = tk.Button(self.root, text="Stop", command=self.parent.stop_speaking_button)
-        self.start_button.pack(padx=10, pady=10)
+        # Przycisk: Potwierdź tekst
+        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.process_text)
+        self.confirm_button.pack(padx=10, pady=5)
 
-        # Zamykanie aplikacji
+        # Przycisk: Zatrzymaj mówienie
+        self.stop_button = tk.Button(self.root, text="Stop", command=self.parent.stop_speaking_button)
+        self.stop_button.pack(padx=10, pady=5)
+
+        # Zamykanie aplikacji przez kliknięcie "X"
         self.root.protocol("WM_DELETE_WINDOW", self.__del__)
 
-    # Zamykanie aplikacji
     def __del__(self):
+        """
+        Zamyka aplikację, zwalnia zasoby i wywołuje funkcję zamykającą w głównej aplikacji.
+        """
+        self.logger.debug("Zamykanie GUI")
         self.root.destroy()
         self.parent.on_closing()
-    
