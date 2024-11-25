@@ -1,0 +1,7 @@
+MedicalChat module
+==================
+
+.. automodule:: MedicalChat
+   :members:
+   :undoc-members:
+   :show-inheritance:

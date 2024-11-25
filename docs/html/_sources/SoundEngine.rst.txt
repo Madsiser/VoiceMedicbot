@@ -1,0 +1,7 @@
+SoundEngine module
+==================
+
+.. automodule:: SoundEngine
+   :members:
+   :undoc-members:
+   :show-inheritance:
