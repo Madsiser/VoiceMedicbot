@@ -1,0 +1,7 @@
+ChatGUI module
+==============
+
+.. automodule:: ChatGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
