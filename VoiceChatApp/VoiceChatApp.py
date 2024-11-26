@@ -29,8 +29,8 @@ class VoiceChatApp:
 
         # Inicjalizacja komponentów
         self.gui = ChatGUI(parent=self, debug=debug)
-        self.lector = SoundEngine()
-        self.medic = MedicalChat(debug)
+        self.lector = SoundEngine(debug=debug)
+        self.medic = MedicalChat(debug=debug)
         self.user_input = ""
         self.is_speaking = False
         self.threads = []
@@ -49,8 +49,16 @@ class VoiceChatApp:
         self.recognizer = KaldiRecognizer(self.model, 16000)
 
     def start(self):
-        """Uruchamia interfejs graficzny aplikacji."""
+        """Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji."""
+        self.logger.debug("Wywołanie start")
+
+        message = "Cześć! Opisz mi co Ci dolega."
+        self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.lector.say(message)
+
         self.gui.start()
+        
+               
 
     def start_speaking_button(self):
         """
