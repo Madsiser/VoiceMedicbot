@@ -1,6 +1,6 @@
 import logging
-from SpeechLibrary import SpeechLibrary
-from AiModel import AiModel
+from .SpeechLibrary import SpeechLibrary
+from .AiModel import AiModel
 
 
 class MedicalChat:

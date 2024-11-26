@@ -1,11 +1,11 @@
-from MedicalChat import MedicalChat
+from .MedicalChat import MedicalChat
 from vosk import Model, KaldiRecognizer
 import pyaudio
 import json
 import threading
 import logging
-from ChatGUI import *
-from SoundEngine import SoundEngine
+from .ChatGUI import *
+from .SoundEngine import SoundEngine
 
 
 class VoiceChatApp:
@@ -36,7 +36,7 @@ class VoiceChatApp:
         self.threads = []
 
         # Konfiguracja rozpoznawania mowy
-        self.model = Model("model")
+        self.model = Model("VoiceChatApp/model")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
             format=pyaudio.paInt16,
