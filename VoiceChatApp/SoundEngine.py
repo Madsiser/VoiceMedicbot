@@ -3,6 +3,7 @@ import pygame
 import os
 import tempfile
 import threading
+import logging
 
 
 class SoundEngine:
@@ -10,13 +11,18 @@ class SoundEngine:
     Klasa SoundEngine zarządza generowaniem i odtwarzaniem dźwięku za pomocą gTTS i Pygame.
     """
 
-    def __init__(self, lang='pl'):
+    def __init__(self, lang='pl', debug=False):
         """
         Inicjalizuje silnik dźwięku z określonym językiem dla gTTS.
 
         Args:
             lang (str): Kod języka (np. 'pl' dla polskiego, 'en' dla angielskiego).
+            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
         """
+        # Konfiguracja loggera
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
+
         self.lang = lang
         self.temp_dir = tempfile.gettempdir()  # Katalog tymczasowy dla plików audio
         self.current_thread = None  # Aktualny wątek odtwarzania
@@ -31,6 +37,7 @@ class SoundEngine:
         Args:
             text (str): Tekst do wymówienia.
         """
+        self.logger.debug("Wywołanie say")
         # Zatrzymaj aktywne odtwarzanie, jeśli istnieje wątek odtwarzania
         if self.current_thread and self.current_thread.is_alive():
             pygame.mixer.music.stop()
