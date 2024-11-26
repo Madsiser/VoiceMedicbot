@@ -6,6 +6,7 @@ import threading
 import logging
 from .ChatGUI import *
 from .SoundEngine import SoundEngine
+from .SpeechLibrary import SpeechLibrary
 
 
 class VoiceChatApp:
@@ -52,7 +53,7 @@ class VoiceChatApp:
         """Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji."""
         self.logger.debug("Wywołanie start")
 
-        message = "Cześć! Opisz mi co Ci dolega."
+        message = SpeechLibrary.hello_phrase
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.lector.say(message)
 
