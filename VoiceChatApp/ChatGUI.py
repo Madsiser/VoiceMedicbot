@@ -55,7 +55,7 @@ class ChatGUI:
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
         # Przycisk: Rozpocznij mówienie
-        self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.start_speaking_button)
+        self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.ev_speaking_button)
         self.start_button.pack(padx=10, pady=5)
 
         # Przycisk: Potwierdź tekst
