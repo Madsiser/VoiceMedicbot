@@ -59,11 +59,19 @@ class VoiceChatApp:
 
         self.gui.start()
         
-               
+    def ev_speaking_button(self):
+        """
+        Obsługuje przycisk mówienia..
+        """
+        self.logger.debug("Wywołanie speaking_button")
+        if not self.is_speaking:
+            self.start_speaking_button()
+        else:
+            self.stop_speaking_button()
 
     def start_speaking_button(self):
         """
-        Obsługuje przycisk rozpoczęcia mówienia.
+        Obsługuje rozpoczęcie mówienia.
 
         Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
         """
@@ -78,7 +86,7 @@ class VoiceChatApp:
         
 
     def stop_speaking_button(self):
-        """Obsługuje przycisk zatrzymania nagrywania mowy."""
+        """Obsługuje zatrzymanie nagrywania mowy."""
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
         self.gui.user_input_voice.config(text=self.user_input)
