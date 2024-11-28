@@ -126,6 +126,9 @@ class VoiceChatApp:
             self.user_input += json.loads(partial_result).get("partial", "")
         self.logger.debug("hear zakończył działanie")
 
+    def ev_confirm_button(self):
+        self.process_text()
+
     def process_text(self):
         """
         Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.

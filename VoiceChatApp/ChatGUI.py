@@ -59,7 +59,7 @@ class ChatGUI:
         self.start_button.pack(padx=10, pady=5)
 
         # Przycisk: Potwierdź tekst
-        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.process_text)
+        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.ev_confirm_button)
         self.confirm_button.pack(padx=10, pady=5)
 
         # Przycisk: Zatrzymaj mówienie
