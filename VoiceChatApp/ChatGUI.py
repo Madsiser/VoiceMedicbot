@@ -32,6 +32,8 @@ class ChatGUI:
         """
         Uruchamia główną pętlę GUI.
         """
+        self.check_state()
+
         self.root.mainloop()
 
     def create_widgets(self):
@@ -66,6 +68,19 @@ class ChatGUI:
 
         # Zamykanie aplikacji przez kliknięcie "X"
         self.root.protocol("WM_DELETE_WINDOW", self.__del__)
+
+        
+    def check_state(self):
+        """
+        Aktualizuje stan przycisku mówienia
+        """
+        self.logger.debug("Aktualizacja stanu is_speaking")
+        if self.parent.is_speaking:
+            self.start_button.config(text="Zatrzymaj słuchanie")
+        else:
+            self.start_button.config(text="Rozpocznij słuchanie")
+        
+        self.root.after(100, self.check_state)
 
     def __del__(self):
         """
