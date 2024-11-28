@@ -73,6 +73,9 @@ class VoiceChatApp:
             thread = threading.Thread(target=self.hear, daemon=True)
             thread.start()
             self.threads.append(thread)
+        else:
+            self.stop_speaking_button()
+        
 
     def stop_speaking_button(self):
         """Obsługuje przycisk zatrzymania nagrywania mowy."""
