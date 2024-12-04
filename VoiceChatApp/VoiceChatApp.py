@@ -59,19 +59,11 @@ class VoiceChatApp:
 
         self.gui.start()
         
-    def ev_speaking_button(self):
-        """
-        Obsługuje przycisk mówienia..
-        """
-        self.logger.debug("Wywołanie speaking_button")
-        if not self.is_speaking:
-            self.start_speaking_button()
-        else:
-            self.stop_speaking_button()
+               
 
     def start_speaking_button(self):
         """
-        Obsługuje rozpoczęcie mówienia.
+        Obsługuje przycisk rozpoczęcia mówienia.
 
         Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
         """
@@ -81,12 +73,9 @@ class VoiceChatApp:
             thread = threading.Thread(target=self.hear, daemon=True)
             thread.start()
             self.threads.append(thread)
-        else:
-            self.stop_speaking_button()
-        
 
     def stop_speaking_button(self):
-        """Obsługuje zatrzymanie nagrywania mowy."""
+        """Obsługuje przycisk zatrzymania nagrywania mowy."""
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
         self.gui.user_input_voice.config(text=self.user_input)
@@ -125,9 +114,6 @@ class VoiceChatApp:
         if self.user_input == "":
             self.user_input += json.loads(partial_result).get("partial", "")
         self.logger.debug("hear zakończył działanie")
-
-    def ev_confirm_button(self):
-        self.process_text()
 
     def process_text(self):
         """

@@ -32,8 +32,6 @@ class ChatGUI:
         """
         Uruchamia główną pętlę GUI.
         """
-        self.check_state()
-
         self.root.mainloop()
 
     def create_widgets(self):
@@ -55,11 +53,11 @@ class ChatGUI:
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
         # Przycisk: Rozpocznij mówienie
-        self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.ev_speaking_button)
+        self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.start_speaking_button)
         self.start_button.pack(padx=10, pady=5)
 
         # Przycisk: Potwierdź tekst
-        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.ev_confirm_button)
+        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.process_text)
         self.confirm_button.pack(padx=10, pady=5)
 
         # Przycisk: Zatrzymaj mówienie
@@ -68,19 +66,6 @@ class ChatGUI:
 
         # Zamykanie aplikacji przez kliknięcie "X"
         self.root.protocol("WM_DELETE_WINDOW", self.__del__)
-
-        
-    def check_state(self):
-        """
-        Aktualizuje stan przycisku mówienia
-        """
-        self.logger.debug("Aktualizacja stanu is_speaking")
-        if self.parent.is_speaking:
-            self.start_button.config(text="Zatrzymaj słuchanie")
-        else:
-            self.start_button.config(text="Rozpocznij słuchanie")
-        
-        self.root.after(100, self.check_state)
 
     def __del__(self):
         """
