@@ -127,6 +127,9 @@ class VoiceChatApp:
         self.logger.debug("hear zakończył działanie")
 
     def ev_confirm_button(self):
+        """
+        Event obsługi przycisku
+        """
         self.process_text()
 
     def process_text(self):
