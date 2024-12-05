@@ -55,15 +55,26 @@ class ChatGUI:
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
         # Przycisk: Rozpocznij mówienie
-        self.start_button = tk.Button(self.root, text="Rozpocznij Mówienie", command=self.parent.ev_speaking_button)
+        self.start_button = tk.Button(self.root, 
+                                      text="Rozpocznij Mówienie", 
+                                      command=self.parent.ev_speaking_button,
+                                      width= 20
+                                      )
         self.start_button.pack(padx=10, pady=5)
 
         # Przycisk: Potwierdź tekst
-        self.confirm_button = tk.Button(self.root, text="Potwierdź", command=self.parent.ev_confirm_button)
+        self.confirm_button = tk.Button(self.root, 
+                                        text="Potwierdź", 
+                                        command=self.parent.ev_confirm_button,
+                                        width= 7
+                                        )
         self.confirm_button.pack(padx=10, pady=5)
 
         # Przycisk: Zatrzymaj mówienie
-        self.stop_button = tk.Button(self.root, text="Stop", command=self.parent.stop_speaking_button)
+        self.stop_button = tk.Button(self.root, text="Stop", 
+                                     command=self.parent.stop_speaking_button,
+                                     width= 7
+                                     )
         self.stop_button.pack(padx=10, pady=5)
 
         # Zamykanie aplikacji przez kliknięcie "X"
