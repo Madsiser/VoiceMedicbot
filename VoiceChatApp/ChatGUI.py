@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import logging
-from PIL import Image, ImageTk, ImageDraw
+
 
 class ChatGUI:
     """
@@ -26,51 +26,15 @@ class ChatGUI:
         # Inicjalizacja głównego okna aplikacji
         self.root = tk.Tk()
         self.root.title("Czat Głosowy")
-
-        # Generowanie ikon mikrofonów
-        self.generate_icons()
-
-        # Tworzenie widżetów interfejsu
         self.create_widgets()
 
     def start(self):
         """
         Uruchamia główną pętlę GUI.
         """
+        self.check_state()
+
         self.root.mainloop()
-
-    def generate_icons(self):
-        """Generuje ikony zielonego i czerwonego przekreślonego mikrofonu."""
-        self.green_mic_image = self.create_mic_icon(fill_color="green")
-        self.red_mic_image = self.create_mic_icon(fill_color="red", cross=True)
-
-    def create_mic_icon(self, fill_color="green", cross=False):
-        """Tworzy ikonę mikrofonu z użyciem biblioteki PIL.
-
-        Args:
-            fill_color (str): Kolor mikrofonu (np. "green", "red").
-            cross (bool): Czy dodać przekreślenie mikrofonu.
-
-        Returns:
-            ImageTk.PhotoImage: Obiekt obrazu do użycia w tkinter.
-        """
-        size = (50, 50)
-        image = Image.new("RGBA", size, (255, 255, 255, 0))
-        draw = ImageDraw.Draw(image)
-
-        # Główka mikrofonu
-        draw.ellipse((20, 10, 30, 25), fill=fill_color)
-        # Trzonek mikrofonu
-        draw.rectangle((24, 25, 26, 35), fill=fill_color)
-        # Podstawa mikrofonu (łuk)
-        draw.arc((18, 30, 32, 40), start=0, end=180, fill=fill_color)
-
-        if cross:
-            # Dodanie przekreślenia gdy mikrofon jest aktywny
-            draw.line((15, 15, 35, 35), fill="black", width=5)
-            draw.line((15, 35, 35, 15), fill="black", width=5)
-
-        return ImageTk.PhotoImage(image)
 
     def create_widgets(self):
         """
@@ -90,39 +54,44 @@ class ChatGUI:
         self.user_input_voice_partial = tk.Label(self.root, width=50, text="Tekst pomocniczy", anchor="w")
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
-        # Przycisk: Rozpocznij/Zatrzymaj mówienie (ikona mikrofonu)
-        # Domyślnie mikrofon jest wyłączony - zielona ikona
-        self.speaking_button = tk.Button(self.root,
-                                         image=self.green_mic_image,
-                                         command=self.parent.ev_speaking_button,
-                                         borderwidth=0)
-        self.speaking_button.pack(padx=10, pady=5)
+        # Przycisk: Rozpocznij mówienie
+        self.start_button = tk.Button(self.root, 
+                                      text="Rozpocznij Mówienie", 
+                                      command=self.parent.ev_speaking_button,
+                                      width= 20
+                                      )
+        self.start_button.pack(padx=10, pady=5)
 
         # Przycisk: Potwierdź tekst
-        self.confirm_button = tk.Button(self.root,
-                                        text="Potwierdź",
+        self.confirm_button = tk.Button(self.root, 
+                                        text="Potwierdź", 
                                         command=self.parent.ev_confirm_button,
-                                        width=7)
+                                        width= 7
+                                        )
         self.confirm_button.pack(padx=10, pady=5)
+
+        # Przycisk: Zatrzymaj mówienie
+        self.stop_button = tk.Button(self.root, text="Stop", 
+                                     command=self.parent.stop_speaking_button,
+                                     width= 7
+                                     )
+        self.stop_button.pack(padx=10, pady=5)
 
         # Zamykanie aplikacji przez kliknięcie "X"
         self.root.protocol("WM_DELETE_WINDOW", self.__del__)
 
-    def update_speaking_button(self, is_speaking):
+        
+    def check_state(self):
         """
-        Aktualizuje ikonę przycisku mówienia w zależności od stanu.
-
-        Args:
-            is_speaking (bool): Czy aktualnie jest w trybie nagrywania.
+        Aktualizuje stan przycisku mówienia
         """
-        if is_speaking:
-            # Mikrofon włączony - czerwona przekreślona ikona
-            self.speaking_button.config(image=self.red_mic_image)
+        self.logger.debug("Aktualizacja stanu is_speaking")
+        if self.parent.is_speaking:
+            self.start_button.config(text="Zatrzymaj słuchanie")
         else:
-            # Mikrofon wyłączony - zielona ikona
-            self.speaking_button.config(image=self.green_mic_image)
-
-
+            self.start_button.config(text="Rozpocznij słuchanie")
+        
+        self.root.after(100, self.check_state)
 
     def __del__(self):
         """
