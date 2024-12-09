@@ -61,7 +61,7 @@ class VoiceChatApp:
 
     def ev_speaking_button(self):
         """
-        Obsługuje przycisk mówienia..
+        Obsługuje przycisk mówienia.
         """
         self.logger.debug("Wywołanie speaking_button")
         if not self.is_speaking:
@@ -78,17 +78,22 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie start_speaking_button")
         if not self.is_speaking:
             self.is_speaking = True
+            # Aktualizacja ikony po zmianie stanu
+            self.gui.update_speaking_button(self.is_speaking)
+
             thread = threading.Thread(target=self.hear, daemon=True)
             thread.start()
             self.threads.append(thread)
         else:
             self.stop_speaking_button()
-        
 
     def stop_speaking_button(self):
         """Obsługuje zatrzymanie nagrywania mowy."""
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
+        # Aktualizacja ikony po zmianie stanu
+        self.gui.update_speaking_button(self.is_speaking)
+
         self.gui.user_input_voice.config(text=self.user_input)
 
     def clear_user_input(self):
@@ -128,15 +133,13 @@ class VoiceChatApp:
 
     def ev_confirm_button(self):
         """
-        Event obsługi przycisku
+        Obsługa przycisku 'Potwierdź'
         """
         self.process_text()
 
     def process_text(self):
         """
         Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.
-
-        Przesyła tekst do modułu analizy medycznej i wyświetla odpowiedź w GUI.
         """
         self.logger.debug("Wywołanie process_text")
         self.stop_speaking_button()
@@ -154,8 +157,6 @@ class VoiceChatApp:
     def on_closing(self):
         """
         Zamyka aplikację i zwalnia zasoby.
-
-        Zatrzymuje wątki, zamyka strumień audio oraz zatrzymuje GUI.
         """
         self.logger.debug("Wywołanie on_closing")
         self.is_speaking = False
