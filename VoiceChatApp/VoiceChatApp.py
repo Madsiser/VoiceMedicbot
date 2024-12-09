@@ -170,6 +170,7 @@ class VoiceChatApp:
         for thread in self.threads:
             thread.join()
 
+ 
     def __del__(self):
         """Destruktor klasy, wywołuje funkcję on_closing w celu zwolnienia zasobów."""
         self.on_closing()
