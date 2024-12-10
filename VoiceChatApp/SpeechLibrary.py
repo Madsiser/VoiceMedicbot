@@ -4,6 +4,7 @@ class SpeechLibrary:
     - Tabelę chorób z objawami i zaleceniami.
     - Obsługę odpowiedzi użytkownika na pytania o objawy.
     - Generowanie odpowiedzi i pytań opartych na danych wejściowych.
+
     """
 
     # Model wzorów chorobowych
