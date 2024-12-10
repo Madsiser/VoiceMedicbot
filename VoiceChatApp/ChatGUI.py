@@ -3,6 +3,7 @@ from tkinter import scrolledtext
 import logging
 from PIL import Image, ImageTk, ImageDraw
 
+
 class ChatGUI:
     """
     Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
@@ -97,10 +98,11 @@ class ChatGUI:
         )
         self.chat_display.pack(padx=10, pady=10)
 
-        # Etykieta do wyświetlania rozpoznanego tekstu głównego
-        self.user_input_voice = tk.Label(
-            self.root, width=50, text="Tekst główny", anchor="w"
+        # Pole tekstowe do edycji rozpoznanego tekstu głównego
+        self.user_input_voice = tk.Text(
+            self.root, wrap=tk.WORD, width=50, height=2
         )
+        self.user_input_voice.insert(tk.END, "Tekst główny")
         self.user_input_voice.pack(padx=10, pady=10)
 
         # Etykieta do wyświetlania częściowo rozpoznanego tekstu (pomocniczego)

@@ -4,9 +4,10 @@ import pyaudio
 import json
 import threading
 import logging
-from .ChatGUI import *
+from .ChatGUI import ChatGUI
 from .SoundEngine import SoundEngine
 from .SpeechLibrary import SpeechLibrary
+import tkinter as tk
 
 
 class VoiceChatApp:
@@ -32,7 +33,6 @@ class VoiceChatApp:
         self.gui = ChatGUI(parent=self, debug=debug)
         self.lector = SoundEngine(debug=debug)
         self.medic = MedicalChat(debug=debug)
-        self.user_input = ""
         self.is_speaking = False
         self.threads = []
 
@@ -61,7 +61,7 @@ class VoiceChatApp:
 
     def ev_speaking_button(self):
         """
-        Obsługuje przycisk mówienia..
+        Obsługuje przycisk mówienia.
         """
         self.logger.debug("Wywołanie speaking_button")
         if not self.is_speaking:
@@ -78,23 +78,26 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie start_speaking_button")
         if not self.is_speaking:
             self.is_speaking = True
+            # Aktualizacja ikony po zmianie stanu
+            self.gui.update_speaking_button(self.is_speaking)
+
             thread = threading.Thread(target=self.hear, daemon=True)
             thread.start()
             self.threads.append(thread)
         else:
             self.stop_speaking_button()
-        
 
     def stop_speaking_button(self):
         """Obsługuje zatrzymanie nagrywania mowy."""
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
-        self.gui.user_input_voice.config(text=self.user_input)
+        # Aktualizacja ikony po zmianie stanu
+        self.gui.update_speaking_button(self.is_speaking)
 
-    def clear_user_input(self):
-        """Czyści bufor tekstowy użytkownika."""
-        self.logger.debug("Wywołanie clear_user_input")
-        self.user_input = ""
+        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji
+        recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
+        self.gui.user_input_voice.delete("1.0", tk.END)
+        self.gui.user_input_voice.insert(tk.END, recognized_text)
 
     def hear(self):
         """
@@ -103,7 +106,7 @@ class VoiceChatApp:
         Dane są odczytywane z mikrofonu i rozpoznawane przy użyciu modelu VOSK.
         """
         self.logger.debug("Wywołanie hear")
-        self.user_input = ""
+        recognized_text = ""
         partial_result = ""
 
         while self.is_speaking:
@@ -111,51 +114,58 @@ class VoiceChatApp:
                 data = self.stream.read(4000, exception_on_overflow=False)
                 if self.recognizer.AcceptWaveform(data):
                     result = self.recognizer.Result()
-                    self.user_input += json.loads(result)["text"]
-                    self.gui.user_input_voice.config(text=self.user_input)
+                    text = json.loads(result).get("text", "")
+                    recognized_text += text + " "
+                    # Aktualizacja pola tekstowego z rozpoznanym tekstem
+                    self.gui.user_input_voice.delete("1.0", tk.END)
+                    self.gui.user_input_voice.insert(tk.END, recognized_text.strip())
                 else:
                     partial_result = self.recognizer.PartialResult()
-                    self.gui.user_input_voice_partial.config(
-                        text=json.loads(partial_result)["partial"]
-                    )
+                    partial_text = json.loads(partial_result).get("partial", "")
+                    self.gui.user_input_voice_partial.config(text=partial_text)
             except Exception as e:
                 self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
                 break
 
-        if self.user_input == "":
-            self.user_input += json.loads(partial_result).get("partial", "")
+        if recognized_text.strip() == "":
+            recognized_text = json.loads(partial_result).get("partial", "")
+            self.gui.user_input_voice.delete("1.0", tk.END)
+            self.gui.user_input_voice.insert(tk.END, recognized_text.strip())
         self.logger.debug("hear zakończył działanie")
 
     def ev_confirm_button(self):
         """
-        Event obsługi przycisku
+        Obsługa przycisku 'Potwierdź'
         """
         self.process_text()
 
     def process_text(self):
         """
         Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.
-
-        Przesyła tekst do modułu analizy medycznej i wyświetla odpowiedź w GUI.
         """
         self.logger.debug("Wywołanie process_text")
-        self.stop_speaking_button()
-        user_text = self.user_input
-        self.user_input = ""
+        # Pobierz tekst z pola edycji, a nie z wewnętrznej zmiennej
+        user_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
 
-        if not user_text.strip():
+        if not user_text:
+            self.logger.debug("Brak tekstu do przetworzenia.")
             return
 
+        # Wyświetlenie tekstu użytkownika w czacie
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
+        # Przetwarzanie tekstu przez moduł medyczny
         result, message = self.medic.analyze_symptoms(user_text)
+        # Wyświetlenie odpowiedzi bota w czacie
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        # Odtworzenie odpowiedzi
         self.lector.say(message)
+
+        # Czyszczenie pola tekstowego po potwierdzeniu
+        self.gui.user_input_voice.delete("1.0", tk.END)
 
     def on_closing(self):
         """
         Zamyka aplikację i zwalnia zasoby.
-
-        Zatrzymuje wątki, zamyka strumień audio oraz zatrzymuje GUI.
         """
         self.logger.debug("Wywołanie on_closing")
         self.is_speaking = False
