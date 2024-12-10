@@ -10,6 +10,7 @@ class ChatGUI:
     Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do sterowania nagrywaniem.
     """
 
+
     def __init__(self, parent, debug=False):
         """
         Inicjalizuje obiekt GUI i jego komponenty.

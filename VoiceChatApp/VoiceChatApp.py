@@ -163,6 +163,7 @@ class VoiceChatApp:
         # Czyszczenie pola tekstowego po potwierdzeniu
         self.gui.user_input_voice.delete("1.0", tk.END)
 
+
     def on_closing(self):
         """
         Zamyka aplikację i zwalnia zasoby.
