@@ -33,7 +33,9 @@ class AiModel:
         try:
             response = self.client.chat.completions.create(
                 model="gpt-4o-mini",
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "system", "content": "Odpowiedź od chatbota odnośnie zaleceń do twoich objawów."},
+                    {"role": "user", "content": prompt},
+                     {"role": "system", "content": "Nadal zaleca się skontaktować z lekarzem pierwszego kontaktu."}],
             )
             return response.choices[0].message.content.strip()
         except Exception as e:

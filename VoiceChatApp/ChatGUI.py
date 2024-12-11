@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import scrolledtext
 import logging
-from PIL import Image, ImageTk, ImageDraw
+from PIL import Image, ImageTk
 
 
 class ChatGUI:
@@ -9,7 +9,6 @@ class ChatGUI:
     Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
     Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do sterowania nagrywaniem.
     """
-
 
     def __init__(self, parent, debug=False):
         """
@@ -34,7 +33,7 @@ class ChatGUI:
         self.root = tk.Tk()
         self.root.title("Czat Głosowy")
 
-        # Wygeneruj ikony mikrofonów (zielony i czerwony przekreślony)
+        # Wczytaj ikony mikrofonów (zielony i czerwony)
         self.generate_icons()
 
         # Utworzenie i rozmieszczenie wszystkich widżetów GUI
@@ -48,44 +47,18 @@ class ChatGUI:
 
     def generate_icons(self):
         """
-        Generuje ikony dla przycisku mikrofonu.
+        Wczytuje ikony mikrofonu z plików graficznych.
         Ikona zielona - mikrofon wyłączony (gotowy do nagrywania).
-        Ikona czerwona z przekreśleniem - mikrofon włączony (nagrywanie trwa).
+        Ikona czerwona - mikrofon włączony (nagrywanie trwa).
         """
-        self.green_mic_image = self.create_mic_icon(fill_color="green")
-        self.red_mic_image = self.create_mic_icon(fill_color="red", cross=True)
-
-    def create_mic_icon(self, fill_color="green", cross=False):
-        """
-        Tworzy ikonę mikrofonu za pomocą biblioteki PIL (Pillow).
-
-        Args:
-            fill_color (str): Kolor mikrofonu (np. "green", "red").
-            cross (bool): Czy dodać przekreślenie mikrofonu (stosowane, gdy nagrywanie jest włączone).
-
-        Returns:
-            ImageTk.PhotoImage: Obiekt obrazu, który można przypisać do widgetu Tkinter (np. przycisku).
-        """
-        size = (50, 50)  # Rozmiar ikony
-        # Tworzenie obrazu z przezroczystym tłem (RGBA)
-        image = Image.new("RGBA", size, (255, 255, 255, 0))
-        draw = ImageDraw.Draw(image)
-
-        # Rysowanie mikrofonu
-        # Główka mikrofonu (elipsa)
-        draw.ellipse((20, 10, 30, 25), fill=fill_color)
-        # Trzonek mikrofonu (prostokąt)
-        draw.rectangle((24, 25, 26, 35), fill=fill_color)
-        # Podstawa mikrofonu (łuk)
-        draw.arc((18, 30, 32, 40), start=0, end=180, fill=fill_color)
-
-        # Jeśli cross=True, to dodajemy dwie linie przekreślające mikrofon
-        if cross:
-            draw.line((15, 15, 35, 35), fill="black", width=5)
-            draw.line((15, 35, 35, 15), fill="black", width=5)
-
-        # Konwersja obrazu PIL do formatu obsługiwanego przez Tkinter
-        return ImageTk.PhotoImage(image)
+        try:
+            # Wczytywanie obrazów mikrofonu
+            self.green_mic_image = ImageTk.PhotoImage(Image.open("green_mic.png"))
+            self.red_mic_image = ImageTk.PhotoImage(Image.open("red_mic.png"))
+        except Exception as e:
+            self.logger.error(f"Error loading mic icons: {e}")
+            self.green_mic_image = None
+            self.red_mic_image = None
 
     def create_widgets(self):
         """
@@ -142,7 +115,7 @@ class ChatGUI:
             is_speaking (bool): True jeśli aktualnie nagrywamy, False jeśli nagrywanie jest wyłączone.
         """
         if is_speaking:
-            # Jeśli nagrywanie jest włączone - pokazujemy czerwoną, przekreśloną ikonę
+            # Jeśli nagrywanie jest włączone - pokazujemy czerwoną ikonę
             self.speaking_button.config(image=self.red_mic_image)
         else:
             # Jeśli nagrywanie jest wyłączone - pokazujemy zieloną ikonę
