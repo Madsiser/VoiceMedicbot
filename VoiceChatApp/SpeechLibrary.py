@@ -21,6 +21,8 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
             "Specjalista": "Internista",
             "Zalecenia": "Odpoczynek, nawadnianie, leki przeciwgorączkowe"
         },
@@ -37,6 +39,8 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": True,
             "Specjalista": "Pulmonolog",
             "Zalecenia": "Antybiotyki, nawadnianie, odpoczynek"
         },
@@ -53,6 +57,8 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
             "Specjalista": "Chirurg ogólny",
             "Zalecenia": "Natychmiastowa pomoc medyczna, operacja"
         },
@@ -68,7 +74,7 @@ class SpeechLibrary:
     required_symptoms = [
         "Ból głowy", "Wymioty", "Gorączka", "Ból kości i stawów",
         "Nudności", "Ból brzucha", "Kaszel", "Duszności",
-        "Zmęczenie", "Utrata wagi", "Problemy ze snem"
+        "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
     ]
 
     # Wzorce odpowiedzi użytkownika (tak/nie) kolejnośc od najbardziej zaawansowanej
