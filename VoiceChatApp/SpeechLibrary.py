@@ -80,6 +80,25 @@ class SpeechLibrary:
             "Specjalista": "Neurolog",
             "Zalecenia": "Leki przeciwbólowe, unikanie czynników wywołujących"
         },
+        {
+            "Choroba": "Infekcja wirusowa",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": False,
+            "Kaszel": True,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
+            "Specjalista": "Internista",
+            "Zalecenia": "Odpoczynek, nawadnianie, leki objawowe"
+        },
+
 
         # Możliwość rozszerzenia o kolejne choroby
     ]
