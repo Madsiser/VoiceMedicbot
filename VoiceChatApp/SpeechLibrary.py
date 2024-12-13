@@ -118,7 +118,7 @@ class SpeechLibrary:
         Returns:
             str: Pytanie o objaw.
         """
-        return f"Czy występują u Ciebie {symptom.lower()}?"
+        return f"Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
 
     @staticmethod
     def ask_error(symptom: str) -> str:
@@ -131,7 +131,7 @@ class SpeechLibrary:
         Returns:
             str: Ponowne pytanie o objaw.
         """
-        return f"Czy możesz powtórzyć? Czy występują u Ciebie {symptom.lower()}?"
+        return f"Czy możesz powtórzyć? Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
 
     @staticmethod
     def error() -> str:
