@@ -39,7 +39,7 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
-            "Ból mięśni": False,
+            "Ból mięśni": True,
             "Dreszcze": True,
             "Specjalista": "Pulmonolog",
             "Zalecenia": "Antybiotyki, nawadnianie, odpoczynek"
@@ -58,10 +58,29 @@ class SpeechLibrary:
             "Utrata wagi": False,
             "Problemy ze snem": False,
             "Ból mięśni": False,
-            "Dreszcze": False,
+            "Dreszcze": True,
             "Specjalista": "Chirurg ogólny",
             "Zalecenia": "Natychmiastowa pomoc medyczna, operacja"
         },
+        {
+            "Choroba": "Migrena",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Neurolog",
+            "Zalecenia": "Leki przeciwbólowe, unikanie czynników wywołujących"
+        },
+
         # Możliwość rozszerzenia o kolejne choroby
     ]
 
