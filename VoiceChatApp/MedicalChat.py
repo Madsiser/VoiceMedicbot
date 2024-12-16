@@ -29,6 +29,16 @@ class MedicalChat:
         self.prev_question = None
         self.ai_model = AiModel()
 
+    def reset_conversation(self):
+            """
+            Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.
+            """
+            self.user_symptoms = {}
+            self.check_syndroms = {}
+            self.first_info_pack = True
+            self.prev_question = None
+            self.logger.info("Rozpoczęto nową rozmowę medyczną.")
+
     def analyze_monolog(self, user_input):
         """
         Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.
@@ -91,7 +101,7 @@ class MedicalChat:
         """
         self.logger.info(f"Analiza odpowiedzi: {message}")
         self.logger.info(f"Poprzednie pytanie: {self.prev_question}")
-        for key, value in SpeechLibrary.response_yes_no_pettern.items():
+        for key, value in SpeechLibrary.response_yes_no_pattern.items():
             if key in message.lower():
                 return value
         return None

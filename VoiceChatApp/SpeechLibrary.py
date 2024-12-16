@@ -295,6 +295,14 @@ class SpeechLibrary:
         "koniec", "dziękuję", "do widzenia"
     ]
 
+    # Lista zwrotów do resetowania rozmowy
+    reset_speech_phrases = [
+        "zacznijmy od nowa",
+        "zacznijmy jeszcze raz",
+        "chcę zacząć od nowa",
+        "zacznijmy ponownie"
+    ]
+
     # Lista objawów do odpytania
     required_symptoms = [
         "Ból głowy", "Wymioty", "Gorączka", "Ból kości i stawów",
@@ -357,6 +365,21 @@ class SpeechLibrary:
 
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
+
+    @staticmethod
+    def is_reset_command(message: str) -> bool:
+            """
+            Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.
+
+            Args:
+                message (str): Wiadomość użytkownika.
+
+            Returns:
+                bool: True jeśli jest komendą resetującą, False w przeciwnym razie.
+            """
+            message = message.lower()
+            reset = any(phrase in message for phrase in SpeechLibrary.reset_speech_phrases)
+            return reset
     
 
     @staticmethod
