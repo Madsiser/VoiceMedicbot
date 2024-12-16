@@ -198,7 +198,8 @@ class SpeechLibrary:
         Returns:
             str: Odpowiedź z zaleceniami.
         """
-        return (f"Zalecany specjalista: {disease['Specjalista']}\n"
+        return (f"Najprawdopodobniej dolega ci {disease['Choroba']}\n"
+                f"Zalecany specjalista: {disease['Specjalista']}\n"
                 f"Zalecenia: {disease['Zalecenia']}")
 
     @staticmethod
