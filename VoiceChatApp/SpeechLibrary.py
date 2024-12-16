@@ -302,17 +302,58 @@ class SpeechLibrary:
         "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
     ]
 
-    # Wzorce odpowiedzi użytkownika (tak/nie) kolejnośc od najbardziej zaawansowanej
-    response_yes_no_pettern = {
+    # Wzorce odpowiedzi użytkownika (tak/nie) - kolejność od najbardziej zaawansowanej
+    response_yes_no_pattern = {
+        # Odpowiedzi pozytywne
         "tak": True,
+        "oczywiście": True,
         "występują": True,
         "mają miejsce": True,
+        "potwierdzam": True,
+        "prawda": True,
+        "bez wątpienia": True,
+        "pewnie": True,
+        "zdecydowanie": True,
+        "z całą pewnością": True,
+        "zgadzam się": True,
+        "to prawda": True,
+        "dokładnie": True,
+        "absolutnie": True,
+        "tak jest": True,
+        "na pewno": True,
+        "zdecydowanie tak": True,
+
+        # Odpowiedzi negatywne
+        "zdecydowanie nie": False,
         "nie": False,
+        "nie, dziękuję": False,
         "nie występuje": False,
         "brak": False,
-        "t": True,
-        "n": False
+        "nie ma": False,
+        "nie potwierdzam": False,
+        "absolutnie nie": False,
+        "zdecydowanie nie": False,
+        "nie zgadzam się": False,
+        "to nieprawda": False,
+        "niewystępują": False,
+        "nie do końca": False,
+        "nie jestem pewien": None,
+        "nie wiem": None,
+        "trudno powiedzieć": None,
+        "nie jestem pewna": None,
+        "nie jestem przekonany": None,
     }
+
+    # Opcjonalnie: Lista dodatkowych skrótów
+    additional_yes_no_abbreviations = {
+        "t": True,
+        "n": False,
+        "y": True,
+    }
+
+    # Integracja dodatkowych skrótów
+    response_yes_no_pattern.update(additional_yes_no_abbreviations)
+
 
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
