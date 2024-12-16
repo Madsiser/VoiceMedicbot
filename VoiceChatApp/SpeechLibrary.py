@@ -300,8 +300,26 @@ class SpeechLibrary:
         "zacznijmy od nowa",
         "zacznijmy jeszcze raz",
         "chcę zacząć od nowa",
-        "zacznijmy ponownie"
+        "zacznijmy ponownie",
+        "zrestartujmy rozmowę",
+        "zróbmy to jeszcze raz",
+        "zacznijmy od początku",
+        "chciałbym zacząć od nowa",
+        "rozpocznijmy ponownie",
+        "przeładujmy rozmowę",
+        "zacznijmy wszystko od początku",
+        "zrestartujmy naszą rozmowę",
+        "zacznijmy jeszcze raz od początku",
+        "proszę zacząć od nowa",
+        "proszę rozpocząć ponownie",
+        "zacznijmy od nowa proszę",
+        "zróbmy to od nowa",
+        "zacznijmy naszą rozmowę od nowa",
+        "powtórzmy rozmowę od początku",
+        "chcę zacząć jeszcze raz",
+        "zacznijmy rozmowę jeszcze raz",
     ]
+
 
     # Lista objawów do odpytania
     required_symptoms = [
