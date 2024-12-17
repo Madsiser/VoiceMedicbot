@@ -21,6 +21,8 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
             "Specjalista": "Internista",
             "Zalecenia": "Odpoczynek, nawadnianie, leki przeciwgorączkowe"
         },
@@ -37,6 +39,8 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
             "Specjalista": "Pulmonolog",
             "Zalecenia": "Antybiotyki, nawadnianie, odpoczynek"
         },
@@ -53,9 +57,48 @@ class SpeechLibrary:
             "Zmęczenie": True,
             "Utrata wagi": False,
             "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": True,
             "Specjalista": "Chirurg ogólny",
             "Zalecenia": "Natychmiastowa pomoc medyczna, operacja"
         },
+        {
+            "Choroba": "Migrena",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Neurolog",
+            "Zalecenia": "Leki przeciwbólowe, unikanie czynników wywołujących"
+        },
+        {
+            "Choroba": "Infekcja wirusowa",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": False,
+            "Kaszel": True,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
+            "Specjalista": "Internista",
+            "Zalecenia": "Odpoczynek, nawadnianie, leki objawowe"
+        },
+
         # Możliwość rozszerzenia o kolejne choroby
     ]
 
@@ -68,9 +111,71 @@ class SpeechLibrary:
     required_symptoms = [
         "Ból głowy", "Wymioty", "Gorączka", "Ból kości i stawów",
         "Nudności", "Ból brzucha", "Kaszel", "Duszności",
-        "Zmęczenie", "Utrata wagi", "Problemy ze snem"
+        "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni", "Dreszcze"
     ]
 
+    synonyms = {
+        "ból głowy": [
+            "głowa mnie boli",
+            "bol glowy",
+            "migrena",
+            "pulsuje mi w głowie",
+            "pulsujący ból głowy"
+        ],
+        "wymioty": [
+            "rzyganie",
+            "zwracam treść pokarmową",
+            "chce mi się wymiotować"
+        ],
+        "gorączka": [
+            "temperatura 38",
+            "wysoka temperatura",
+            "mam ponad 37 stopni"
+        ],
+        "ból kości i stawów": [
+            "łamanie w kościach",
+            "stawy mnie bolą"
+        ],
+        "nudności": [
+            "mdłości",
+            "jest mi niedobrze",
+            "zbiera mi się na wymioty"
+        ],
+        "ból brzucha": [
+            "boli mnie brzuch",
+            "ból w okolicy żołądka"
+        ],
+        "kaszel": [
+            "kaszlę",
+            "pokasłuję"
+        ],
+        "duszności": [
+            "ciężko mi oddychać",
+            "brakuje mi tchu"
+        ],
+        "zmęczenie": [
+            "jestem wyczerpany",
+            "brak mi energii"
+        ],
+        "utrata wagi": [
+            "schudłem",
+            "chudnę ostatnio"
+        ],
+        "problemy ze snem": [
+            "bezsenność",
+            "ciężko mi zasnąć",
+            "nie mogę spać"
+        ],
+        "ból mięśni": [
+            "mięśnie mnie bolą",
+            "zakwasy",
+            "ciągnie mnie w mięśniach"
+        ],
+        "dreszcze": [
+            "mam dreszcze",
+            "trzęsie mnie"
+        ]
+    }
     # Wzorce odpowiedzi użytkownika (tak/nie) kolejnośc od najbardziej zaawansowanej
     response_yes_no_pettern = {
         "tak": True,
@@ -85,7 +190,6 @@ class SpeechLibrary:
 
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
-    
 
     @staticmethod
     def first_response(user_symptoms: dict, message: str) -> str:
@@ -118,7 +222,7 @@ class SpeechLibrary:
         Returns:
             str: Pytanie o objaw.
         """
-        return f"Czy występują u Ciebie {symptom.lower()}?"
+        return f"Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
 
     @staticmethod
     def ask_error(symptom: str) -> str:
@@ -131,7 +235,7 @@ class SpeechLibrary:
         Returns:
             str: Ponowne pytanie o objaw.
         """
-        return f"Czy możesz powtórzyć? Czy występują u Ciebie {symptom.lower()}?"
+        return f"Czy możesz powtórzyć? Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
 
     @staticmethod
     def error() -> str:
