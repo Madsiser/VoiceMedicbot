@@ -370,7 +370,7 @@ class SpeechLibrary:
         "nie jestem przekonany": None,
     }
 
-    # Opcjonalnie: Lista dodatkowych skrótów
+    # Lista skrótów
     additional_yes_no_abbreviations = {
         "t": True,
         "n": False,
