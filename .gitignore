@@ -3,3 +3,4 @@ main-test.py
 .env
 .vscode
 .idea
+venv

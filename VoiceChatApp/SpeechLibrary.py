@@ -190,6 +190,7 @@ class SpeechLibrary:
 
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
+    
 
     @staticmethod
     def first_response(user_symptoms: dict, message: str) -> str:
