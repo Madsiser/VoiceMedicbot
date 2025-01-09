@@ -71,19 +71,14 @@ class ChatGUI:
             self.root, wrap=tk.WORD, width=50, height=20, state='normal'
         )
         self.chat_display.pack(padx=10, pady=10)
+        #self.chat_display.config(state="disabled")
 
         # Pole tekstowe do edycji rozpoznanego tekstu głównego
         self.user_input_voice = tk.Text(
             self.root, wrap=tk.WORD, width=50, height=2
         )
-        self.user_input_voice.insert(tk.END, "Tekst główny")
+        self.user_input_voice.insert(tk.END, "wprowadź pytanie do czata")
         self.user_input_voice.pack(padx=10, pady=10)
-
-        # Etykieta do wyświetlania częściowo rozpoznanego tekstu (pomocniczego)
-        self.user_input_voice_partial = tk.Label(
-            self.root, width=50, text="Tekst pomocniczy", anchor="w"
-        )
-        self.user_input_voice_partial.pack(padx=10, pady=10)
 
         # Przycisk mikrofonu - start/stop nagrywania
         # Domyślnie pokazujemy zieloną ikonę (nagrywanie wyłączone)
