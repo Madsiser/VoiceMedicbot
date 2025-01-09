@@ -58,7 +58,8 @@ class MedicalChat:
     def analyze_symptoms(self, user_input):
         """
         Główna funkcja analizy objawów użytkownika.
-        Najpierw (jeśli first_info_pack) analizuje monolog, a następnie pyta o brakujące objawy.
+        Obsługuje zarówno monolog użytkownika, jak i odpowiedzi na pytania.
+        Obsługuje również komendy do resetowania rozmowy.
 
         Args:
             user_input (str): Wypowiedź użytkownika (monolog lub odpowiedź na dodatkowe pytanie).
@@ -68,21 +69,25 @@ class MedicalChat:
                 - bool: Czy znane są wszystkie objawy? (True/False)
                 - str: Wiadomość zwrotna dla użytkownika (diagnoza lub pytania uzupełniające).
         """
+        self.logger.info("Stan systemu: Przetwarzanie wiadomości użytkownika...")
+
         # Obsługa resetu rozmowy
         if SpeechLibrary.reset_conversation(user_input):
             # Resetowanie objawów użytkownika i zmiennych sterujących
-            self.user_symptoms.clear()
-            self.check_syndroms.clear()
-            self.first_info_pack = True
-            self.prev_question = None
+            self.user_symptoms.clear()  # Czyści słownik objawów użytkownika
+            self.check_syndroms.clear()  # Czyści słownik statusów objawów
+            self.first_info_pack = True  # Ustawia flagę początku rozmowy
+            self.prev_question = None  # Reset ostatniego pytania
+            self.required_symptoms = list(SpeechLibrary.required_symptoms)  # Odświeżenie listy wymaganych objawów
 
             # Odpowiedź na reset
             reset_message = SpeechLibrary().reset_response()
-            self.logger.info("Rozmowa została zresetowana.")
+            self.logger.info("Stan systemu: Rozmowa została zresetowana. Oczekiwanie na nowy opis objawów.")
             return False, reset_message
 
         if self.first_info_pack:
             # Pierwsze wywołanie – analiza monologu
+            self.logger.info("Stan systemu: Analiza monologu użytkownika.")
             self.analyze_monolog(user_input)
         else:
             # Odpowiedź na dodatkowe pytanie
@@ -91,10 +96,14 @@ class MedicalChat:
                 # Użytkownik odpowiedział twierdząco/negatywnie
                 self.check_syndroms[self.prev_question] = True
                 self.user_symptoms[self.prev_question] = answer
+                self.logger.info(
+                    f"Stan systemu: Użytkownik potwierdził objaw '{self.prev_question}' jako {'tak' if answer else 'nie'}.")
             else:
                 # Brak jasnej odpowiedzi
                 self.check_syndroms[self.prev_question] = None
                 self.user_symptoms[self.prev_question] = None
+                self.logger.warning(f"Stan systemu: Brak jednoznacznej odpowiedzi dla objawu '{self.prev_question}'.")
+
             self.prev_question = ""
 
         self.logger.info(f"Sprawdzone objawy: {self.check_syndroms}")
@@ -102,14 +111,17 @@ class MedicalChat:
 
         # Sprawdzamy, czy wszystkie objawy zostały ustalone (True/False)
         if all(x is not None for x in self.check_syndroms.values()):
+            self.logger.info("Stan systemu: Wszystkie objawy ustalone. Generowanie rekomendacji...")
             i_know, message = True, self.get_recommendation()
         else:
+            self.logger.info("Stan systemu: Pytanie o brakujące objawy. Oczekiwanie na odpowiedź użytkownika.")
             i_know, message = False, self.ask_missing_symptom()
 
         # Dodatkowa wiadomość powitalna przy pierwszym uruchomieniu
         if self.first_info_pack:
             message = SpeechLibrary.first_response(self.user_symptoms, message)
             self.first_info_pack = False
+            self.logger.info("Stan systemu: Wysłano pierwszą wiadomość z listą objawów.")
 
         return i_know, message
 
