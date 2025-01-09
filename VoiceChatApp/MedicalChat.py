@@ -68,6 +68,19 @@ class MedicalChat:
                 - bool: Czy znane są wszystkie objawy? (True/False)
                 - str: Wiadomość zwrotna dla użytkownika (diagnoza lub pytania uzupełniające).
         """
+        # Obsługa resetu rozmowy
+        if SpeechLibrary.reset_conversation(user_input):
+            # Resetowanie objawów użytkownika i zmiennych sterujących
+            self.user_symptoms.clear()
+            self.check_syndroms.clear()
+            self.first_info_pack = True
+            self.prev_question = None
+
+            # Odpowiedź na reset
+            reset_message = SpeechLibrary().reset_response()
+            self.logger.info("Rozmowa została zresetowana.")
+            return False, reset_message
+
         if self.first_info_pack:
             # Pierwsze wywołanie – analiza monologu
             self.analyze_monolog(user_input)
@@ -88,8 +101,6 @@ class MedicalChat:
         self.logger.info(f"Objawy użytkownika: {self.user_symptoms}")
 
         # Sprawdzamy, czy wszystkie objawy zostały ustalone (True/False)
-        # jeżeli wszystko jest True lub False, to przechodzimy do rekomendacji
-        # w przeciwnym wypadku -> pytamy o brakujące
         if all(x is not None for x in self.check_syndroms.values()):
             i_know, message = True, self.get_recommendation()
         else:

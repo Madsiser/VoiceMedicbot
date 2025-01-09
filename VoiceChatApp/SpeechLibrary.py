@@ -187,7 +187,10 @@ class SpeechLibrary:
         "t": True,
         "n": False
     }
-
+    #zwroty do resetowania rozmowy
+    reset_phrases = [
+        "zacznijmy od nowa", "restart", "rozpocznij ponownie"
+    ]
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
     
@@ -300,3 +303,25 @@ class SpeechLibrary:
             if key in message.lower():
                 return value
         return None
+
+    @staticmethod
+    def reset_conversation(message: str) -> bool:
+        """
+        Sprawdza, czy użytkownik chce zresetować rozmowę i zacząć od nowa.
+
+        Args:
+            message (str): Wiadomość użytkownika.
+
+        Returns:
+            bool: True, jeśli użytkownik chce zresetować rozmowę, w przeciwnym razie False.
+        """
+        return any(phrase in message.lower() for phrase in SpeechLibrary.reset_phrases)
+
+    def reset_response(self) -> str:
+        """
+        Odpowiedź po zresetowaniu rozmowy.
+
+        Returns:
+            str: Komunikat o rozpoczęciu nowej rozmowy.
+        """
+        return "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega."
