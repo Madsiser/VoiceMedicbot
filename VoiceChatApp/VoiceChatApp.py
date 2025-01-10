@@ -78,6 +78,8 @@ class VoiceChatApp:
         Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
         """
         self.logger.debug("Wywołanie start_speaking_button")
+        self.gui.user_input_voice.delete("1.0", tk.END)
+        self.gui.user_input_voice_partial.config(text="")
         if not self.is_speaking:
             self.is_speaking = True
             # Aktualizacja ikony po zmianie stanu
@@ -100,6 +102,7 @@ class VoiceChatApp:
         recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
         self.gui.user_input_voice.delete("1.0", tk.END)
         self.gui.user_input_voice.insert(tk.END, recognized_text)
+        self.gui.user_input_voice_partial.config(text="")
 
     def hear(self):
         """
