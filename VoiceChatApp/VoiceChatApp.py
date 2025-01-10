@@ -139,6 +139,7 @@ class VoiceChatApp:
         """
         Obsługa przycisku 'Potwierdź'
         """
+        self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
         self.process_text()
 
     def process_text(self):
