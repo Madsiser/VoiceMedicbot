@@ -76,12 +76,12 @@ class ChatGUI:
         self.user_input_voice = tk.Text(
             self.root, wrap=tk.WORD, width=50, height=2
         )
-        self.user_input_voice.insert(tk.END, "Tekst główny")
+        self.user_input_voice.insert(tk.END, "")
         self.user_input_voice.pack(padx=10, pady=10)
 
         # Etykieta do wyświetlania częściowo rozpoznanego tekstu (pomocniczego)
         self.user_input_voice_partial = tk.Label(
-            self.root, width=50, text="Tekst pomocniczy", anchor="w"
+            self.root, width=50, text="Aby rozpocząć mówienie wciśnij przycisk mikrofonu", anchor="w"
         )
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
