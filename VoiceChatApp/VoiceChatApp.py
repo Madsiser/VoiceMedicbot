@@ -54,7 +54,9 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie start")
 
         message = SpeechLibrary.hello_phrase
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.gui.chat_display.config(state="disabled")
         self.lector.say(message)
 
         self.gui.start()
@@ -152,7 +154,9 @@ class VoiceChatApp:
             return
 
         # Wyświetlenie tekstu użytkownika w czacie
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
+        self.gui.chat_display.config(state="disabled")
         self.logger.debug(f"Wyświetlono tekst użytkownika: 'Ty: {user_text}'")
 
         # Sprawdź, czy użytkownik chce zresetować rozmowę
@@ -161,7 +165,9 @@ class VoiceChatApp:
             self.medic.reset_conversation()
             response = "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega?"
             # Wyświetlenie odpowiedzi bota w czacie
+            self.gui.chat_display.config(state="normal")
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
+            self.gui.chat_display.config(state="disabled")
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
             # Odtworzenie odpowiedzi
             self.lector.say(response)
@@ -174,7 +180,9 @@ class VoiceChatApp:
         self.logger.debug(f"Przetworzono tekst użytkownika przez MedicalChat: {message}")
 
         # Wyświetlenie odpowiedzi bota w czacie
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.gui.chat_display.config(state="disabled")
         self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {message}'")
 
         # Odtworzenie odpowiedzi
