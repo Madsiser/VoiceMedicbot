@@ -55,6 +55,7 @@ class VoiceChatApp:
 
         message = SpeechLibrary.hello_phrase
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.gui.chat_display.config(state="disabled")
         self.lector.say(message)
 
         self.gui.start()
@@ -122,7 +123,7 @@ class VoiceChatApp:
                 else:
                     partial_result = self.recognizer.PartialResult()
                     partial_text = json.loads(partial_result).get("partial", "")
-                    self.gui.user_input_voice_partial.config(text=partial_text)
+                    self.gui.user_input_voice.config(text=partial_text)
             except Exception as e:
                 self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
                 break
@@ -152,11 +153,15 @@ class VoiceChatApp:
             return
 
         # Wyświetlenie tekstu użytkownika w czacie
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
+        self.gui.chat_display.config(state="disabled")
         # Przetwarzanie tekstu przez moduł medyczny
         result, message = self.medic.analyze_symptoms(user_text)
         # Wyświetlenie odpowiedzi bota w czacie
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
+        self.gui.chat_display.config(state="disabled")
         # Odtworzenie odpowiedzi
         self.lector.say(message)
 
