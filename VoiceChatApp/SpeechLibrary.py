@@ -107,6 +107,10 @@ class SpeechLibrary:
     end_speech_phrases = [
         "koniec", "dziękuję", "do widzenia"
     ]
+    # zwroty do resetowania rozmowy
+    reset_phrases = [
+        "zacznijmy od nowa", "restart", "rozpocznij ponownie"
+    ]
 
     # Lista objawów do odpytania
     required_symptoms = [
@@ -114,6 +118,68 @@ class SpeechLibrary:
         "Nudności", "Ból brzucha", "Kaszel", "Duszności",
         "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
     ]
+    synonyms = {
+        "ból głowy": [
+            "głowa mnie boli",
+            "bol glowy",
+            "migrena",
+            "pulsuje mi w głowie",
+            "pulsujący ból głowy"
+        ],
+        "wymioty": [
+            "rzyganie",
+            "zwracam treść pokarmową",
+            "chce mi się wymiotować"
+        ],
+        "gorączka": [
+            "temperatura 38",
+            "wysoka temperatura",
+            "mam ponad 37 stopni"
+        ],
+        "ból kości i stawów": [
+            "łamanie w kościach",
+            "stawy mnie bolą"
+        ],
+        "nudności": [
+            "mdłości",
+            "jest mi niedobrze",
+            "zbiera mi się na wymioty"
+        ],
+        "ból brzucha": [
+            "boli mnie brzuch",
+            "ból w okolicy żołądka"
+        ],
+        "kaszel": [
+            "kaszlę",
+            "pokasłuję"
+        ],
+        "duszności": [
+            "ciężko mi oddychać",
+            "brakuje mi tchu"
+        ],
+        "zmęczenie": [
+            "jestem wyczerpany",
+            "brak mi energii"
+        ],
+        "utrata wagi": [
+            "schudłem",
+            "chudnę ostatnio"
+        ],
+        "problemy ze snem": [
+            "bezsenność",
+            "ciężko mi zasnąć",
+            "nie mogę spać"
+        ],
+        "ból mięśni": [
+            "mięśnie mnie bolą",
+            "zakwasy",
+            "ciągnie mnie w mięśniach"
+        ],
+        "dreszcze": [
+            "mam dreszcze",
+            "trzęsie mnie"
+        ]
+    }
 
     # Wzorce odpowiedzi użytkownika (tak/nie) kolejnośc od najbardziej zaawansowanej
     response_yes_no_pettern = {
@@ -223,6 +289,28 @@ class SpeechLibrary:
             bool: True, jeśli rozmowa powinna się zakończyć; w przeciwnym razie False.
         """
         return any(phrase in message.lower() for phrase in SpeechLibrary.end_speech_phrases)
+
+    @staticmethod
+    def reset_conversation(message: str) -> bool:
+        """
+        Sprawdza, czy użytkownik chce zresetować rozmowę i zacząć od nowa.
+
+        Args:
+            message (str): Wiadomość użytkownika.
+
+        Returns:
+            bool: True, jeśli użytkownik chce zresetować rozmowę, w przeciwnym razie False.
+        """
+        return any(phrase in message.lower() for phrase in SpeechLibrary.reset_phrases)
+
+    def reset_response(self) -> str:
+        """
+        Odpowiedź po zresetowaniu rozmowy.
+
+        Returns:
+            str: Komunikat o rozpoczęciu nowej rozmowy.
+        """
+        return "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega."
 
     @staticmethod
     def get_symptom_confirmation_status(message: str) -> bool:

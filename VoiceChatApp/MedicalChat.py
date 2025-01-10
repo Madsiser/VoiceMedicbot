@@ -56,6 +56,19 @@ class MedicalChat:
         if self.first_info_pack:
             self.analyze_monolog(user_input)
         else:
+            # Obsługa resetu rozmowy
+            if SpeechLibrary.reset_conversation(user_input):
+                # Resetowanie objawów użytkownika i zmiennych sterujących
+                self.user_symptoms.clear()  # Czyści słownik objawów użytkownika
+                self.check_syndroms.clear()  # Czyści słownik statusów objawów
+                self.first_info_pack = True  # Ustawia flagę początku rozmowy
+                self.prev_question = None  # Reset ostatniego pytania
+                self.required_symptoms = list(SpeechLibrary.required_symptoms)  # Odświeżenie listy wymaganych objawów
+
+                # Odpowiedź na reset
+                reset_message = SpeechLibrary().reset_response()
+                self.logger.info("Stan systemu: Rozmowa została zresetowana. Oczekiwanie na nowy opis objawów.")
+                return False, reset_message
             answer = self.does_agree(user_input)
             if answer is not None:
                 self.check_syndroms[self.prev_question] = True
