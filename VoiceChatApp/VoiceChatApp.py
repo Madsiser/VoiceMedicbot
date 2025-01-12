@@ -98,10 +98,10 @@ class VoiceChatApp:
         # Aktualizacja ikony po zmianie stanu
         self.gui.update_speaking_button(self.is_speaking)
 
-        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji
-        recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
-        self.gui.user_input_voice.delete("1.0", tk.END)
-        self.gui.user_input_voice.insert(tk.END, recognized_text)
+        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka
+        # recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
+        # self.gui.user_input_voice.delete("1.0", tk.END)
+        # self.gui.user_input_voice.insert(tk.END, recognized_text)
         self.gui.user_input_voice_partial.config(text="")
 
     def hear(self):
@@ -113,6 +113,11 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie hear")
         recognized_text = ""
         partial_result = ""
+        try:
+            data = self.stream.read(4000, exception_on_overflow=False)
+            self.recognizer.AcceptWaveform(data)
+        except Exception as e:
+            self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
 
         while self.is_speaking:
             try:
@@ -132,7 +137,7 @@ class VoiceChatApp:
                 self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
                 break
 
-        if recognized_text.strip() == "":
+        if recognized_text.strip() == "" and False:
             recognized_text = json.loads(partial_result).get("partial", "")
             self.gui.user_input_voice.delete("1.0", tk.END)
             self.gui.user_input_voice.insert(tk.END, recognized_text.strip())
@@ -142,8 +147,10 @@ class VoiceChatApp:
         """
         Obsługa przycisku 'Potwierdź'
         """
+        self.stop_speaking_button()
         self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
         self.process_text()
+        self.gui.user_input_voice.delete("1.0", tk.END)
 
     def process_text(self):
         """
