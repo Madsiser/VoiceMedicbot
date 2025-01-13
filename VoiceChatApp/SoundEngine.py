@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from gtts import gTTS
 import pygame
 import os
@@ -60,10 +62,13 @@ class SoundEngine:
 
             # Generowanie pliku audio za pomocą gTTS
             tts = gTTS(text=text, lang=self.lang)
-            tts.save(temp_file)
+            mp3 = BytesIO()
+            tts.write_to_fp(mp3)
+            mp3.seek(0)
+
 
             # Odtwarzanie pliku audio za pomocą Pygame
-            pygame.mixer.music.load(temp_file)
+            pygame.mixer.music.load(mp3)
             pygame.mixer.music.play()
 
             # Czekaj, aż odtwarzanie zostanie zakończone
