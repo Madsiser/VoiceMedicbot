@@ -120,62 +120,63 @@ class SpeechLibrary:
     ]
     synonyms = {
         "ból głowy": [
+            "boli mnie głowa",
             "głowa mnie boli",
             "bol glowy",
             "migrena",
             "pulsuje mi w głowie",
             "pulsujący ból głowy"
         ],
-        "wymioty": [
+        "Wymioty": [
             "rzyganie",
             "zwracam treść pokarmową",
             "chce mi się wymiotować"
         ],
-        "gorączka": [
+        "Gorączka": [
             "temperatura 38",
             "wysoka temperatura",
             "mam ponad 37 stopni"
         ],
-        "ból kości i stawów": [
+        "Ból kości i stawów": [
             "łamanie w kościach",
             "stawy mnie bolą"
         ],
-        "nudności": [
+        "Nudności": [
             "mdłości",
             "jest mi niedobrze",
             "zbiera mi się na wymioty"
         ],
-        "ból brzucha": [
+        "Ból brzucha": [
             "boli mnie brzuch",
             "ból w okolicy żołądka"
         ],
-        "kaszel": [
+        "Kaszel": [
             "kaszlę",
             "pokasłuję"
         ],
-        "duszności": [
+        "Duszności": [
             "ciężko mi oddychać",
             "brakuje mi tchu"
         ],
-        "zmęczenie": [
+        "Zmęczenie": [
             "jestem wyczerpany",
             "brak mi energii"
         ],
-        "utrata wagi": [
+        "Utrata wagi": [
             "schudłem",
             "chudnę ostatnio"
         ],
-        "problemy ze snem": [
+        "Problemy ze snem": [
             "bezsenność",
             "ciężko mi zasnąć",
             "nie mogę spać"
         ],
-        "ból mięśni": [
+        "Ból mięśni": [
             "mięśnie mnie bolą",
             "zakwasy",
             "ciągnie mnie w mięśniach"
         ],
-        "dreszcze": [
+        "Dreszcze": [
             "mam dreszcze",
             "trzęsie mnie"
         ]

@@ -23,13 +23,14 @@ class MedicalChat:
         # Inicjalizacja zmiennych
         self.symptoms_table = SpeechLibrary.symptoms_table
         self.required_symptoms = SpeechLibrary.required_symptoms
+        self.synonyms=SpeechLibrary.synonyms
         self.user_symptoms = {}
         self.check_syndroms = {}
         self.first_info_pack = True
         self.prev_question = None
         self.ai_model = AiModel()
 
-    def analyze_monolog(self, user_input):
+    def analyze_monolog(self, user_input)-> None:
         """
         Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.
 
@@ -37,7 +38,31 @@ class MedicalChat:
             user_input (str): Wprowadzenie użytkownika z potencjalnymi objawami.
         """
         for symptom in self.required_symptoms:
-            symptom_present = symptom.lower() in user_input.lower()
+            # Domyślnie ustawiamy, że objawu nie wykryto.
+            symptom_present = False
+
+            # Sprawdzamy, czy dokładna fraza kluczowa znajduje się w monologu.
+            if symptom.lower() in user_input.lower():
+                symptom_present = True
+            else:
+                # Jeżeli nie - sprawdzamy synonimy zdefiniowane w słowniku "synonyms".
+                # Uwaga: klucz w słowniku synonyms musi odpowiadać temu z required_symptoms,
+                # np. "Ból głowy" -> "ból głowy" lub odwrotnie, żeby przyporządkowanie
+                # było jednoznaczne. W razie potrzeby możesz to znormalizować.
+                # Tu dla pewności zrobiono .lower() na kluczu i symptomie.
+                symptom_key_lower = symptom.lower()
+                for syn_key, syn_list in self.synonyms.items():
+                    # Synonimy są pod kluczami typu "ból głowy", a w "required_symptoms" mamy np. "Ból głowy".
+                    # Dlatego normalizujemy:
+                    if syn_key.lower() == symptom_key_lower:
+                        # Sprawdzamy każdy synonim:
+                        for s in syn_list:
+                            if s.lower() in user_input.lower():
+                                symptom_present = True
+                                break
+                        break  # Kończymy, jeżeli znaleźliśmy dopasowanie w synonimach.
+
+            # Uzupełniamy nasze tabele / słowniki dotyczące wykrytych objawów.
             self.check_syndroms[symptom] = symptom_present
             self.user_symptoms[symptom] = symptom_present
 
