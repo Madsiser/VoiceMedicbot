@@ -574,13 +574,15 @@ class SpeechLibrary:
         """
         return any(phrase in message.lower() for phrase in SpeechLibrary.reset_phrases)
 
-    def reset_response(self) -> str:
+    @staticmethod
+    def reset_response() -> str:
         """
         Odpowiedź po zresetowaniu rozmowy.
 
         Returns:
             str: Komunikat o rozpoczęciu nowej rozmowy.
         """
+
         return "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega."
 
     @staticmethod

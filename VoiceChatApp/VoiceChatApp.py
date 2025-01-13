@@ -174,7 +174,7 @@ class VoiceChatApp:
         if SpeechLibrary.is_reset_command(user_text.lower()):
             self.logger.info("Otrzymano komendę resetowania rozmowy.")
             self.medic.reset_conversation()
-            response = "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega?"
+            response = SpeechLibrary.reset_response()
             # Wyświetlenie odpowiedzi bota w czacie
             self.gui.chat_display.config(state="normal")
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
