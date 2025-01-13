@@ -250,11 +250,22 @@ class VoiceChatApp:
     def ev_confirm_button(self):
         self.stop_speaking_button()
         self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
-        # Ustaw status od razu na "komunikacja ze strony systemu"
+        # Ustaw status od razu
         self.gui.update_status_label("mówię do ciebie")
         self.process_text()
         self.gui.user_input_voice.delete("1.0", tk.END)
-        # Po 5 sekundach zmień status na "oczekiwanie na urzytkownika"
-        self.gui.root.after(5000, lambda: self.gui.update_status_label("możesz teraz mówić"))
+        # sprawdzanie statusu wątku odtwarzania dźwięku
+        self.check_audio_status_thread()
+
+    def check_audio_status_thread(self):
+        """
+        Cyklicznie sprawdza, czy wątek odpowiedzialny za odtwarzanie dźwięku (self.lector.current_thread)
+        nadal działa. Gdy się zakończy, ustawia status na "możesz teraz mówić".
+        """
+        if self.lector.current_thread is not None and self.lector.current_thread.is_alive():
+            self.gui.root.after(100, self.check_audio_status_thread)
+        else:
+            # Gdy wątek zakończył działanie, ustaw status na
+            self.gui.update_status_label("możesz teraz mówić")
 
 
