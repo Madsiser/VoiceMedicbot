@@ -98,10 +98,6 @@ class VoiceChatApp:
         # Aktualizacja ikony po zmianie stanu
         self.gui.update_speaking_button(self.is_speaking)
 
-        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka
-        # recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
-        # self.gui.user_input_voice.delete("1.0", tk.END)
-        # self.gui.user_input_voice.insert(tk.END, recognized_text)
         self.gui.user_input_voice_partial.config(text="")
 
     def hear(self):
