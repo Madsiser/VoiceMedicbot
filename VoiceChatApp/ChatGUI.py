@@ -76,9 +76,14 @@ class ChatGUI:
         self.user_input_voice = tk.Text(
             self.root, wrap=tk.WORD, width=50, height=2
         )
-        self.user_input_voice.insert(tk.END, "Miejsce do wpisania")
+        self.user_input_voice.insert(tk.END, "")
         self.user_input_voice.pack(padx=10, pady=10)
 
+        # Etykieta do wyświetlania częściowo rozpoznanego tekstu (pomocniczego)
+        self.user_input_voice_partial = tk.Label(
+            self.root, width=50, text="Aby rozpocząć mówienie wciśnij przycisk mikrofonu", anchor="w"
+        )
+        self.user_input_voice_partial.pack(padx=10, pady=10)
 
         # Przycisk do potwierdzenia tekstu (po zakończeniu nagrywania lub ręcznej edycji)
         self.confirm_button = tk.Button(

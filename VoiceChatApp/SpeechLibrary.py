@@ -98,6 +98,193 @@ class SpeechLibrary:
             "Specjalista": "Internista",
             "Zalecenia": "Odpoczynek, nawadnianie, leki objawowe"
         },
+        {
+            "Choroba": "Choroby autoimmunologiczne",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": True,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": True,
+            "Ból mięśni": True,
+            "Dreszcze": True,
+            "Specjalista": "Reumatolog",
+            "Zalecenia": "Leki immunosupresyjne, regularne kontrole"
+        },
+        {
+            "Choroba": "Nowotwory",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": True,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": True,
+            "Ból mięśni": True,
+            "Dreszcze": True,
+            "Specjalista": "Onkolog",
+            "Zalecenia": "Diagnostyka, leczenie onkologiczne"
+        },
+        {
+            "Choroba": "Zatrucie pokarmowe",
+            "Ból głowy": True,
+            "Wymioty": True,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": True,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": False,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": True,
+            "Specjalista": "Internista",
+            "Zalecenia": "Nawadnianie, dieta lekkostrawna"
+        },
+        {
+            "Choroba": "Cukrzyca",
+            "Ból głowy": False,
+            "Wymioty": False,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": True,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Diabetolog",
+            "Zalecenia": "Monitorowanie poziomu cukru, dieta, leki"
+        },
+        {
+            "Choroba": "Choroby tarczycy",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Endokrynolog",
+            "Zalecenia": "Badania hormonalne, leczenie hormonalne"
+        },
+        {
+            "Choroba": "Zespół przewlekłego zmęczenia",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": True,
+            "Ból mięśni": True,
+            "Dreszcze": False,
+            "Specjalista": "Internista",
+            "Zalecenia": "Odpoczynek, terapia, zmiana stylu życia"
+        },
+        {
+            "Choroba": "Astma",
+            "Ból głowy": False,
+            "Wymioty": False,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": False,
+            "Ból brzucha": False,
+            "Kaszel": True,
+            "Duszności": True,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Pulmonolog",
+            "Zalecenia": "Leki rozszerzające oskrzela, unikanie alergenów"
+        },
+        {
+            "Choroba": "Wrzody żołądka",
+            "Ból głowy": False,
+            "Wymioty": True,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": True,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Gastroenterolog",
+            "Zalecenia": "Leki zobojętniające, dieta, unikanie stresu"
+        },
+        {
+            "Choroba": "Mononukleoza",
+            "Ból głowy": True,
+            "Wymioty": False,
+            "Gorączka": True,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": False,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": True,
+            "Problemy ze snem": False,
+            "Ból mięśni": True,
+            "Dreszcze": True,
+            "Specjalista": "Internista",
+            "Zalecenia": "Odpoczynek, nawadnianie, leki przeciwbólowe"
+        },
+        {
+            "Choroba": "Zespół jelita drażliwego",
+            "Ból głowy": False,
+            "Wymioty": True,
+            "Gorączka": False,
+            "Ból kości i stawów": False,
+            "Nudności": True,
+            "Ból brzucha": True,
+            "Kaszel": False,
+            "Duszności": False,
+            "Zmęczenie": True,
+            "Utrata wagi": False,
+            "Problemy ze snem": False,
+            "Ból mięśni": False,
+            "Dreszcze": False,
+            "Specjalista": "Gastroenterolog",
+            "Zalecenia": "Dieta, leki przeciwbólowe, terapia psychologiczna"
+        },
+
+
+
+
+
+
+
 
 
         # Możliwość rozszerzenia o kolejne choroby
@@ -111,6 +298,32 @@ class SpeechLibrary:
     reset_phrases = [
         "zacznijmy od nowa", "restart", "rozpocznij ponownie"
     ]
+
+    # Lista zwrotów do resetowania rozmowy
+    reset_speech_phrases = [
+        "zacznijmy od nowa",
+        "zacznijmy jeszcze raz",
+        "chcę zacząć od nowa",
+        "zacznijmy ponownie",
+        "zrestartujmy rozmowę",
+        "zróbmy to jeszcze raz",
+        "zacznijmy od początku",
+        "chciałbym zacząć od nowa",
+        "rozpocznijmy ponownie",
+        "przeładujmy rozmowę",
+        "zacznijmy wszystko od początku",
+        "zrestartujmy naszą rozmowę",
+        "zacznijmy jeszcze raz od początku",
+        "proszę zacząć od nowa",
+        "proszę rozpocząć ponownie",
+        "zacznijmy od nowa proszę",
+        "zróbmy to od nowa",
+        "zacznijmy naszą rozmowę od nowa",
+        "powtórzmy rozmowę od początku",
+        "chcę zacząć jeszcze raz",
+        "zacznijmy rozmowę jeszcze raz",
+    ]
+
 
     # Lista objawów do odpytania
     required_symptoms = [
@@ -182,20 +395,76 @@ class SpeechLibrary:
         ]
     }
 
-    # Wzorce odpowiedzi użytkownika (tak/nie) kolejnośc od najbardziej zaawansowanej
-    response_yes_no_pettern = {
+    # Wzorce odpowiedzi użytkownika (tak/nie) - kolejność od najbardziej zaawansowanej
+    response_yes_no_pattern = {
+        # Odpowiedzi pozytywne
         "tak": True,
+        "oczywiście": True,
         "występują": True,
         "mają miejsce": True,
+        "potwierdzam": True,
+        "prawda": True,
+        "bez wątpienia": True,
+        "pewnie": True,
+        "zdecydowanie": True,
+        "z całą pewnością": True,
+        "zgadzam się": True,
+        "to prawda": True,
+        "dokładnie": True,
+        "absolutnie": True,
+        "tak jest": True,
+        "na pewno": True,
+        "zdecydowanie tak": True,
+
+        # Odpowiedzi negatywne
+        "zdecydowanie nie": False,
         "nie": False,
+        "nie, dziękuję": False,
         "nie występuje": False,
         "brak": False,
-        "t": True,
-        "n": False
+        "nie ma": False,
+        "nie potwierdzam": False,
+        "absolutnie nie": False,
+        "zdecydowanie nie": False,
+        "nie zgadzam się": False,
+        "to nieprawda": False,
+        "niewystępują": False,
+        "nie do końca": False,
+        "nie jestem pewien": None,
+        "nie wiem": None,
+        "trudno powiedzieć": None,
+        "nie jestem pewna": None,
+        "nie jestem przekonany": None,
     }
+
+    # Lista skrótów
+    additional_yes_no_abbreviations = {
+        "t": True,
+        "n": False,
+        "y": True,
+    }
+
+    # Integracja dodatkowych skrótów
+    response_yes_no_pattern.update(additional_yes_no_abbreviations)
+
 
     # Zwrot witający
     hello_phrase = "Cześć! Opisz mi co Ci dolega."
+
+    @staticmethod
+    def is_reset_command(message: str) -> bool:
+            """
+            Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.
+
+            Args:
+                message (str): Wiadomość użytkownika.
+
+            Returns:
+                bool: True jeśli jest komendą resetującą, False w przeciwnym razie.
+            """
+            message = message.lower()
+            reset = any(phrase in message for phrase in SpeechLibrary.reset_speech_phrases)
+            return reset
     
 
     @staticmethod
@@ -265,7 +534,8 @@ class SpeechLibrary:
         Returns:
             str: Odpowiedź z zaleceniami.
         """
-        return (f"Zalecany specjalista: {disease['Specjalista']}\n"
+        return (f"Najprawdopodobniej dolega ci {disease['Choroba']}\n"
+                f"Zalecany specjalista: {disease['Specjalista']}\n"
                 f"Zalecenia: {disease['Zalecenia']}")
 
     @staticmethod

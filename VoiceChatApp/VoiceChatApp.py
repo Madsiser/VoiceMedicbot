@@ -54,6 +54,7 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie start")
 
         message = SpeechLibrary.hello_phrase
+        self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")
         self.lector.say(message)
@@ -77,6 +78,8 @@ class VoiceChatApp:
         Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
         """
         self.logger.debug("Wywołanie start_speaking_button")
+        self.gui.user_input_voice.delete("1.0", tk.END)
+        self.gui.user_input_voice_partial.config(text="")
         if not self.is_speaking:
             self.is_speaking = True
             # Aktualizacja ikony po zmianie stanu
@@ -95,10 +98,11 @@ class VoiceChatApp:
         # Aktualizacja ikony po zmianie stanu
         self.gui.update_speaking_button(self.is_speaking)
 
-        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji
-        recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
-        self.gui.user_input_voice.delete("1.0", tk.END)
-        self.gui.user_input_voice.insert(tk.END, recognized_text)
+        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka
+        # recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
+        # self.gui.user_input_voice.delete("1.0", tk.END)
+        # self.gui.user_input_voice.insert(tk.END, recognized_text)
+        self.gui.user_input_voice_partial.config(text="")
 
     def hear(self):
         """
@@ -109,6 +113,11 @@ class VoiceChatApp:
         self.logger.debug("Wywołanie hear")
         recognized_text = ""
         partial_result = ""
+        try:
+            data = self.stream.read(4000, exception_on_overflow=False)
+            self.recognizer.AcceptWaveform(data)
+        except Exception as e:
+            self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
 
         while self.is_speaking:
             try:
@@ -123,12 +132,12 @@ class VoiceChatApp:
                 else:
                     partial_result = self.recognizer.PartialResult()
                     partial_text = json.loads(partial_result).get("partial", "")
-                    self.gui.user_input_voice.config(text=partial_text)
+                    self.gui.user_input_voice_partial.config(text=partial_text)
             except Exception as e:
                 self.logger.error(f"Błąd podczas odczytu strumienia: {e}")
                 break
 
-        if recognized_text.strip() == "":
+        if recognized_text.strip() == "" and False:
             recognized_text = json.loads(partial_result).get("partial", "")
             self.gui.user_input_voice.delete("1.0", tk.END)
             self.gui.user_input_voice.insert(tk.END, recognized_text.strip())
@@ -138,14 +147,17 @@ class VoiceChatApp:
         """
         Obsługa przycisku 'Potwierdź'
         """
+        self.stop_speaking_button()
+        self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
         self.process_text()
+        self.gui.user_input_voice.delete("1.0", tk.END)
 
     def process_text(self):
         """
         Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.
         """
         self.logger.debug("Wywołanie process_text")
-        # Pobierz tekst z pola edycji, a nie z wewnętrznej zmiennej
+        # Pobierz tekst z pola edycji i przekształć go na małe litery dla lepszej zgodności
         user_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
 
         if not user_text:
@@ -156,17 +168,41 @@ class VoiceChatApp:
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"Ty: {user_text}\n")
         self.gui.chat_display.config(state="disabled")
+        self.logger.debug(f"Wyświetlono tekst użytkownika: 'Ty: {user_text}'")
+
+        # Sprawdź, czy użytkownik chce zresetować rozmowę
+        if SpeechLibrary.is_reset_command(user_text.lower()):
+            self.logger.info("Otrzymano komendę resetowania rozmowy.")
+            self.medic.reset_conversation()
+            response = "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega?"
+            # Wyświetlenie odpowiedzi bota w czacie
+            self.gui.chat_display.config(state="normal")
+            self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
+            self.gui.chat_display.config(state="disabled")
+            self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
+            # Odtworzenie odpowiedzi
+            self.lector.say(response)
+            # Czyszczenie pola tekstowego po potwierdzeniu
+            self.gui.user_input_voice.delete("1.0", tk.END)
+            return
+
         # Przetwarzanie tekstu przez moduł medyczny
         result, message = self.medic.analyze_symptoms(user_text)
+        self.logger.debug(f"Przetworzono tekst użytkownika przez MedicalChat: {message}")
+
         # Wyświetlenie odpowiedzi bota w czacie
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")
+        self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {message}'")
+
         # Odtworzenie odpowiedzi
         self.lector.say(message)
 
         # Czyszczenie pola tekstowego po potwierdzeniu
         self.gui.user_input_voice.delete("1.0", tk.END)
+        self.logger.debug("Pole tekstowe zostało wyczyszczone.")
+
 
 
     def on_closing(self):
