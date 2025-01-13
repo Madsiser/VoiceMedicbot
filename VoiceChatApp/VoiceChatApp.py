@@ -171,8 +171,10 @@ class VoiceChatApp:
             self.logger.info("Otrzymano komendę resetowania rozmowy.")
             self.medic.reset_conversation()
             response = SpeechLibrary.reset_response()
-            # Wyświetlenie odpowiedzi bota w czacie
+            # Czyszczenie historii rozmowy
             self.gui.chat_display.config(state="normal")
+            self.gui.chat_display.delete("1.0", tk.END)
+            # Wyświetlenie odpowiedzi bota w czacie
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
             self.gui.chat_display.config(state="disabled")
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
@@ -230,7 +232,7 @@ class VoiceChatApp:
         else:
             self.stop_speaking_button()
             # Ustawiamy status na "czekam na odpowiedź"
-            self.gui.update_status_label("oczekiwanie na potwierdzenie")
+            self.gui.update_status_label("sprawdź i potwierdź")
 
     def start_speaking_button(self):
         self.logger.debug("Wywołanie start_speaking_button")
@@ -249,10 +251,10 @@ class VoiceChatApp:
         self.stop_speaking_button()
         self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
         # Ustaw status od razu na "komunikacja ze strony systemu"
-        self.gui.update_status_label("komunikacja ze strony systemu")
+        self.gui.update_status_label("mówię do ciebie")
         self.process_text()
         self.gui.user_input_voice.delete("1.0", tk.END)
-        # Po 3 sekundach zmień status na "oczekiwanie na urzytkownika"
-        self.gui.root.after(3000, lambda: self.gui.update_status_label("oczekiwanie na urzytkownika"))
+        # Po 5 sekundach zmień status na "oczekiwanie na urzytkownika"
+        self.gui.root.after(5000, lambda: self.gui.update_status_label("możesz teraz mówić"))
 
 
