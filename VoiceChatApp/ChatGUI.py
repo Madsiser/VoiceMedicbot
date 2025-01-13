@@ -85,14 +85,7 @@ class ChatGUI:
         )
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
-        # Przycisk do potwierdzenia tekstu (po zakończeniu nagrywania lub ręcznej edycji)
-        self.confirm_button = tk.Button(
-            self.root,
-            text="Potwierdź",
-            command=self.parent.ev_confirm_button,
-            width=7
-        )
-        self.confirm_button.pack(padx=10, pady=5)
+
         # Przycisk mikrofonu - start/stop nagrywania
         # Domyślnie pokazujemy zieloną ikonę (nagrywanie wyłączone)
         self.speaking_button = tk.Button(
@@ -103,7 +96,14 @@ class ChatGUI:
         )
         self.speaking_button.pack(padx=10, pady=5)
 
-
+        # Przycisk do potwierdzenia tekstu (po zakończeniu nagrywania lub ręcznej edycji)
+        self.confirm_button = tk.Button(
+            self.root,
+            text="Potwierdź",
+            command=self.parent.ev_confirm_button,
+            width=7
+        )
+        self.confirm_button.pack(padx=10, pady=5)
 
         # Obsługa zamykania okna aplikacji (kliknięcie "X")
         self.root.protocol("WM_DELETE_WINDOW", self.__del__)

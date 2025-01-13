@@ -332,7 +332,7 @@ class SpeechLibrary:
         "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
     ]
     synonyms = {
-        "ból głowy": [
+        "Ból głowy": [
             "boli mnie głowa",
             "głowa mnie boli",
             "bol glowy",
