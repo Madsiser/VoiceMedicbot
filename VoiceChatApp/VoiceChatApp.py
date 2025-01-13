@@ -53,7 +53,7 @@ class VoiceChatApp:
         """Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji."""
         self.logger.debug("Wywołanie start")
 
-        message = SpeechLibrary.hello_phrase
+        message = SpeechLibrary.start_response()
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")

@@ -1,3 +1,6 @@
+import random
+
+
 class SpeechLibrary:
     """
     Biblioteka obsługująca logikę rozmów w aplikacji medycznej, w tym:
@@ -437,6 +440,33 @@ class SpeechLibrary:
         "nie jestem przekonany": None,
     }
 
+    responses = {
+        "reset": [
+            "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega.",
+            "W porządku. Możesz jeszcze raz opisać, co Cię trapi?",
+            "Jasne, zatem co Cię konkretnie boli?",
+            "Rozpoczynamy od nowa. Jak się czujesz i co Cię boli?",
+        ],
+        "start": [
+            "Cześć, w czym mogę pomóc?",
+            "Witaj, jak się dziś czujesz?",
+            "Dzień dobry, co Ci dolega?",
+        ],
+        "end": [
+            "Do widzenia, życzę zdrowia!",
+            "Trzymaj się, mam nadzieję, że czujesz się lepiej.",
+            "Zdrówka, do usłyszenia!",
+        ],
+        "ask_first": [
+            "Czy występują u Ciebie objawy takie jak {symptom}?",
+            "Zastanawiam się, czy dokucza Ci {symptom}?",
+            "Czy zauważyłeś ostatnio, że masz {symptom}?",
+            "Mógłbyś powiedzieć, czy masz {symptom}?"
+        ]
+
+    }
+
+
     # Lista skrótów
     additional_yes_no_abbreviations = {
         "t": True,
@@ -448,8 +478,6 @@ class SpeechLibrary:
     response_yes_no_pattern.update(additional_yes_no_abbreviations)
 
 
-    # Zwrot witający
-    hello_phrase = "Cześć! Opisz mi co Ci dolega."
 
     @staticmethod
     def is_reset_command(message: str) -> bool:
@@ -490,7 +518,7 @@ class SpeechLibrary:
     @staticmethod
     def ask_first(symptom: str) -> str:
         """
-        Generuje pytanie o określony objaw.
+        Generuje losowe pytanie o określony objaw.
 
         Args:
             symptom (str): Nazwa objawu.
@@ -498,7 +526,10 @@ class SpeechLibrary:
         Returns:
             str: Pytanie o objaw.
         """
-        return f"Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
+        # Losujemy jeden z szablonów pytań z klucza "ask_first"
+        question_template = random.choice(SpeechLibrary.responses["ask_first"])
+        # Wstawiamy objaw w miejsce {symptom}, zamieniając np. "Ból głowy" -> "ból głowy"
+        return question_template.format(symptom=symptom.lower())
 
     @staticmethod
     def ask_error(symptom: str) -> str:
@@ -583,7 +614,21 @@ class SpeechLibrary:
             str: Komunikat o rozpoczęciu nowej rozmowy.
         """
 
-        return "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega."
+        return random.choice(SpeechLibrary.responses["reset"])
+
+    @staticmethod
+    def start_response() -> str:
+        """
+        Zwraca losowo wybraną odpowiedź przy rozpoczęciu rozmowy.
+        """
+        return random.choice(SpeechLibrary.responses["start"])
+
+    @staticmethod
+    def end_response() -> str:
+        """
+        Zwraca losowo wybraną odpowiedź przy zakończeniu rozmowy.
+        """
+        return random.choice(SpeechLibrary.responses["end"])
 
     @staticmethod
     def get_symptom_confirmation_status(message: str) -> bool:
