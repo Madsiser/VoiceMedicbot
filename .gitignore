@@ -4,3 +4,4 @@ main-test.py
 .vscode
 .idea
 venv
+*io.BytesIO*
