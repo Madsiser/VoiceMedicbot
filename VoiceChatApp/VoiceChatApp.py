@@ -171,8 +171,10 @@ class VoiceChatApp:
             self.logger.info("Otrzymano komendę resetowania rozmowy.")
             self.medic.reset_conversation()
             response = SpeechLibrary.reset_response()
-            # Wyświetlenie odpowiedzi bota w czacie
+            # Czyszczenie historii rozmowy
             self.gui.chat_display.config(state="normal")
+            self.gui.chat_display.delete("1.0", tk.END)
+            # Wyświetlenie odpowiedzi bota w czacie
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
             self.gui.chat_display.config(state="disabled")
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
@@ -220,3 +222,50 @@ class VoiceChatApp:
     def __del__(self):
         """Destruktor klasy, wywołuje funkcję on_closing w celu zwolnienia zasobów."""
         self.on_closing()
+
+    def ev_speaking_button(self):
+        self.logger.debug("Wywołanie speaking_button")
+        if not self.is_speaking:
+            self.start_speaking_button()
+            # Ustawiamy status na "mówię"
+            self.gui.update_status_label("nasłuchiwanie")
+        else:
+            self.stop_speaking_button()
+            # Ustawiamy status na "czekam na odpowiedź"
+            self.gui.update_status_label("sprawdź i potwierdź")
+
+    def start_speaking_button(self):
+        self.logger.debug("Wywołanie start_speaking_button")
+        self.gui.user_input_voice.delete("1.0", tk.END)
+        self.gui.user_input_voice_partial.config(text="")
+        if not self.is_speaking:
+            self.is_speaking = True
+            self.gui.update_speaking_button(self.is_speaking)
+            thread = threading.Thread(target=self.hear, daemon=True)
+            thread.start()
+            self.threads.append(thread)
+        else:
+            self.stop_speaking_button()
+
+    def ev_confirm_button(self):
+        self.stop_speaking_button()
+        self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
+        # Ustaw status od razu
+        self.gui.update_status_label("mówię do ciebie")
+        self.process_text()
+        self.gui.user_input_voice.delete("1.0", tk.END)
+        # sprawdzanie statusu wątku odtwarzania dźwięku
+        self.check_audio_status_thread()
+
+    def check_audio_status_thread(self):
+        """
+        Cyklicznie sprawdza, czy wątek odpowiedzialny za odtwarzanie dźwięku (self.lector.current_thread)
+        nadal działa. Gdy się zakończy, ustawia status na "możesz teraz mówić".
+        """
+        if self.lector.current_thread is not None and self.lector.current_thread.is_alive():
+            self.gui.root.after(100, self.check_audio_status_thread)
+        else:
+            # Gdy wątek zakończył działanie, ustaw status na
+            self.gui.update_status_label("możesz teraz mówić")
+
+
