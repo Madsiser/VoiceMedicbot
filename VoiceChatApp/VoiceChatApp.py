@@ -180,7 +180,6 @@ class VoiceChatApp:
             self.gui.chat_display.delete("1.0", tk.END)
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
             self.gui.chat_display.config(state="disabled")
-            self.gui.chat_display.see(tk.END)
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
             # Odtworzenie odpowiedzi
             self.lector.say(response)

@@ -282,14 +282,6 @@ class SpeechLibrary:
             "Zalecenia": "Dieta, leki przeciwbólowe, terapia psychologiczna"
         },
 
-
-
-
-
-
-
-
-
         # Możliwość rozszerzenia o kolejne choroby
     ]
 
