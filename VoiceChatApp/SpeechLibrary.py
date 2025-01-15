@@ -568,13 +568,12 @@ class SpeechLibrary:
         ],
         "ask_first": [
             "Czy występują u Ciebie objawy takie jak {symptom}?",
-            "Zastanawiam się, czy dokucza Ci {symptom}?",
-            "Czy zauważyłeś ostatnio następujący objaw: {symptom}?",
-            "Mógłbyś powiedzieć, czy masz następujący objaw: {symptom}?",
-            "Czy możesz mi powiedzieć, czy odczuwasz następujący objaw: {symptom}?",
-            "Czy zauważyłeś u siebie objaw w rodzaju: {symptom}?",
-            "Czy zdarza Ci się doświadczać objawu: {symptom}?",
-            "Czy masz może objaw podobny do następującego: {symptom}?",
+            "Zastanawiam się, czy dokucza Ci coś takiego jak {symptom}?",
+            "Czy zauważyłeś ostatnio coś co mogło wyglądać jak {symptom}?",
+            "Mógłbyś powiedzieć, że jeden z twoich symptomów to {symptom}?",
+            "Czy możesz mi powiedzieć, czy odczuwasz następujący objaw taki jak {symptom}?",
+            "{symptom}?",
+            "było ostatnio coś w podobie jak {symptom}?",
             "Czy ostatnio pojawił się u Ciebie następujący objaw: {symptom}?",
             "Czy objawem, który masz, jest {symptom}?"
         ]
