@@ -543,11 +543,8 @@ class SpeechLibrary:
             "Przejdźmy przez to od nowa. Jak się dziś czujesz?"
         ],
         "start": [
-            "Cześć, w czym mogę pomóc?",
-            "Witaj, jak się dziś czujesz?",
             "Dzień dobry, co Ci dolega?",
             "Hej! Co się dzieje? Jak mogę pomóc?",
-            "Witam! Jak się dzisiaj czujesz?",
             "Hej! Czy mógłbyś powiedzieć co ci dolega?",
             "Witaj! Co jest nie tak?",
             "Dzień dobry! opowiedz mi o swoich dolegliwościach",
