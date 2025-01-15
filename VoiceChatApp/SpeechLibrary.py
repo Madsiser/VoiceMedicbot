@@ -572,7 +572,7 @@ class SpeechLibrary:
             "Mógłbyś powiedzieć, czy symptom taki jak {symptom} wystąpił u ciebie ostatnio?",
             "a {symptom}?",
             "Czy zdarza Ci się doświadczać czegoś jak {symptom}?",
-            "Czy masz może jeden z twoich objawów to {symptom}?",
+            "Czy może jeden z twoich objawów to {symptom}?",
         ]
     }
 
@@ -582,6 +582,19 @@ class SpeechLibrary:
         "n": False,
         "y": True,
     }
+    #frazy mówiące o braku innych objawów
+    no_other_symptoms_phrases = [
+        "żadne inne objawy",
+        "nie mam więcej objawów",
+        "nic więcej mnie nie boli",
+        "to wszystkie objawy",
+        "to koniec objawów",
+        "nie występują inne objawy",
+        "to wszystko",
+        "nic innego mi nie dolega",
+        "to już wszystkie objawy",
+        "nie mam innych dolegliwości"
+    ]
 
     # Integracja dodatkowych skrótów
     response_yes_no_pattern.update(additional_yes_no_abbreviations)

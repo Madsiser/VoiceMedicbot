@@ -76,6 +76,13 @@ class MedicalChat:
             self.check_syndroms[symptom] = symptom_present
             self.user_symptoms[symptom] = symptom_present
 
+            for phrase in SpeechLibrary.no_other_symptoms_phrases:
+                if phrase in user_input.lower():
+                    self.logger.info(f"Wykryto frazę sugerującą brak innych objawów: '{phrase}'")
+                    for symptom in self.required_symptoms:
+                        self.check_syndroms[symptom] = True
+                    break
+
     def analyze_symptoms(self, user_input):
         """
         Główna funkcja analizy objawów użytkownika.
