@@ -548,10 +548,9 @@ class SpeechLibrary:
             "Dzień dobry, co Ci dolega?",
             "Hej! Co się dzieje? Jak mogę pomóc?",
             "Witam! Jak się dzisiaj czujesz?",
-            "Cześć! Powiedz, co Cię trapi?",
-            "Hej! Co mogę dziś dla Ciebie zrobić?",
+            "Hej! Czy mógłbyś powiedzieć co ci dolega?",
             "Witaj! Co jest nie tak?",
-            "Dzień dobry! Jak się masz?",
+            "Dzień dobry! opowiedz mi o swoich dolegliwościach",
             "Cześć! Jakie masz dziś dolegliwości?"
         ],
         "end": [
@@ -568,15 +567,12 @@ class SpeechLibrary:
         ],
         "ask_first": [
             "Czy występują u Ciebie objawy takie jak {symptom}?",
-            "Zastanawiam się, czy dokucza Ci {symptom}?",
-            "Czy zauważyłeś ostatnio, że masz {symptom}?",
-            "Mógłbyś powiedzieć, czy masz {symptom}?",
-            "Czy możesz mi powiedzieć, czy odczuwasz {symptom}?",
-            "Czy zauważyłeś u siebie coś w rodzaju {symptom}?",
-            "Czy zdarza Ci się doświadczać {symptom}?",
-            "Czy masz może objawy podobne do {symptom}?",
-            "Czy ostatnio pojawił się u Ciebie {symptom}?",
-            "Czy objawem, który masz, jest {symptom}?"
+            "Zastanawiam się, czy dokucza Ci coś takiego jak{symptom}?",
+            "Czy zauważyłeś ostatnio, że masz coś co mogłoby sie objawiać jak {symptom}?",
+            "Mógłbyś powiedzieć, czy symptom taki jak {symptom} wystąpił u ciebie ostatnio?",
+            "a {symptom}?",
+            "Czy zdarza Ci się doświadczać czegoś jak {symptom}?",
+            "Czy masz może jeden z twoich objawów to {symptom}?",
         ]
     }
 
