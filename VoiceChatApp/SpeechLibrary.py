@@ -1,3 +1,6 @@
+import random
+
+
 class SpeechLibrary:
     """
     Biblioteka obsługująca logikę rozmów w aplikacji medycznej, w tym:
@@ -279,14 +282,6 @@ class SpeechLibrary:
             "Zalecenia": "Dieta, leki przeciwbólowe, terapia psychologiczna"
         },
 
-
-
-
-
-
-
-
-
         # Możliwość rozszerzenia o kolejne choroby
     ]
 
@@ -294,10 +289,7 @@ class SpeechLibrary:
     end_speech_phrases = [
         "koniec", "dziękuję", "do widzenia"
     ]
-    # zwroty do resetowania rozmowy
-    reset_phrases = [
-        "zacznijmy od nowa", "restart", "rozpocznij ponownie"
-    ]
+
 
     # Lista zwrotów do resetowania rozmowy
     reset_speech_phrases = [
@@ -322,6 +314,8 @@ class SpeechLibrary:
         "powtórzmy rozmowę od początku",
         "chcę zacząć jeszcze raz",
         "zacznijmy rozmowę jeszcze raz",
+        "restart",
+        "rozpocznij ponownie"
     ]
 
 
@@ -331,67 +325,164 @@ class SpeechLibrary:
         "Nudności", "Ból brzucha", "Kaszel", "Duszności",
         "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
     ]
+
+    # słownik synonimów
     synonyms = {
         "Ból głowy": [
             "boli mnie głowa",
             "głowa mnie boli",
-            "bol glowy",
+            "ból głowy",
             "migrena",
             "pulsuje mi w głowie",
-            "pulsujący ból głowy"
+            "pulsujący ból głowy",
+            "ścisk w skroniach",
+            "napięciowy ból głowy",
+            "ćmiący ból głowy",
+            "rozpierający ból głowy"
         ],
         "Wymioty": [
             "rzyganie",
             "zwracam treść pokarmową",
-            "chce mi się wymiotować"
+            "chce mi się wymiotować",
+            "wymiotuję",
+            "nudności z wymiotami",
+            "rzucam pawia",
+            "zwymiotowałem",
+            "odruch wymiotny",
+            "wyrzucam z siebie jedzenie",
+            "mdłości z torsjami"
         ],
         "Gorączka": [
             "temperatura 38",
             "wysoka temperatura",
-            "mam ponad 37 stopni"
+            "mam ponad 37 stopni",
+            "mam gorączkę",
+            "jestem rozpalony",
+            "czuję, że mam podwyższoną temperaturę",
+            "gorączkuję",
+            "mam stan podgorączkowy",
+            "piecze mnie skóra",
+            "czuję gorąco w ciele"
         ],
         "Ból kości i stawów": [
             "łamanie w kościach",
-            "stawy mnie bolą"
+            "stawy mnie bolą",
+            "przeskakiwanie w stawach",
+            "bóle reumatyczne",
+            "kłujący ból w stawach",
+            "sztywność stawów",
+            "trzeszczenie w stawach",
+            "bóle kostne",
+            "ciągnie mnie w kościach",
+            "ból podczas ruchu"
         ],
         "Nudności": [
             "mdłości",
             "jest mi niedobrze",
-            "zbiera mi się na wymioty"
+            "zbiera mi się na wymioty",
+            "czuję się słabo",
+            "ścisnęło mnie w żołądku",
+            "żołądek mi się przewraca",
+            "mam zawroty głowy i mdłości",
+            "odrzuca mnie od jedzenia",
+            "brzydzi mnie zapach jedzenia",
+            "mdli mnie"
         ],
         "Ból brzucha": [
             "boli mnie brzuch",
-            "ból w okolicy żołądka"
+            "ból w okolicy żołądka",
+            "kłuje mnie w brzuchu",
+            "skurcze brzucha",
+            "bóle żołądkowe",
+            "ciągnie mnie w żołądku",
+            "czuję ucisk w brzuchu",
+            "rozpierający ból w brzuchu",
+            "piekący ból w żołądku",
+            "ból jelitowy"
         ],
         "Kaszel": [
             "kaszlę",
-            "pokasłuję"
+            "pokasłuję",
+            "mam suchy kaszel",
+            "kaszel mokry",
+            "drażniący kaszel",
+            "krztuszę się",
+            "odchrząkuję",
+            "napad kaszlu",
+            "kaszel odrywający",
+            "kaszel duszący"
         ],
         "Duszności": [
             "ciężko mi oddychać",
-            "brakuje mi tchu"
+            "brakuje mi tchu",
+            "łapię powietrze",
+            "nie mogę złapać oddechu",
+            "czuję ucisk w klatce piersiowej",
+            "świszczący oddech",
+            "czuję się przytłoczony",
+            "mam zadyszkę",
+            "krótkie oddechy",
+            "duszę się"
         ],
         "Zmęczenie": [
             "jestem wyczerpany",
-            "brak mi energii"
+            "brak mi energii",
+            "czuję się słabo",
+            "mam totalny spadek energii",
+            "jestem ospały",
+            "nie mam sił",
+            "padam z nóg",
+            "czuję się wyczerpany psychicznie",
+            "jestem przemęczony",
+            "czuję się bez życia"
         ],
         "Utrata wagi": [
             "schudłem",
-            "chudnę ostatnio"
+            "chudnę ostatnio",
+            "straciłem na wadze",
+            "ważę mniej",
+            "ubytki masy ciała",
+            "spadek wagi",
+            "zmniejszyłem swoją wagę",
+            "widać po mnie, że schudłem",
+            "zaczynam być chudy",
+            "zmalała mi waga"
         ],
         "Problemy ze snem": [
             "bezsenność",
             "ciężko mi zasnąć",
-            "nie mogę spać"
+            "nie mogę spać",
+            "budzę się w nocy",
+            "śpię niespokojnie",
+            "mam płytki sen",
+            "przewracam się z boku na bok",
+            "nie mogę się wyspać",
+            "senność w ciągu dnia",
+            "jestem niewyspany"
         ],
         "Ból mięśni": [
             "mięśnie mnie bolą",
             "zakwasy",
-            "ciągnie mnie w mięśniach"
+            "ciągnie mnie w mięśniach",
+            "sztywność mięśni",
+            "mam ból mięśniowy",
+            "nadwyrężenie mięśni",
+            "skurcze mięśni",
+            "piekący ból mięśni",
+            "uczucie zmęczenia mięśni",
+            "mięśnie mi sztywnieją"
         ],
         "Dreszcze": [
             "mam dreszcze",
-            "trzęsie mnie"
+            "trzęsie mnie",
+            "zimno mi",
+            "mam gęsią skórkę",
+            "drżę z zimna",
+            "czuję wewnętrzne dreszcze",
+            "jest mi lodowato",
+            "czuję, jakby coś mnie mroziło",
+            "ciągle mi zimno",
+            "mam niekontrolowane drżenie ciała"
         ]
     }
 
@@ -437,6 +528,58 @@ class SpeechLibrary:
         "nie jestem przekonany": None,
     }
 
+    # Słownik odpowiedzi systemu
+    responses = {
+        "reset": [
+            "Rozumiem, tak więc opisz mi jeszcze raz, co Ci dolega.",
+            "W porządku. Możesz jeszcze raz opisać, co Cię trapi?",
+            "Jasne, zatem co Cię konkretnie boli?",
+            "Rozpoczynamy od nowa. Jak się czujesz i co Cię boli?",
+            "OK, opowiedz mi ponownie, co Ci dolega.",
+            "Zaczynamy od początku. Co Cię niepokoi?",
+            "Powiedz mi raz jeszcze, co Ci doskwiera.",
+            "Spróbujmy ponownie. Co Ci dolega?",
+            "Chcę dobrze zrozumieć. Opisz jeszcze raz swoje objawy.",
+            "Przejdźmy przez to od nowa. Jak się dziś czujesz?"
+        ],
+        "start": [
+            "Cześć, w czym mogę pomóc?",
+            "Witaj, jak się dziś czujesz?",
+            "Dzień dobry, co Ci dolega?",
+            "Hej! Co się dzieje? Jak mogę pomóc?",
+            "Witam! Jak się dzisiaj czujesz?",
+            "Cześć! Powiedz, co Cię trapi?",
+            "Hej! Co mogę dziś dla Ciebie zrobić?",
+            "Witaj! Co jest nie tak?",
+            "Dzień dobry! Jak się masz?",
+            "Cześć! Jakie masz dziś dolegliwości?"
+        ],
+        "end": [
+            "Do widzenia, życzę zdrowia!",
+            "Trzymaj się, mam nadzieję, że czujesz się lepiej.",
+            "Zdrówka, do usłyszenia!",
+            "Dbaj o siebie i wracaj do zdrowia!",
+            "Życzę Ci szybkiego powrotu do zdrowia!",
+            "Do usłyszenia! Wszystkiego dobrego!",
+            "Powodzenia, życzę dużo zdrowia!",
+            "Trzymaj się ciepło, zdrowiej!",
+            "Miłego dnia, dbaj o siebie!",
+            "Cześć i wracaj szybko do formy!"
+        ],
+        "ask_first": [
+            "Czy występują u Ciebie objawy takie jak {symptom}?",
+            "Zastanawiam się, czy dokucza Ci {symptom}?",
+            "Czy zauważyłeś ostatnio, że masz {symptom}?",
+            "Mógłbyś powiedzieć, czy masz {symptom}?",
+            "Czy możesz mi powiedzieć, czy odczuwasz {symptom}?",
+            "Czy zauważyłeś u siebie coś w rodzaju {symptom}?",
+            "Czy zdarza Ci się doświadczać {symptom}?",
+            "Czy masz może objawy podobne do {symptom}?",
+            "Czy ostatnio pojawił się u Ciebie {symptom}?",
+            "Czy objawem, który masz, jest {symptom}?"
+        ]
+    }
+
     # Lista skrótów
     additional_yes_no_abbreviations = {
         "t": True,
@@ -448,8 +591,6 @@ class SpeechLibrary:
     response_yes_no_pattern.update(additional_yes_no_abbreviations)
 
 
-    # Zwrot witający
-    hello_phrase = "Cześć! Opisz mi co Ci dolega."
 
     @staticmethod
     def is_reset_command(message: str) -> bool:
@@ -490,7 +631,7 @@ class SpeechLibrary:
     @staticmethod
     def ask_first(symptom: str) -> str:
         """
-        Generuje pytanie o określony objaw.
+        Generuje losowe pytanie o określony objaw.
 
         Args:
             symptom (str): Nazwa objawu.
@@ -498,7 +639,10 @@ class SpeechLibrary:
         Returns:
             str: Pytanie o objaw.
         """
-        return f"Czy występują u Ciebie objawy takie jak {symptom.lower()}?"
+        # Losujemy jeden z szablonów pytań z klucza "ask_first"
+        question_template = random.choice(SpeechLibrary.responses["ask_first"])
+        # Wstawiamy objaw w miejsce {symptom}, zamieniając np. "Ból głowy" -> "ból głowy"
+        return question_template.format(symptom=symptom.lower())
 
     @staticmethod
     def ask_error(symptom: str) -> str:
@@ -572,7 +716,7 @@ class SpeechLibrary:
         Returns:
             bool: True, jeśli użytkownik chce zresetować rozmowę, w przeciwnym razie False.
         """
-        return any(phrase in message.lower() for phrase in SpeechLibrary.reset_phrases)
+        return any(phrase in message.lower() for phrase in SpeechLibrary.reset_speech_phrases)
 
     @staticmethod
     def reset_response() -> str:
@@ -583,7 +727,21 @@ class SpeechLibrary:
             str: Komunikat o rozpoczęciu nowej rozmowy.
         """
 
-        return "Rozumiem, tak więc opisz mi jeszcze raz co Ci dolega."
+        return random.choice(SpeechLibrary.responses["reset"])
+
+    @staticmethod
+    def start_response() -> str:
+        """
+        Zwraca losowo wybraną odpowiedź przy rozpoczęciu rozmowy.
+        """
+        return random.choice(SpeechLibrary.responses["start"])
+
+    @staticmethod
+    def end_response() -> str:
+        """
+        Zwraca losowo wybraną odpowiedź przy zakończeniu rozmowy.
+        """
+        return random.choice(SpeechLibrary.responses["end"])
 
     @staticmethod
     def get_symptom_confirmation_status(message: str) -> bool:

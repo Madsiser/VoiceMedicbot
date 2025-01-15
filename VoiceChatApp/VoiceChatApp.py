@@ -53,7 +53,7 @@ class VoiceChatApp:
         """Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji."""
         self.logger.debug("Wywołanie start")
 
-        message = SpeechLibrary.hello_phrase
+        message = SpeechLibrary.start_response()
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")
@@ -98,6 +98,10 @@ class VoiceChatApp:
         # Aktualizacja ikony po zmianie stanu
         self.gui.update_speaking_button(self.is_speaking)
 
+        # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka
+        # recognized_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
+        # self.gui.user_input_voice.delete("1.0", tk.END)
+        # self.gui.user_input_voice.insert(tk.END, recognized_text)
         self.gui.user_input_voice_partial.config(text="")
 
     def hear(self):
@@ -171,10 +175,9 @@ class VoiceChatApp:
             self.logger.info("Otrzymano komendę resetowania rozmowy.")
             self.medic.reset_conversation()
             response = SpeechLibrary.reset_response()
-            # Czyszczenie historii rozmowy
+            # Wyświetlenie odpowiedzi bota w czacie
             self.gui.chat_display.config(state="normal")
             self.gui.chat_display.delete("1.0", tk.END)
-            # Wyświetlenie odpowiedzi bota w czacie
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
             self.gui.chat_display.config(state="disabled")
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
@@ -192,6 +195,7 @@ class VoiceChatApp:
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")
+        self.gui.chat_display.see(tk.END)
         self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {message}'")
 
         # Odtworzenie odpowiedzi

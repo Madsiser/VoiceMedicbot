@@ -105,6 +105,7 @@ class MedicalChat:
 
         if all(self.check_syndroms.values()):
             i_know, message = True, self.get_recommendation()
+
         else:
             i_know, message = False, self.ask_missing_symptom()
 
