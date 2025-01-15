@@ -92,7 +92,7 @@ class MedicalChat:
                 - bool: Czy wszystkie etapy analizy zostały zakończone.
                 - str: Wiadomość zwrotna do użytkownika.
         """
-        # Jeżeli po diagnozie czekamy na odpowiedź na pytanie "Czy mogę coś dla ciebie zrobić?"
+        # Jeżeli po diagnozie czekamy na odpowiedź na pytanie "Czy przejsc caly proces od nowa?"
         if self.waiting_post_diagnosis:
             answer = self.does_agree(user_input)
             if answer is True:
@@ -175,10 +175,10 @@ class MedicalChat:
     def get_recommendation(self):
         """
         Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie
-        "Czy mogę coś dla Ciebie zrobić?" po przedstawieniu diagnozy.
+        po przedstawieniu diagnozy.
 
         Returns:
-            str: Komunikat z diagnozą i pytaniem o dalszą pomoc.
+            str: Komunikat z diagnozą(Zalecenia lub odpowiedź modelu AI) i pytaniem o dalszą pomoc.
         """
         diagnosis = None
         for disease in self.symptoms_table:
@@ -196,5 +196,5 @@ class MedicalChat:
             )
 
         # Dodajemy pytanie o dalszą pomoc.
-        diagnosis += "\nCzy poudawać innego chorego?"
+        diagnosis += "\nCzy spełniłem twoje oczekiwania?"
         return diagnosis
