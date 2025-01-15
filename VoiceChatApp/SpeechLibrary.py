@@ -570,12 +570,12 @@ class SpeechLibrary:
             "Czy występują u Ciebie objawy takie jak {symptom}?",
             "Zastanawiam się, czy dokucza Ci {symptom}?",
             "Czy zauważyłeś ostatnio następujący objaw: {symptom}?",
-            "Mógłbyś powiedzieć, czy masz objaw: {symptom}?",
-            "Czy możesz mi powiedzieć, czy odczuwasz następujące objawy: {symptom}?",
-            "Czy zauważyłeś u siebie objawy w rodzaju: {symptom}?",
+            "Mógłbyś powiedzieć, czy masz następujący objaw: {symptom}?",
+            "Czy możesz mi powiedzieć, czy odczuwasz następujący objaw: {symptom}?",
+            "Czy zauważyłeś u siebie objaw w rodzaju: {symptom}?",
             "Czy zdarza Ci się doświadczać objawu: {symptom}?",
-            "Czy masz może objawy podobne do następującego: {symptom}?",
-            "Czy ostatnio pojawił się u Ciebie objaw {symptom}?",
+            "Czy masz może objaw podobny do następującego: {symptom}?",
+            "Czy ostatnio pojawił się u Ciebie następujący objaw: {symptom}?",
             "Czy objawem, który masz, jest {symptom}?"
         ]
     }
