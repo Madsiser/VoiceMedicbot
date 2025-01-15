@@ -532,12 +532,12 @@ class SpeechLibrary:
     responses = {
         "reset": [
             "Rozumiem, tak więc opisz mi jeszcze raz, co Ci dolega.",
-            "W porządku. Możesz jeszcze raz opisać, co Cię trapi?",
+            "W porządku. Możesz jeszcze raz opisać, co Cię boli?",
             "Jasne, zatem co Cię konkretnie boli?",
             "Rozpoczynamy od nowa. Jak się czujesz i co Cię boli?",
             "OK, opowiedz mi ponownie, co Ci dolega.",
-            "Zaczynamy od początku. Co Cię niepokoi?",
-            "Powiedz mi raz jeszcze, co Ci doskwiera.",
+            "Zaczynamy od początku. Co Cię niepokoi w twoim zdrowu?",
+            "Powiedz mi raz jeszcze, co Ci dolega.",
             "Spróbujmy ponownie. Co Ci dolega?",
             "Chcę dobrze zrozumieć. Opisz jeszcze raz swoje objawy.",
             "Przejdźmy przez to od nowa. Jak się dziś czujesz?"
@@ -548,7 +548,7 @@ class SpeechLibrary:
             "Dzień dobry, co Ci dolega?",
             "Hej! Co się dzieje? Jak mogę pomóc?",
             "Witam! Jak się dzisiaj czujesz?",
-            "Cześć! Powiedz, co Cię trapi?",
+            "Cześć! Powiedz, co ci dolega?",
             "Hej! Co mogę dziś dla Ciebie zrobić?",
             "Witaj! Co jest nie tak?",
             "Dzień dobry! Jak się masz?",
@@ -569,13 +569,13 @@ class SpeechLibrary:
         "ask_first": [
             "Czy występują u Ciebie objawy takie jak {symptom}?",
             "Zastanawiam się, czy dokucza Ci {symptom}?",
-            "Czy zauważyłeś ostatnio, że masz {symptom}?",
-            "Mógłbyś powiedzieć, czy masz {symptom}?",
-            "Czy możesz mi powiedzieć, czy odczuwasz {symptom}?",
-            "Czy zauważyłeś u siebie coś w rodzaju {symptom}?",
-            "Czy zdarza Ci się doświadczać {symptom}?",
-            "Czy masz może objawy podobne do {symptom}?",
-            "Czy ostatnio pojawił się u Ciebie {symptom}?",
+            "Czy zauważyłeś ostatnio następujący objaw: {symptom}?",
+            "Mógłbyś powiedzieć, czy masz objaw: {symptom}?",
+            "Czy możesz mi powiedzieć, czy odczuwasz następujące objawy: {symptom}?",
+            "Czy zauważyłeś u siebie objawy w rodzaju: {symptom}?",
+            "Czy zdarza Ci się doświadczać objawu: {symptom}?",
+            "Czy masz może objawy podobne do następującego: {symptom}?",
+            "Czy ostatnio pojawił się u Ciebie objaw {symptom}?",
             "Czy objawem, który masz, jest {symptom}?"
         ]
     }
