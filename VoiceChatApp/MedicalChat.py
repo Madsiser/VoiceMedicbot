@@ -1,3 +1,4 @@
+import random
 import logging
 from .SpeechLibrary import SpeechLibrary
 from .AiModel import AiModel
@@ -23,22 +24,26 @@ class MedicalChat:
         # Inicjalizacja zmiennych
         self.symptoms_table = SpeechLibrary.symptoms_table
         self.required_symptoms = SpeechLibrary.required_symptoms
-        self.synonyms=SpeechLibrary.synonyms
+        self.synonyms = SpeechLibrary.synonyms
         self.user_symptoms = {}
         self.check_syndroms = {}
         self.first_info_pack = True
         self.prev_question = None
         self.ai_model = AiModel()
+        # Flaga wskazująca, czy przekazaliśmy już diagnozę i czekamy na odpowiedź
+        # na pytanie "Czy mogę coś dla ciebie zrobić?"
+        self.waiting_post_diagnosis = False
 
     def reset_conversation(self):
-            """
-            Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.
-            """
-            self.user_symptoms = {}
-            self.check_syndroms = {}
-            self.first_info_pack = True
-            self.prev_question = None
-            self.logger.info("Rozpoczęto nową rozmowę medyczną.")
+        """
+        Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.
+        """
+        self.user_symptoms = {}
+        self.check_syndroms = {}
+        self.first_info_pack = True
+        self.prev_question = None
+        self.waiting_post_diagnosis = False
+        self.logger.info("Rozpoczęto nową rozmowę medyczną.")
 
     def analyze_monolog(self, user_input):
         """
@@ -55,24 +60,16 @@ class MedicalChat:
             if symptom.lower() in user_input.lower():
                 symptom_present = True
             else:
-                # Jeżeli nie - sprawdzamy synonimy zdefiniowane w słowniku "synonyms".
-                # Uwaga: klucz w słowniku synonyms musi odpowiadać temu z required_symptoms,
-                # np. "Ból głowy" -> "ból głowy" lub odwrotnie, żeby przyporządkowanie
-                # było jednoznaczne. W razie potrzeby możesz to znormalizować.
-                # Tu dla pewności zrobiono .lower() na kluczu i symptomie.
+                # Jeśli nie – sprawdzamy synonimy.
                 symptom_key_lower = symptom.lower()
                 for syn_key, syn_list in self.synonyms.items():
-                    # Synonimy są pod kluczami typu "ból głowy", a w "required_symptoms" mamy np. "Ból głowy".
-                    # Dlatego normalizujemy:
                     if syn_key.lower() == symptom_key_lower:
-                        # Sprawdzamy każdy synonim:
                         for s in syn_list:
                             if s.lower() in user_input.lower():
                                 symptom_present = True
                                 break
-                        break  # Kończymy, jeżeli znaleźliśmy dopasowanie w synonimach.
+                        break  # Koniec, gdy znaleziono dopasowanie.
 
-            # Uzupełniamy nasze tabele / słowniki dotyczące wykrytych objawów.
             self.check_syndroms[symptom] = symptom_present
             self.user_symptoms[symptom] = symptom_present
 
@@ -92,9 +89,25 @@ class MedicalChat:
 
         Returns:
             tuple: (bool, str)
-                - bool: Czy znane są wszystkie objawy?
+                - bool: Czy wszystkie etapy analizy zostały zakończone.
                 - str: Wiadomość zwrotna do użytkownika.
         """
+        # Jeżeli po diagnozie czekamy na odpowiedź na pytanie "Czy mogę coś dla ciebie zrobić?"
+        if self.waiting_post_diagnosis:
+            answer = self.does_agree(user_input)
+            if answer is True:
+                # Użytkownik akceptuje – resetujemy rozmowę
+                self.reset_conversation()
+                return True, SpeechLibrary.reset_response()
+            elif answer is False:
+                # Użytkownik nie potrzebuje dalszej pomocy – kończymy rozmowę
+                self.waiting_post_diagnosis = False
+                return True, SpeechLibrary.end_response()
+            else:
+                # Brak jednoznacznej odpowiedzi – pytamy jeszcze raz
+                return False, "Czy mogę coś dla Ciebie zrobić? Proszę odpowiedz 'tak' lub 'nie'."
+
+        # Standardowa analiza objawów
         if self.first_info_pack:
             self.analyze_monolog(user_input)
         else:
@@ -111,8 +124,10 @@ class MedicalChat:
         self.logger.info(f"Objawy użytkownika: {self.user_symptoms}")
 
         if all(self.check_syndroms.values()):
+            # Jeśli wszystkie objawy są znane – generujemy rekomendację
             i_know, message = True, self.get_recommendation()
-
+            # Ustawiamy flagę, aby po przekazaniu diagnozy poczekać na odpowiedź
+            self.waiting_post_diagnosis = True
         else:
             i_know, message = False, self.ask_missing_symptom()
 
@@ -130,7 +145,7 @@ class MedicalChat:
             message (str): Odpowiedź użytkownika.
 
         Returns:
-            bool or None: True dla odpowiedzi twierdzącej, False dla zaprzeczenia, None dla braku jednoznaczności.
+            bool lub None: True dla potwierdzenia, False dla zaprzeczenia, None gdy odpowiedź jest niejednoznaczna.
         """
         self.logger.info(f"Analiza odpowiedzi: {message}")
         self.logger.info(f"Poprzednie pytanie: {self.prev_question}")
@@ -159,20 +174,27 @@ class MedicalChat:
 
     def get_recommendation(self):
         """
-        Generuje rekomendacje na podstawie zgłoszonych objawów.
+        Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie
+        "Czy mogę coś dla Ciebie zrobić?" po przedstawieniu diagnozy.
 
         Returns:
-            str: Zalecenia lub odpowiedź modelu AI.
+            str: Komunikat z diagnozą i pytaniem o dalszą pomoc.
         """
+        diagnosis = None
         for disease in self.symptoms_table:
             if all(
                 disease.get(symptom, False) == self.user_symptoms.get(symptom, False)
                 for symptom in self.required_symptoms
             ):
-                return SpeechLibrary.find_disease(disease)
+                diagnosis = SpeechLibrary.find_disease(disease)
+                break
 
-        response = self.ai_model.ask(
-            f"Jaka to może być choroba i jakie zalecenia mi dasz. "
-            f"Odpowiedz bardzo krótko w dwóch zdaniach. Objawy: {self.user_symptoms}"
-        )
-        return response
+        if diagnosis is None:
+            diagnosis = self.ai_model.ask(
+                f"Jaka to może być choroba i jakie zalecenia mi dasz. "
+                f"Odpowiedz bardzo krótko w dwóch zdaniach. Objawy: {self.user_symptoms}"
+            )
+
+        # Dodajemy pytanie o dalszą pomoc.
+        diagnosis += "\nCzy poudawać innego chorego?"
+        return diagnosis
