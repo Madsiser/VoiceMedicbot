@@ -6,12 +6,24 @@ import os
 class AiModel:
     """
     Klasa AiModel zarządza interakcjami z modelem AI dostarczanym przez OpenAI.
+
+    Klasa ta umożliwia przesyłanie zapytań do modelu AI i odbieranie odpowiedzi.
+    Dane uwierzytelniające są wczytywane z pliku środowiskowego `.env` za pomocą
+    biblioteki dotenv.
     """
 
     def __init__(self):
         """
         Inicjalizuje obiekt AiModel i konfiguruje klienta OpenAI.
-        Wczytuje dane uwierzytelniające z plików środowiskowych za pomocą dotenv.
+
+        Proces inicjalizacji obejmuje:
+        - Wczytanie zmiennych środowiskowych z pliku `.env`.
+        - Utworzenie klienta OpenAI za pomocą podanych danych uwierzytelniających.
+
+        Zmienne środowiskowe:
+        - OPENAI_ORGANIZATION: Organizacja OpenAI.
+        - OPENAI_PROJECT: Projekt OpenAI.
+        - OPENAI_API_KEY: Klucz API dla OpenAI.
         """
         load_dotenv()  # Wczytanie zmiennych środowiskowych z pliku .env
         self.client = OpenAI(
@@ -22,13 +34,14 @@ class AiModel:
 
     def ask(self, prompt: str) -> str:
         """
-        Wysyła zapytanie do modelu AI i zwraca jego odpowiedź.
+        Wysyła zapytanie w formie tekstu do modelu AI i odbiera wygenerowaną przez niego odpowiedź.
 
         Args:
-            prompt (str): Tekst zapytania, który ma zostać przesłany do modelu.
+            prompt (str): Tekst zapytania, które ma zostać przesłane do modelu.
 
         Returns:
-            str: Odpowiedź wygenerowana przez model AI. W przypadku błędu zwraca opis błędu.
+            str: Odpowiedź wygenerowana przez model AI.
+                  W przypadku wystąpienia błędu zwraca opis błędu w formie tekstowej.
         """
         try:
             response = self.client.chat.completions.create(
