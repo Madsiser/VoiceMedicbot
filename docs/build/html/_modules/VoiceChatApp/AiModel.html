@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -86,12 +86,24 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">AiModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Klasa AiModel zarządza interakcjami z modelem AI dostarczanym przez OpenAI.</span>
+
+<span class="sd">    Klasa ta umożliwia przesyłanie zapytań do modelu AI i odbieranie odpowiedzi.</span>
+<span class="sd">    Dane uwierzytelniające są wczytywane z pliku środowiskowego `.env` za pomocą</span>
+<span class="sd">    biblioteki dotenv.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inicjalizuje obiekt AiModel i konfiguruje klienta OpenAI.</span>
-<span class="sd">        Wczytuje dane uwierzytelniające z plików środowiskowych za pomocą dotenv.</span>
+
+<span class="sd">        Proces inicjalizacji obejmuje:</span>
+<span class="sd">        - Wczytanie zmiennych środowiskowych z pliku `.env`.</span>
+<span class="sd">        - Utworzenie klienta OpenAI za pomocą podanych danych uwierzytelniających.</span>
+
+<span class="sd">        Zmienne środowiskowe:</span>
+<span class="sd">        - OPENAI_ORGANIZATION: Organizacja OpenAI.</span>
+<span class="sd">        - OPENAI_PROJECT: Projekt OpenAI.</span>
+<span class="sd">        - OPENAI_API_KEY: Klucz API dla OpenAI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">load_dotenv</span><span class="p">()</span>  <span class="c1"># Wczytanie zmiennych środowiskowych z pliku .env</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span>
@@ -104,13 +116,14 @@
 <a class="viewcode-back" href="../../AiModel.html#VoiceChatApp.AiModel.AiModel.ask">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Wysyła zapytanie do modelu AI i zwraca jego odpowiedź.</span>
+<span class="sd">        Wysyła zapytanie w formie tekstu do modelu AI i odbiera wygenerowaną przez niego odpowiedź.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            prompt (str): Tekst zapytania, który ma zostać przesłany do modelu.</span>
+<span class="sd">            prompt (str): Tekst zapytania, które ma zostać przesłane do modelu.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: Odpowiedź wygenerowana przez model AI. W przypadku błędu zwraca opis błędu.</span>
+<span class="sd">            str: Odpowiedź wygenerowana przez model AI.</span>
+<span class="sd">                  W przypadku wystąpienia błędu zwraca opis błędu w formie tekstowej.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
