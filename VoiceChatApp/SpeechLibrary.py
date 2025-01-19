@@ -3,13 +3,15 @@ import random
 
 class SpeechLibrary:
     """
-    Biblioteka obsługująca logikę rozmów w aplikacji medycznej, w tym:
-    - Tabelę chorób z objawami i zaleceniami.
-    - Obsługę odpowiedzi użytkownika na pytania o objawy.
-    - Generowanie odpowiedzi i pytań opartych na danych wejściowych.
+    Klasa SpeechLibrary obsługuje logikę rozmów w aplikacji medycznej.
+
+    Funkcjonalności:
+    - Przechowywanie tabeli chorób wraz z objawami i zaleceniami.
+    - Obsługa odpowiedzi użytkownika na pytania dotyczące objawów.
+    - Generowanie losowych pytań oraz odpowiedzi na podstawie danych wejściowych.
     """
 
-    # Model wzorów chorobowych
+    # Modele wzorców chorobowych
     symptoms_table = [
         {
             "Choroba": "Grypa",
@@ -281,15 +283,12 @@ class SpeechLibrary:
             "Specjalista": "Gastroenterolog",
             "Zalecenia": "Dieta, leki przeciwbólowe, terapia psychologiczna"
         },
-
-        # Możliwość rozszerzenia o kolejne choroby
     ]
 
     # Lista zwrotów do zakończenia rozmowy
     end_speech_phrases = [
         "koniec", "dziękuję", "do widzenia"
     ]
-
 
     # Lista zwrotów do resetowania rozmowy
     reset_speech_phrases = [
@@ -318,15 +317,14 @@ class SpeechLibrary:
         "rozpocznij ponownie"
     ]
 
-
     # Lista objawów do odpytania
     required_symptoms = [
         "Ból głowy", "Wymioty", "Gorączka", "Ból kości i stawów",
         "Nudności", "Ból brzucha", "Kaszel", "Duszności",
-        "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni","Dreszcze"
+        "Zmęczenie", "Utrata wagi", "Problemy ze snem", "Ból mięśni", "Dreszcze"
     ]
 
-    # słownik synonimów
+    # Lista synonimów objawów
     synonyms = {
         "Ból głowy": [
             "boli mnie głowa",
@@ -516,7 +514,6 @@ class SpeechLibrary:
         "nie ma": False,
         "nie potwierdzam": False,
         "absolutnie nie": False,
-        "zdecydowanie nie": False,
         "nie zgadzam się": False,
         "to nieprawda": False,
         "niewystępują": False,
@@ -564,7 +561,7 @@ class SpeechLibrary:
         ],
         "ask_first": [
             "Czy występują u Ciebie objawy takie jak {symptom}?",
-            "Zastanawiam się, czy dokucza Ci coś takiego jak{symptom}?",
+            "Zastanawiam się, czy dokucza Ci coś takiego jak {symptom}?",
             "Czy zauważyłeś ostatnio, że masz coś co mogłoby sie objawiać jak {symptom}?",
             "Mógłbyś powiedzieć, czy symptom taki jak {symptom} wystąpił u ciebie ostatnio?",
             "a {symptom}?",
@@ -579,7 +576,8 @@ class SpeechLibrary:
         "n": False,
         "y": True,
     }
-    #frazy mówiące o braku innych objawów
+
+    # Lista wyrażeń mówiąca o braku innych objawów
     no_other_symptoms_phrases = [
         "żadne inne objawy",
         "nie mam więcej objawów",
@@ -596,35 +594,32 @@ class SpeechLibrary:
     # Integracja dodatkowych skrótów
     response_yes_no_pattern.update(additional_yes_no_abbreviations)
 
-
-
     @staticmethod
     def is_reset_command(message: str) -> bool:
-            """
-            Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.
+        """
+        Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.
 
-            Args:
-                message (str): Wiadomość użytkownika.
+        Args:
+            message (str): Wiadomość użytkownika.
 
-            Returns:
-                bool: True jeśli jest komendą resetującą, False w przeciwnym razie.
-            """
-            message = message.lower()
-            reset = any(phrase in message for phrase in SpeechLibrary.reset_speech_phrases)
-            return reset
-    
+        Returns:
+            bool: True jeśli jest komendą resetującą, False w przeciwnym razie.
+        """
+        message = message.lower()
+        reset = any(phrase in message for phrase in SpeechLibrary.reset_speech_phrases)
+        return reset
 
     @staticmethod
     def first_response(user_symptoms: dict, message: str) -> str:
         """
-        Generuje pierwszą odpowiedź po monologu użytkownika.
+        Generuje pierwszą odpowiedź po wprowadzeniu objawów przez użytkownika.
 
         Args:
             user_symptoms (dict): Słownik z objawami użytkownika (objaw: True/False).
-            message (str): Komunikat bazowy.
+            message (str): Wiadomość bazowa do uzupełnienia.
 
         Returns:
-            str: Sformatowana odpowiedź.
+            str: Sformatowana odpowiedź zawierająca listę objawów.
         """
         active_symptoms = [symptom for symptom, has_symptom in user_symptoms.items() if has_symptom]
         if active_symptoms:
@@ -643,11 +638,9 @@ class SpeechLibrary:
             symptom (str): Nazwa objawu.
 
         Returns:
-            str: Pytanie o objaw.
+            str: Losowo wybrane pytanie o dany objaw.
         """
-        # Losujemy jeden z szablonów pytań z klucza "ask_first"
         question_template = random.choice(SpeechLibrary.responses["ask_first"])
-        # Wstawiamy objaw w miejsce {symptom}, zamieniając np. "Ból głowy" -> "ból głowy"
         return question_template.format(symptom=symptom.lower())
 
     @staticmethod
@@ -676,13 +669,13 @@ class SpeechLibrary:
     @staticmethod
     def find_disease(disease: dict) -> str:
         """
-        Generuje odpowiedź z zaleceniami i specjalistą dla zidentyfikowanej choroby.
+        Generuje odpowiedź zawierającą diagnozę, specjalistę i zalecenia dla zidentyfikowanej choroby.
 
         Args:
             disease (dict): Dane choroby.
 
         Returns:
-            str: Odpowiedź z zaleceniami.
+            str: Diagnoza, specjalista i zalecenia.
         """
         return (f"Najprawdopodobniej dolega ci {disease['Choroba']}\n"
                 f"Zalecany specjalista: {disease['Specjalista']}\n"
@@ -701,13 +694,13 @@ class SpeechLibrary:
     @staticmethod
     def is_end_of_conversation(message: str) -> bool:
         """
-        Sprawdza, czy użytkownik chce zakończyć rozmowę.
+        Sprawdza, czy wiadomość użytkownika wskazuje na zakończenie rozmowy.
 
         Args:
             message (str): Wiadomość użytkownika.
 
         Returns:
-            bool: True, jeśli rozmowa powinna się zakończyć; w przeciwnym razie False.
+            bool: True, jeśli rozmowa powinna zostać zakończona; w przeciwnym razie False.
         """
         return any(phrase in message.lower() for phrase in SpeechLibrary.end_speech_phrases)
 
