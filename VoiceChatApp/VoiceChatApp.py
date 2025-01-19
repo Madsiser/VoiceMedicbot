@@ -14,29 +14,27 @@ class VoiceChatApp:
     """
     Główna klasa aplikacji VoiceChatApp.
 
-    Zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu
+    Klasa zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu
     oraz integracją z modułem medycznym.
     """
 
     def __init__(self, debug=False):
         """
-        Inicjalizuje aplikację.
+        Inicjalizuje aplikację VoiceChatApp, konfigurując komponenty GUI, rozpoznawania mowy
+        oraz przetwarzania tekstu.
 
         Args:
-            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
+            debug (bool): Flaga określająca, czy włączyć tryb debugowania logów.
         """
-        # Konfiguracja loggera
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
 
-        # Inicjalizacja komponentów
         self.gui = ChatGUI(parent=self, debug=debug)
         self.lector = SoundEngine(debug=debug)
         self.medic = MedicalChat(debug=debug)
         self.is_speaking = False
         self.threads = []
 
-        # Konfiguracja rozpoznawania mowy
         self.model = Model("VoiceChatApp/model")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
@@ -50,7 +48,9 @@ class VoiceChatApp:
         self.recognizer = KaldiRecognizer(self.model, 16000)
 
     def start(self):
-        """Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji."""
+        """
+        Sekwencja startowa, która uruchamia aplikację i interfejs graficzny.
+        """
         self.logger.debug("Wywołanie start")
 
         message = SpeechLibrary.start_response()
@@ -63,26 +63,34 @@ class VoiceChatApp:
 
     def ev_speaking_button(self):
         """
-        Obsługuje przycisk mówienia.
+        Obsługuje zdarzenie kliknięcia przycisku mówienia.
+
+        Jeśli nagrywanie mowy nie jest aktywne, uruchamia nasłuchiwanie w nowym wątku.
+        W przeciwnym razie zatrzymuje nagrywanie i aktualizuje elementy GUI.
+
+        Zmiany w GUI:
+        - Aktualizuje ikonę przycisku mówienia.
+        - Ustawia odpowiedni status w interfejsie graficznym.
         """
         self.logger.debug("Wywołanie speaking_button")
         if not self.is_speaking:
             self.start_speaking_button()
+            self.gui.update_status_label("nasłuchiwanie")
         else:
             self.stop_speaking_button()
+            self.gui.update_status_label("sprawdź i potwierdź")
 
     def start_speaking_button(self):
         """
-        Obsługuje rozpoczęcie mówienia.
+        Rozpoczyna nasłuchiwanie mowy w nowym wątku.
 
-        Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.
+        Tworzy nowy wątek odpowiedzialny za odczyt dźwięku z mikrofonu i jego przetwarzanie.
         """
         self.logger.debug("Wywołanie start_speaking_button")
         self.gui.user_input_voice.delete("1.0", tk.END)
         self.gui.user_input_voice_partial.config(text="")
         if not self.is_speaking:
             self.is_speaking = True
-            # Aktualizacja ikony po zmianie stanu
             self.gui.update_speaking_button(self.is_speaking)
 
             thread = threading.Thread(target=self.hear, daemon=True)
@@ -92,10 +100,13 @@ class VoiceChatApp:
             self.stop_speaking_button()
 
     def stop_speaking_button(self):
-        """Obsługuje zatrzymanie nagrywania mowy."""
+        """
+        Zatrzymuje nasłuchiwanie mowy.
+
+        Aktualizuje odpowiednie elementy GUI oraz zatrzymuje przetwarzanie strumienia audio.
+        """
         self.logger.debug("Wywołanie stop_speaking_button")
         self.is_speaking = False
-        # Aktualizacja ikony po zmianie stanu
         self.gui.update_speaking_button(self.is_speaking)
 
         # Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka
@@ -106,9 +117,9 @@ class VoiceChatApp:
 
     def hear(self):
         """
-        Wątek nasłuchujący, odpowiedzialny za przetwarzanie dźwięku na tekst.
+        Wątek odpowiedzialny za nasłuchiwanie i przetwarzanie mowy na tekst.
 
-        Dane są odczytywane z mikrofonu i rozpoznawane przy użyciu modelu VOSK.
+        Dane są odczytywane z mikrofonu i przetwarzane przez model VOSK.
         """
         self.logger.debug("Wywołanie hear")
         recognized_text = ""
@@ -145,19 +156,24 @@ class VoiceChatApp:
 
     def ev_confirm_button(self):
         """
-        Obsługa przycisku 'Potwierdź'
+        Obsługuje zdarzenie kliknięcia przycisku 'Potwierdź'.
+
+        Zatrzymuje nasłuchiwanie, przetwarza wprowadzony tekst użytkownika
+        oraz generuje odpowiedź, która jest wyświetlana w GUI.
         """
         self.stop_speaking_button()
         self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
+        self.gui.update_status_label("mówię do ciebie")
         self.process_text()
         self.gui.user_input_voice.delete("1.0", tk.END)
+        self.check_audio_status_thread()
 
     def process_text(self):
         """
-        Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.
+        Przetwarza tekst wprowadzony przez użytkownika, generuje odpowiedź
+        oraz wyświetla ją w GUI.
         """
         self.logger.debug("Wywołanie process_text")
-        # Pobierz tekst z pola edycji i przekształć go na małe litery dla lepszej zgodności
         user_text = self.gui.user_input_voice.get("1.0", tk.END).strip()
 
         if not user_text:
@@ -170,7 +186,6 @@ class VoiceChatApp:
         self.gui.chat_display.config(state="disabled")
         self.logger.debug(f"Wyświetlono tekst użytkownika: 'Ty: {user_text}'")
 
-        # Sprawdź, czy użytkownik chce zresetować rozmowę
         if SpeechLibrary.is_reset_command(user_text.lower()):
             self.logger.info("Otrzymano komendę resetowania rozmowy.")
             self.medic.reset_conversation()
@@ -181,35 +196,29 @@ class VoiceChatApp:
             self.gui.chat_display.insert(tk.END, f"MedykBot: {response}\n")
             self.gui.chat_display.config(state="disabled")
             self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {response}'")
-            # Odtworzenie odpowiedzi
             self.lector.say(response)
-            # Czyszczenie pola tekstowego po potwierdzeniu
             self.gui.user_input_voice.delete("1.0", tk.END)
             return
 
-        # Przetwarzanie tekstu przez moduł medyczny
         result, message = self.medic.analyze_symptoms(user_text)
         self.logger.debug(f"Przetworzono tekst użytkownika przez MedicalChat: {message}")
 
-        # Wyświetlenie odpowiedzi bota w czacie
         self.gui.chat_display.config(state="normal")
         self.gui.chat_display.insert(tk.END, f"MedykBot: {message}\n")
         self.gui.chat_display.config(state="disabled")
         self.gui.chat_display.see(tk.END)
         self.logger.debug(f"Wyświetlono odpowiedź bota: 'MedykBot: {message}'")
 
-        # Odtworzenie odpowiedzi
         self.lector.say(message)
 
-        # Czyszczenie pola tekstowego po potwierdzeniu
         self.gui.user_input_voice.delete("1.0", tk.END)
         self.logger.debug("Pole tekstowe zostało wyczyszczone.")
-
-
 
     def on_closing(self):
         """
         Zamyka aplikację i zwalnia zasoby.
+
+        Kończy działanie strumieni, zamyka wątki i zwalnia zasoby audio.
         """
         self.logger.debug("Wywołanie on_closing")
         self.is_speaking = False
@@ -224,42 +233,12 @@ class VoiceChatApp:
             thread.join()
 
     def __del__(self):
-        """Destruktor klasy, wywołuje funkcję on_closing w celu zwolnienia zasobów."""
+        """
+        Destruktor klasy.
+
+        Wywołuje funkcję on_closing w celu zwolnienia zasobów przed usunięciem obiektu.
+        """
         self.on_closing()
-
-    def ev_speaking_button(self):
-        self.logger.debug("Wywołanie speaking_button")
-        if not self.is_speaking:
-            self.start_speaking_button()
-            # Ustawiamy status na "mówię"
-            self.gui.update_status_label("nasłuchiwanie")
-        else:
-            self.stop_speaking_button()
-            # Ustawiamy status na "czekam na odpowiedź"
-            self.gui.update_status_label("sprawdź i potwierdź")
-
-    def start_speaking_button(self):
-        self.logger.debug("Wywołanie start_speaking_button")
-        self.gui.user_input_voice.delete("1.0", tk.END)
-        self.gui.user_input_voice_partial.config(text="")
-        if not self.is_speaking:
-            self.is_speaking = True
-            self.gui.update_speaking_button(self.is_speaking)
-            thread = threading.Thread(target=self.hear, daemon=True)
-            thread.start()
-            self.threads.append(thread)
-        else:
-            self.stop_speaking_button()
-
-    def ev_confirm_button(self):
-        self.stop_speaking_button()
-        self.gui.user_input_voice_partial.config(text="Aby rozpocząć mówienie wciśnij ikonę mikrofonu")
-        # Ustaw status od razu
-        self.gui.update_status_label("mówię do ciebie")
-        self.process_text()
-        self.gui.user_input_voice.delete("1.0", tk.END)
-        # sprawdzanie statusu wątku odtwarzania dźwięku
-        self.check_audio_status_thread()
 
     def check_audio_status_thread(self):
         """
@@ -269,7 +248,4 @@ class VoiceChatApp:
         if self.lector.current_thread is not None and self.lector.current_thread.is_alive():
             self.gui.root.after(100, self.check_audio_status_thread)
         else:
-            # Gdy wątek zakończył działanie, ustaw status na
             self.gui.update_status_label("możesz teraz mówić")
-
-
