@@ -7,10 +7,24 @@ from PIL import Image, ImageTk
 class ChatGUI:
     """
     Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
-    Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do sterowania nagrywaniem.
+
+    Zapewnia funkcjonalności, takie jak:
+    - Wyświetlanie historii wiadomości.
+    - Edycja i podgląd rozpoznanego tekstu.
+    - Sterowanie nagrywaniem za pomocą przycisków.
     """
 
     def __init__(self, parent, debug=False):
+        """
+        Inicjalizuje obiekt ChatGUI i konfiguruje środowisko GUI i ładuje wymagane zasoby.
+
+        Args:
+            parent (VoiceChatApp): Instancja klasy VoiceChatApp, która zarządza logiką aplikacji.
+            debug (bool, optional): Jeśli True, włącza tryb debugowania w logach. Domyślnie False.
+
+        Raises:
+            TypeError: Jeśli `parent` nie jest instancją klasy VoiceChatApp.
+        """
         from VoiceChatApp import VoiceChatApp
         if not isinstance(parent, VoiceChatApp):
             raise TypeError(
@@ -28,30 +42,37 @@ class ChatGUI:
 
     def create_widgets(self):
         """
-        Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna.
+        Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna aplikacji.
+
+        Widżety obejmują:
+        - Pole tekstowe do wyświetlania historii wiadomości czatu.
+        - Pole edycyjne do wprowadzania tekstu rozpoznanego przez system.
+        - Etykiety do wyświetlania stanu systemu oraz rozpoznanego tekstu.
+        - Przycisk mikrofonu do sterowania nagrywaniem.
+        - Przycisk potwierdzenia tekstu.
         """
         self.logger.debug("Rozpoczynam tworzenie widżetów GUI")
 
-        # Pole do wyświetlania czatu
+        #Pole tekstowe do wyświetlania historii wiadomości czatu
         self.chat_display = scrolledtext.ScrolledText(
             self.root, wrap=tk.WORD, width=50, height=20, state='normal'
         )
         self.chat_display.pack(padx=10, pady=10)
 
-        # Pole tekstowe do edycji rozpoznanego tekstu
+        #Pole edycyjne do wprowadzania tekstu rozpoznanego przez system
         self.user_input_voice = tk.Text(
             self.root, wrap=tk.WORD, width=50, height=2
         )
         self.user_input_voice.insert(tk.END, "")
         self.user_input_voice.pack(padx=10, pady=10)
 
-        # Etykieta do wyświetlania częściowo rozpoznanego tekstu
+        #Etykieta do wyświetlania rozpoznanego tekstu
         self.user_input_voice_partial = tk.Label(
             self.root, width=50, text="Aby rozpocząć mówienie wciśnij przycisk mikrofonu", anchor="w"
         )
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
-        #etykieta do wyświetlenia stanu systemu
+        #Etykieta do wyświetlania stanu systemu
         self.system_status = tk.Label(
             self.root,
             text="rozpoczęcie rozmowy",
@@ -60,7 +81,7 @@ class ChatGUI:
         )
         self.system_status.pack(padx=10, pady=5)
 
-        # Przycisk mikrofonu - start/stop nagrywania
+        #Przycisk mikrofonu do sterowania nagrywaniem - start/stop nagrywania
         self.speaking_button = tk.Button(
             self.root,
             image=self.green_mic_image,
@@ -69,7 +90,7 @@ class ChatGUI:
         )
         self.speaking_button.pack(padx=10, pady=5)
 
-        # Przycisk potwierdzenia tekstu
+        #Przycisk potwierdzenia tekstu
         self.confirm_button = tk.Button(
             self.root,
             text="Potwierdź",
@@ -82,19 +103,19 @@ class ChatGUI:
 
     def update_status_label(self, status: str):
         """
-        Aktualizuje znacznik stanu systemu w GUI.
+        Aktualizuje etykietę stanu systemu w GUI.
 
         Args:
-            status (str): Tekst stanu
+            status (str): Tekst reprezentujący aktualny stan systemu.
         """
         self.system_status.config(text=status)
 
     def update_speaking_button(self, is_speaking):
         """
-        Aktualizuje ikonę przycisku mówienia w zależności od stanu nagrywania.
+        Aktualizuje ikonę przycisku mikrofonu w zależności od stanu nagrywania.
 
         Args:
-            is_speaking (bool): True jeśli aktualnie nagrywamy, False jeśli nagrywanie jest wyłączone.
+            is_speaking (bool): True, jeśli nagrywanie jest aktywne, False w przeciwnym przypadku.
         """
         if is_speaking:
             self.speaking_button.config(image=self.red_mic_image)
@@ -102,9 +123,17 @@ class ChatGUI:
             self.speaking_button.config(image=self.green_mic_image)
 
     def start(self):
+        """
+        Rozpoczyna główną pętlę aplikacji GUI.
+        """
         self.root.mainloop()
 
     def generate_icons(self):
+        """
+        Ładuje ikony przycisków mikrofonu z plików graficznych.
+
+        Obsługuje błędy ładowania ikon i loguje odpowiednie informacje.
+        """
         try:
             self.green_mic_image = ImageTk.PhotoImage(Image.open("green_mic.png"))
             self.red_mic_image = ImageTk.PhotoImage(Image.open("red_mic.png"))
@@ -114,6 +143,9 @@ class ChatGUI:
             self.red_mic_image = None
 
     def __del__(self):
+        """
+        Obsługuje zamykanie GUI i wywołuje zdarzenie zamknięcia w klasie nadrzędnej.
+        """
         self.logger.debug("Zamykanie GUI")
         self.root.destroy()
         self.parent.on_closing()
