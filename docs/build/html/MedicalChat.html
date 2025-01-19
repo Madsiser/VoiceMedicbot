@@ -62,7 +62,6 @@
 <li class="toctree-l1"><a class="reference internal" href="SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
         </div>
@@ -95,15 +94,28 @@
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">VoiceChatApp.MedicalChat.</span></span><span class="sig-name descname"><span class="pre">MedicalChat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat" title="Link to this definition"></a></dt>
 <dd><p>Klasy bazowe: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Klasa MedicalChat odpowiada za analizę objawów zgłaszanych przez użytkownika,
-zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</p>
+<p>Klasa MedicalChat obsługuje analizę zgłoszonych objawów, generowanie pytań uzupełniających
+oraz rekomendacji medycznych.</p>
+<p>Funkcjonalności:</p>
+<ul class="simple">
+<li><p>Analiza początkowego monologu użytkownika w celu identyfikacji objawów.</p></li>
+<li><p>Tworzenie pytań uzupełniających na podstawie brakujących danych.</p></li>
+<li><p>Generowanie diagnoz i rekomendacji medycznych za pomocą wbudowanych reguł lub modelu AI.</p></li>
+</ul>
+<p>Inicjalizuje obiekt klasy MedicalChat, konfigurując logger i zmienne pomocnicze.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>debug</strong> (<em>bool</em>) – Flaga włączająca tryb debugowania. Domyślnie False.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat.analyze_monolog">
 <span class="sig-name descname"><span class="pre">analyze_monolog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat.analyze_monolog"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat.analyze_monolog" title="Link to this definition"></a></dt>
-<dd><p>Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.</p>
+<dd><p>Analizuje początkowy monolog użytkownika, identyfikując obecne objawy oraz potencjalne
+frazy wskazujące na brak innych dolegliwości.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametry<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_input</strong> (<em>str</em>) – Wprowadzenie użytkownika z potencjalnymi objawami.</p>
+<dd class="field-odd"><p><strong>user_input</strong> (<em>str</em>) – Tekstowy monolog użytkownika zawierający informacje o objawach.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -111,16 +123,16 @@ zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</p
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat.analyze_symptoms">
 <span class="sig-name descname"><span class="pre">analyze_symptoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat.analyze_symptoms"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat.analyze_symptoms" title="Link to this definition"></a></dt>
-<dd><p>Główna funkcja analizy objawów użytkownika.</p>
+<dd><p>Główna funkcja analizująca objawy użytkownika i generująca odpowiedź.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametry<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_input</strong> (<em>str</em>) – Wprowadzenie użytkownika do analizy.</p>
+<dd class="field-odd"><p><strong>user_input</strong> (<em>str</em>) – Tekstowa odpowiedź użytkownika zawierająca objawy.</p>
 </dd>
 <dt class="field-even">Zwraca<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>(bool, str)</dt><dd><ul class="simple">
-<li><p>bool: Czy wszystkie etapy analizy zostały zakończone.</p></li>
-<li><p>str: Wiadomość zwrotna do użytkownika.</p></li>
+<li><p>bool: Flaga wskazująca, czy analiza została zakończona.</p></li>
+<li><p>str: Wiadomość zwrotna, w tym pytania uzupełniające lub rekomendacje.</p></li>
 </ul>
 </dd>
 </dl>
@@ -149,16 +161,20 @@ zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</p
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat.does_agree">
 <span class="sig-name descname"><span class="pre">does_agree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat.does_agree"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat.does_agree" title="Link to this definition"></a></dt>
-<dd><p>Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył.</p>
+<dd><p>Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył na pytanie.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametry<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – Odpowiedź użytkownika.</p>
 </dd>
 <dt class="field-even">Zwraca<span class="colon">:</span></dt>
-<dd class="field-even"><p>True dla potwierdzenia, False dla zaprzeczenia, None gdy odpowiedź jest niejednoznaczna.</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>True, jeśli odpowiedź jest twierdząca; False, jeśli zaprzeczająca;</dt><dd><p>None, jeśli odpowiedź jest niejednoznaczna.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Typ zwracany<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool lub None</p>
+<dd class="field-odd"><p>bool | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -166,11 +182,12 @@ zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</p
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat.get_recommendation">
 <span class="sig-name descname"><span class="pre">get_recommendation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat.get_recommendation"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat.get_recommendation" title="Link to this definition"></a></dt>
-<dd><p>Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie
-po przedstawieniu diagnozy.</p>
+<dd><p>Generuje rekomendacje medyczne na podstawie zgłoszonych objawów.</p>
+<p>Jeśli nie można dopasować diagnozy na podstawie zdefiniowanych reguł,
+metoda korzysta z modelu AI do wygenerowania odpowiedzi.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Zwraca<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Komunikat z diagnozą(Zalecenia lub odpowiedź modelu AI) i pytaniem o dalszą pomoc.</p>
+<dd class="field-odd"><p>Komunikat zawierający diagnozę, zalecenia oraz pytanie o dalszą pomoc.</p>
 </dd>
 <dt class="field-even">Typ zwracany<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
@@ -181,7 +198,8 @@ po przedstawieniu diagnozy.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.MedicalChat.MedicalChat.reset_conversation">
 <span class="sig-name descname"><span class="pre">reset_conversation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/MedicalChat.html#MedicalChat.reset_conversation"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.MedicalChat.MedicalChat.reset_conversation" title="Link to this definition"></a></dt>
-<dd><p>Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.</p>
+<dd><p>Resetuje wszystkie zmienne związane z analizą objawów, przygotowując system
+do rozpoczęcia nowej rozmowy medycznej.</p>
 </dd></dl>
 
 </dd></dl>

@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -48,7 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
 </ul>
 
         </div>
@@ -83,13 +82,18 @@
 <a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary">[dokumentacja]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpeechLibrary</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Biblioteka obsługująca logikę rozmów w aplikacji medycznej, w tym:</span>
-<span class="sd">    - Tabelę chorób z objawami i zaleceniami.</span>
-<span class="sd">    - Obsługę odpowiedzi użytkownika na pytania o objawy.</span>
-<span class="sd">    - Generowanie odpowiedzi i pytań opartych na danych wejściowych.</span>
+<span class="sd">    Klasa SpeechLibrary obsługuje logikę rozmów w aplikacji medycznej.</span>
+
+<span class="sd">    Funkcjonalności:</span>
+
+<span class="sd">    - Przechowywanie tabeli chorób wraz z objawami i zaleceniami.</span>
+
+<span class="sd">    - Obsługa odpowiedzi użytkownika na pytania dotyczące objawów.</span>
+
+<span class="sd">    - Generowanie losowych pytań oraz odpowiedzi na podstawie danych wejściowych.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Model wzorów chorobowych</span>
+    <span class="c1"># Modele wzorców chorobowych</span>
     <span class="n">symptoms_table</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Grypa&quot;</span><span class="p">,</span>
@@ -361,15 +365,12 @@
             <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Gastroenterolog&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Dieta, leki przeciwbólowe, terapia psychologiczna&quot;</span>
         <span class="p">},</span>
-
-        <span class="c1"># Możliwość rozszerzenia o kolejne choroby</span>
     <span class="p">]</span>
 
     <span class="c1"># Lista zwrotów do zakończenia rozmowy</span>
     <span class="n">end_speech_phrases</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;koniec&quot;</span><span class="p">,</span> <span class="s2">&quot;dziękuję&quot;</span><span class="p">,</span> <span class="s2">&quot;do widzenia&quot;</span>
     <span class="p">]</span>
-
 
     <span class="c1"># Lista zwrotów do resetowania rozmowy</span>
     <span class="n">reset_speech_phrases</span> <span class="o">=</span> <span class="p">[</span>
@@ -398,15 +399,14 @@
         <span class="s2">&quot;rozpocznij ponownie&quot;</span>
     <span class="p">]</span>
 
-
     <span class="c1"># Lista objawów do odpytania</span>
     <span class="n">required_symptoms</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;Ból głowy&quot;</span><span class="p">,</span> <span class="s2">&quot;Wymioty&quot;</span><span class="p">,</span> <span class="s2">&quot;Gorączka&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">,</span>
         <span class="s2">&quot;Nudności&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">,</span> <span class="s2">&quot;Kaszel&quot;</span><span class="p">,</span> <span class="s2">&quot;Duszności&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">,</span> <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">,</span> <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">,</span><span class="s2">&quot;Dreszcze&quot;</span>
+        <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">,</span> <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">,</span> <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">,</span> <span class="s2">&quot;Dreszcze&quot;</span>
     <span class="p">]</span>
 
-    <span class="c1"># słownik synonimów</span>
+    <span class="c1"># Lista synonimów objawów</span>
     <span class="n">synonyms</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;boli mnie głowa&quot;</span><span class="p">,</span>
@@ -596,7 +596,6 @@
         <span class="s2">&quot;nie ma&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;nie potwierdzam&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;absolutnie nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;zdecydowanie nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;nie zgadzam się&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;to nieprawda&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;niewystępują&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -644,7 +643,7 @@
         <span class="p">],</span>
         <span class="s2">&quot;ask_first&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;Czy występują u Ciebie objawy takie jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Zastanawiam się, czy dokucza Ci coś takiego jak</span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zastanawiam się, czy dokucza Ci coś takiego jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Czy zauważyłeś ostatnio, że masz coś co mogłoby sie objawiać jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Mógłbyś powiedzieć, czy symptom taki jak </span><span class="si">{symptom}</span><span class="s2"> wystąpił u ciebie ostatnio?&quot;</span><span class="p">,</span>
             <span class="s2">&quot;a </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
@@ -659,7 +658,8 @@
         <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="c1">#frazy mówiące o braku innych objawów</span>
+
+    <span class="c1"># Lista wyrażeń mówiąca o braku innych objawów</span>
     <span class="n">no_other_symptoms_phrases</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;żadne inne objawy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;nie mam więcej objawów&quot;</span><span class="p">,</span>
@@ -676,40 +676,37 @@
     <span class="c1"># Integracja dodatkowych skrótów</span>
     <span class="n">response_yes_no_pattern</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">additional_yes_no_abbreviations</span><span class="p">)</span>
 
-
-
 <div class="viewcode-block" id="SpeechLibrary.is_reset_command">
 <a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.is_reset_command">[dokumentacja]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_reset_command</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.</span>
 
-<span class="sd">            Args:</span>
-<span class="sd">                message (str): Wiadomość użytkownika.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): Wiadomość użytkownika.</span>
 
-<span class="sd">            Returns:</span>
-<span class="sd">                bool: True jeśli jest komendą resetującą, False w przeciwnym razie.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="n">reset</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">reset_speech_phrases</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">reset</span></div>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True jeśli jest komendą resetującą, False w przeciwnym razie.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">reset</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">reset_speech_phrases</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">reset</span></div>
 
-    
 
 <div class="viewcode-block" id="SpeechLibrary.first_response">
 <a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.first_response">[dokumentacja]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">first_response</span><span class="p">(</span><span class="n">user_symptoms</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generuje pierwszą odpowiedź po monologu użytkownika.</span>
+<span class="sd">        Generuje pierwszą odpowiedź po wprowadzeniu objawów przez użytkownika.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            user_symptoms (dict): Słownik z objawami użytkownika (objaw: True/False).</span>
-<span class="sd">            message (str): Komunikat bazowy.</span>
+<span class="sd">            message (str): Wiadomość bazowa do uzupełnienia.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: Sformatowana odpowiedź.</span>
+<span class="sd">            str: Sformatowana odpowiedź zawierająca listę objawów.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">active_symptoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">symptom</span> <span class="k">for</span> <span class="n">symptom</span><span class="p">,</span> <span class="n">has_symptom</span> <span class="ow">in</span> <span class="n">user_symptoms</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">has_symptom</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">active_symptoms</span><span class="p">:</span>
@@ -731,11 +728,9 @@
 <span class="sd">            symptom (str): Nazwa objawu.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: Pytanie o objaw.</span>
+<span class="sd">            str: Losowo wybrane pytanie o dany objaw.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Losujemy jeden z szablonów pytań z klucza &quot;ask_first&quot;</span>
         <span class="n">question_template</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;ask_first&quot;</span><span class="p">])</span>
-        <span class="c1"># Wstawiamy objaw w miejsce {symptom}, zamieniając np. &quot;Ból głowy&quot; -&gt; &quot;ból głowy&quot;</span>
         <span class="k">return</span> <span class="n">question_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symptom</span><span class="o">=</span><span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
 
 
@@ -773,13 +768,13 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_disease</span><span class="p">(</span><span class="n">disease</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generuje odpowiedź z zaleceniami i specjalistą dla zidentyfikowanej choroby.</span>
+<span class="sd">        Generuje odpowiedź zawierającą diagnozę, specjalistę i zalecenia dla zidentyfikowanej choroby.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            disease (dict): Dane choroby.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: Odpowiedź z zaleceniami.</span>
+<span class="sd">            str: Diagnoza, specjalista i zalecenia.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Najprawdopodobniej dolega ci </span><span class="si">{</span><span class="n">disease</span><span class="p">[</span><span class="s1">&#39;Choroba&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;Zalecany specjalista: </span><span class="si">{</span><span class="n">disease</span><span class="p">[</span><span class="s1">&#39;Specjalista&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -804,13 +799,13 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_end_of_conversation</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sprawdza, czy użytkownik chce zakończyć rozmowę.</span>
+<span class="sd">        Sprawdza, czy wiadomość użytkownika wskazuje na zakończenie rozmowy.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            message (str): Wiadomość użytkownika.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool: True, jeśli rozmowa powinna się zakończyć; w przeciwnym razie False.</span>
+<span class="sd">            bool: True, jeśli rozmowa powinna zostać zakończona; w przeciwnym razie False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">end_speech_phrases</span><span class="p">)</span></div>
 

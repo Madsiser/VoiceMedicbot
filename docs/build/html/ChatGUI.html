@@ -43,7 +43,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="AiModel.html">AiModel module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ChatGUI module</a><ul>
@@ -61,7 +61,6 @@
 <li class="toctree-l1"><a class="reference internal" href="SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
         </div>
@@ -94,31 +93,59 @@
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">VoiceChatApp.ChatGUI.</span></span><span class="sig-name descname"><span class="pre">ChatGUI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI" title="Link to this definition"></a></dt>
 <dd><p>Klasy bazowe: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
-Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do sterowania nagrywaniem.</p>
+<p>Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.</p>
+<p>Zapewnia funkcjonalności, takie jak:</p>
+<ul class="simple">
+<li><p>Wyświetlanie historii wiadomości.</p></li>
+<li><p>Edycja i podgląd rozpoznanego tekstu.</p></li>
+<li><p>Sterowanie nagrywaniem za pomocą przycisków.</p></li>
+</ul>
+<p>Inicjalizuje obiekt ChatGUI i konfiguruje środowisko GUI i ładuje wymagane zasoby.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<a class="reference internal" href="VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp" title="VoiceChatApp.VoiceChatApp.VoiceChatApp"><em>VoiceChatApp</em></a>) – Instancja klasy VoiceChatApp, która zarządza logiką aplikacji.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Jeśli True, włącza tryb debugowania w logach. Domyślnie False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Wyrzuca<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – Jeśli <cite>parent</cite> nie jest instancją klasy VoiceChatApp.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI.create_widgets">
 <span class="sig-name descname"><span class="pre">create_widgets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI.create_widgets"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI.create_widgets" title="Link to this definition"></a></dt>
-<dd><p>Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna.</p>
+<dd><p>Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna aplikacji.</p>
+<p>Widżety obejmują:
+- Pole tekstowe do wyświetlania historii wiadomości czatu.</p>
+<ul class="simple">
+<li><p>Pole edycyjne do wprowadzania tekstu rozpoznanego przez system.</p></li>
+<li><p>Etykiety do wyświetlania stanu systemu oraz rozpoznanego tekstu.</p></li>
+<li><p>Przycisk mikrofonu do sterowania nagrywaniem.</p></li>
+<li><p>Przycisk potwierdzenia tekstu.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI.generate_icons">
 <span class="sig-name descname"><span class="pre">generate_icons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI.generate_icons"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI.generate_icons" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Ładuje ikony przycisków mikrofonu z plików graficznych.</p>
+<p>Obsługuje błędy ładowania ikon i loguje odpowiednie informacje.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI.start"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI.start" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Rozpoczyna główną pętlę aplikacji GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI.update_speaking_button">
 <span class="sig-name descname"><span class="pre">update_speaking_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_speaking</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI.update_speaking_button"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI.update_speaking_button" title="Link to this definition"></a></dt>
-<dd><p>Aktualizuje ikonę przycisku mówienia w zależności od stanu nagrywania.</p>
+<dd><p>Aktualizuje ikonę przycisku mikrofonu w zależności od stanu nagrywania.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametry<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>is_speaking</strong> (<em>bool</em>) – True jeśli aktualnie nagrywamy, False jeśli nagrywanie jest wyłączone.</p>
+<dd class="field-odd"><p><strong>is_speaking</strong> (<em>bool</em>) – True, jeśli nagrywanie jest aktywne, False w przeciwnym przypadku.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -126,10 +153,10 @@ Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do ster
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.ChatGUI.ChatGUI.update_status_label">
 <span class="sig-name descname"><span class="pre">update_status_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/ChatGUI.html#ChatGUI.update_status_label"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.ChatGUI.ChatGUI.update_status_label" title="Link to this definition"></a></dt>
-<dd><p>Aktualizuje znacznik stanu systemu w GUI.</p>
+<dd><p>Aktualizuje etykietę stanu systemu w GUI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parametry<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>status</strong> (<em>str</em>) – Tekst stanu</p>
+<dd class="field-odd"><p><strong>status</strong> (<em>str</em>) – Tekst reprezentujący aktualny stan systemu.</p>
 </dd>
 </dl>
 </dd></dl>

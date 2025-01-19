@@ -20,7 +20,6 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Indeks" href="genindex.html" />
     <link rel="search" title="Szukaj" href="search.html" />
-    <link rel="next" title="main module" href="main.html" />
     <link rel="prev" title="SpeechLibrary module" href="SpeechLibrary.html" /> 
 </head>
 
@@ -43,7 +42,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ChatGUI.html">ChatGUI module</a></li>
@@ -65,7 +64,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
         </div>
@@ -99,8 +97,15 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">VoiceChatApp.VoiceChatApp.</span></span><span class="sig-name descname"><span class="pre">VoiceChatApp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp" title="Link to this definition"></a></dt>
 <dd><p>Klasy bazowe: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Główna klasa aplikacji VoiceChatApp.</p>
-<p>Zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu
+<p>Klasa zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu
 oraz integracją z modułem medycznym.</p>
+<p>Inicjalizuje aplikację VoiceChatApp, konfigurując komponenty GUI, rozpoznawania mowy
+oraz przetwarzania tekstu.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parametry<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>debug</strong> (<em>bool</em>) – Flaga określająca, czy włączyć tryb debugowania logów.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.check_audio_status_thread">
 <span class="sig-name descname"><span class="pre">check_audio_status_thread</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.check_audio_status_thread"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.check_audio_status_thread" title="Link to this definition"></a></dt>
@@ -111,47 +116,58 @@ nadal działa. Gdy się zakończy, ustawia status na „możesz teraz mówić”
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_confirm_button">
 <span class="sig-name descname"><span class="pre">ev_confirm_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.ev_confirm_button"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_confirm_button" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Obsługuje zdarzenie kliknięcia przycisku «Potwierdź».</p>
+<p>Zatrzymuje nasłuchiwanie, przetwarza wprowadzony tekst użytkownika
+oraz generuje odpowiedź, która jest wyświetlana w GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_speaking_button">
 <span class="sig-name descname"><span class="pre">ev_speaking_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.ev_speaking_button"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_speaking_button" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Obsługuje zdarzenie kliknięcia przycisku mówienia.</p>
+<p>Jeśli nagrywanie mowy nie jest aktywne, uruchamia nasłuchiwanie w nowym wątku.
+W przeciwnym razie zatrzymuje nagrywanie i aktualizuje elementy GUI.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.hear">
 <span class="sig-name descname"><span class="pre">hear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.hear"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.hear" title="Link to this definition"></a></dt>
-<dd><p>Wątek nasłuchujący, odpowiedzialny za przetwarzanie dźwięku na tekst.</p>
-<p>Dane są odczytywane z mikrofonu i rozpoznawane przy użyciu modelu VOSK.</p>
+<dd><p>Wątek odpowiedzialny za nasłuchiwanie i przetwarzanie mowy na tekst.</p>
+<p>Dane są odczytywane z mikrofonu i przetwarzane przez model VOSK.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.on_closing">
 <span class="sig-name descname"><span class="pre">on_closing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.on_closing"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.on_closing" title="Link to this definition"></a></dt>
 <dd><p>Zamyka aplikację i zwalnia zasoby.</p>
+<p>Kończy działanie strumieni, zamyka wątki i zwalnia zasoby audio.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.process_text">
 <span class="sig-name descname"><span class="pre">process_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.process_text"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.process_text" title="Link to this definition"></a></dt>
-<dd><p>Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.</p>
+<dd><p>Przetwarza tekst wprowadzony przez użytkownika, generuje odpowiedź
+oraz wyświetla ją w GUI.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.start"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.start" title="Link to this definition"></a></dt>
-<dd><p>Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji.</p>
+<dd><p>Sekwencja startowa, która uruchamia aplikację i interfejs graficzny.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.start_speaking_button">
 <span class="sig-name descname"><span class="pre">start_speaking_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.start_speaking_button"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.start_speaking_button" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Rozpoczyna nasłuchiwanie mowy w nowym wątku.</p>
+<p>Tworzy nowy wątek odpowiedzialny za odczyt dźwięku z mikrofonu i jego przetwarzanie.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.VoiceChatApp.VoiceChatApp.stop_speaking_button">
 <span class="sig-name descname"><span class="pre">stop_speaking_button</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/VoiceChatApp/VoiceChatApp.html#VoiceChatApp.stop_speaking_button"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.VoiceChatApp.VoiceChatApp.stop_speaking_button" title="Link to this definition"></a></dt>
-<dd><p>Obsługuje zatrzymanie nagrywania mowy.</p>
+<dd><p>Zatrzymuje nasłuchiwanie mowy.</p>
+<p>Aktualizuje odpowiednie elementy GUI oraz zatrzymuje przetwarzanie strumienia audio.</p>
 </dd></dl>
 
 </dd></dl>
@@ -163,7 +179,6 @@ nadal działa. Gdy się zakończy, ustawia status na „możesz teraz mówić”
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="SpeechLibrary.html" class="btn btn-neutral float-left" title="SpeechLibrary module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Poprzedni</a>
-        <a href="main.html" class="btn btn-neutral float-right" title="main module" accesskey="n" rel="next">Następny <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

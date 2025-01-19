@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -48,7 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
 </ul>
 
         </div>
@@ -76,8 +75,7 @@
            <div itemprop="articleBody">
              
   <h1>Kod źródłowy modułu VoiceChatApp.MedicalChat</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.SpeechLibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeechLibrary</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.AiModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiModel</span>
 
@@ -86,22 +84,28 @@
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat">[dokumentacja]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MedicalChat</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Klasa MedicalChat odpowiada za analizę objawów zgłaszanych przez użytkownika,</span>
-<span class="sd">    zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</span>
+<span class="sd">    Klasa MedicalChat obsługuje analizę zgłoszonych objawów, generowanie pytań uzupełniających</span>
+<span class="sd">    oraz rekomendacji medycznych.</span>
+
+<span class="sd">    Funkcjonalności:</span>
+
+<span class="sd">    - Analiza początkowego monologu użytkownika w celu identyfikacji objawów.</span>
+
+<span class="sd">    - Tworzenie pytań uzupełniających na podstawie brakujących danych.</span>
+
+<span class="sd">    - Generowanie diagnoz i rekomendacji medycznych za pomocą wbudowanych reguł lub modelu AI.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Inicjalizuje obiekt klasy MedicalChat.</span>
+<span class="sd">        Inicjalizuje obiekt klasy MedicalChat, konfigurując logger i zmienne pomocnicze.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            debug (bool): Flaga określająca, czy włączyć tryb debugowania.</span>
+<span class="sd">            debug (bool): Flaga włączająca tryb debugowania. Domyślnie False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Konfiguracja loggera</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
-        <span class="c1"># Inicjalizacja zmiennych</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">symptoms_table</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">symptoms_table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">required_symptoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">synonyms</span>
@@ -110,15 +114,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ai_model</span> <span class="o">=</span> <span class="n">AiModel</span><span class="p">()</span>
-        <span class="c1"># Flaga wskazująca, czy przekazaliśmy już diagnozę i czekamy na odpowiedź</span>
-        <span class="c1"># na pytanie &quot;Czy mogę coś dla ciebie zrobić?&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="MedicalChat.reset_conversation">
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.reset_conversation">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset_conversation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.</span>
+<span class="sd">        Resetuje wszystkie zmienne związane z analizą objawów, przygotowując system</span>
+<span class="sd">        do rozpoczęcia nowej rozmowy medycznej.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span> <span class="o">=</span> <span class="p">{}</span>
@@ -132,10 +135,11 @@
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.analyze_monolog">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">analyze_monolog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.</span>
+<span class="sd">        Analizuje początkowy monolog użytkownika, identyfikując obecne objawy oraz potencjalne</span>
+<span class="sd">        frazy wskazujące na brak innych dolegliwości.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            user_input (str): Wprowadzenie użytkownika z potencjalnymi objawami.</span>
+<span class="sd">            user_input (str): Tekstowy monolog użytkownika zawierający informacje o objawach.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">symptom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span><span class="p">:</span>
             <span class="c1"># Domyślnie ustawiamy, że objawu nie wykryto.</span>
@@ -145,7 +149,6 @@
             <span class="k">if</span> <span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">user_input</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="n">symptom_present</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Jeśli nie – sprawdzamy synonimy.</span>
                 <span class="n">symptom_key_lower</span> <span class="o">=</span> <span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
                 <span class="k">for</span> <span class="n">syn_key</span><span class="p">,</span> <span class="n">syn_list</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">syn_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">symptom_key_lower</span><span class="p">:</span>
@@ -153,7 +156,7 @@
                             <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">user_input</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                                 <span class="n">symptom_present</span> <span class="o">=</span> <span class="kc">True</span>
                                 <span class="k">break</span>
-                        <span class="k">break</span>  <span class="c1"># Koniec, gdy znaleziono dopasowanie.</span>
+                        <span class="k">break</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="p">[</span><span class="n">symptom</span><span class="p">]</span> <span class="o">=</span> <span class="n">symptom_present</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="p">[</span><span class="n">symptom</span><span class="p">]</span> <span class="o">=</span> <span class="n">symptom_present</span>
@@ -170,15 +173,15 @@
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.analyze_symptoms">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">analyze_symptoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Główna funkcja analizy objawów użytkownika.</span>
+<span class="sd">        Główna funkcja analizująca objawy użytkownika i generująca odpowiedź.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            user_input (str): Wprowadzenie użytkownika do analizy.</span>
+<span class="sd">            user_input (str): Tekstowa odpowiedź użytkownika zawierająca objawy.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple: (bool, str)</span>
-<span class="sd">                - bool: Czy wszystkie etapy analizy zostały zakończone.</span>
-<span class="sd">                - str: Wiadomość zwrotna do użytkownika.</span>
+<span class="sd">                - bool: Flaga wskazująca, czy analiza została zakończona.</span>
+<span class="sd">                - str: Wiadomość zwrotna, w tym pytania uzupełniające lub rekomendacje.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Jeżeli po diagnozie czekamy na odpowiedź na pytanie &quot;Czy przejsc caly proces od nowa?&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span><span class="p">:</span>
@@ -195,7 +198,6 @@
                 <span class="c1"># Brak jednoznacznej odpowiedzi – pytamy jeszcze raz</span>
                 <span class="k">return</span> <span class="kc">False</span><span class="p">,</span>
 
-        <span class="c1"># Standardowa analiza objawów</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">analyze_monolog</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -212,9 +214,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Objawy użytkownika: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
-            <span class="c1"># Jeśli wszystkie objawy są znane – generujemy rekomendację</span>
             <span class="n">i_know</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_recommendation</span><span class="p">()</span>
-            <span class="c1"># Ustawiamy flagę, aby po przekazaniu diagnozy poczekać na odpowiedź</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">i_know</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ask_missing_symptom</span><span class="p">()</span>
@@ -230,13 +230,14 @@
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.does_agree">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">does_agree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył.</span>
+<span class="sd">        Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył na pytanie.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            message (str): Odpowiedź użytkownika.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool lub None: True dla potwierdzenia, False dla zaprzeczenia, None gdy odpowiedź jest niejednoznaczna.</span>
+<span class="sd">            bool | None: True, jeśli odpowiedź jest twierdząca; False, jeśli zaprzeczająca;</span>
+<span class="sd">                         None, jeśli odpowiedź jest niejednoznaczna.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analiza odpowiedzi: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Poprzednie pytanie: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -271,11 +272,13 @@
 <a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.get_recommendation">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie</span>
-<span class="sd">        po przedstawieniu diagnozy.</span>
+<span class="sd">        Generuje rekomendacje medyczne na podstawie zgłoszonych objawów.</span>
+
+<span class="sd">        Jeśli nie można dopasować diagnozy na podstawie zdefiniowanych reguł,</span>
+<span class="sd">        metoda korzysta z modelu AI do wygenerowania odpowiedzi.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            str: Komunikat z diagnozą(Zalecenia lub odpowiedź modelu AI) i pytaniem o dalszą pomoc.</span>
+<span class="sd">            str: Komunikat zawierający diagnozę, zalecenia oraz pytanie o dalszą pomoc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">diagnosis</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">disease</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symptoms_table</span><span class="p">:</span>
@@ -292,7 +295,6 @@
                 <span class="sa">f</span><span class="s2">&quot;Odpowiedz bardzo krótko w dwóch zdaniach. Objawy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="c1"># Dodajemy pytanie o dalszą pomoc.</span>
         <span class="n">diagnosis</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Czy spełniłem twoje oczekiwania?&quot;</span>
         <span class="k">return</span> <span class="n">diagnosis</span></div>
 </div>

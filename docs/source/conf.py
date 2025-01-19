@@ -25,6 +25,7 @@ extensions = [
 
 templates_path = ['_templates']
 exclude_patterns = []
+autoclass_content = 'both'
 
 language = 'pl'
 

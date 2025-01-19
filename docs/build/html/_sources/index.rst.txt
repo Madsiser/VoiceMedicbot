@@ -6,12 +6,19 @@
 VoiceMedicBot documentation
 ===========================
 
-Witamy w dokumentacji projektu VoiceMedicBot!
+Witamy w dokumentacji projektu **VoiceMedicBot**!
 
-**VoiceMedicBot** to aplikacja wspierająca użytkowników w diagnozowaniu objawów zdrowotnych i zarządzaniu rozmowami za pomocą zaawansowanych algorytmów sztucznej inteligencji.
-Oferuje funkcje taką jak analiza objawów z wykorzystaniem modeli AI z użyciem integracji z systemami głosowymi.
+**VoiceMedicBot** to aplikacja medyczna wspierająca użytkowników w diagnozowaniu objawów zdrowotnych dzięki wykorzystaniu sztucznej inteligencji i technologii głosowych.
 
-W tej dokumentacji znajdziesz szczegółowe informacje na temat dostępnych modułów, klas i metod.
+Główne funkcjonalności:
+
+- **Analiza objawów zdrowotnych:** Wykorzystanie modeli AI do interpretacji informacji od użytkownika.
+
+- **Interfejs głosowy:** Integracja z systemami rozpoznawania mowy i generowania dźwięku w celu rozmowy z użytkownikiem.
+
+- **Rekomendacje medyczne:** Propozycje działań opartych na analizie objawów oraz pytaniach pomocniczych.
+
+W tej dokumentacji znajdziesz szczegółowe informacje na temat dostępnych modułów, klas i metod używanych w projekcie.
 
 
 .. toctree::
@@ -24,4 +31,3 @@ W tej dokumentacji znajdziesz szczegółowe informacje na temat dostępnych modu
    SoundEngine
    SpeechLibrary
    VoiceChatApp
-   main.rst

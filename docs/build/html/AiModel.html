@@ -57,7 +57,6 @@
 <li class="toctree-l1"><a class="reference internal" href="SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
 </ul>
 
         </div>
@@ -94,6 +93,18 @@
 <p>Klasa ta umożliwia przesyłanie zapytań do modelu AI i odbieranie odpowiedzi.
 Dane uwierzytelniające są wczytywane z pliku środowiskowego <cite>.env</cite> za pomocą
 biblioteki dotenv.</p>
+<p>Inicjalizuje obiekt AiModel i konfiguruje klienta OpenAI.</p>
+<p>Proces inicjalizacji obejmuje:</p>
+<ul class="simple">
+<li><p>Wczytanie zmiennych środowiskowych z pliku <cite>.env</cite>.</p></li>
+<li><p>Utworzenie klienta OpenAI za pomocą podanych danych uwierzytelniających.</p></li>
+</ul>
+<p>Zmienne środowiskowe:</p>
+<ul class="simple">
+<li><p>OPENAI_ORGANIZATION: Organizacja OpenAI.</p></li>
+<li><p>OPENAI_PROJECT: Projekt OpenAI.</p></li>
+<li><p>OPENAI_API_KEY: Klucz API dla OpenAI.</p></li>
+</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="VoiceChatApp.AiModel.AiModel.ask">
 <span class="sig-name descname"><span class="pre">ask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/VoiceChatApp/AiModel.html#AiModel.ask"><span class="viewcode-link"><span class="pre">[źródło]</span></span></a><a class="headerlink" href="#VoiceChatApp.AiModel.AiModel.ask" title="Link to this definition"></a></dt>

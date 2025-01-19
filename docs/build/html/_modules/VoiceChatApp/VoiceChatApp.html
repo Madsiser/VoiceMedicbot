@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -48,7 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
 </ul>
 
         </div>
@@ -94,29 +93,27 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Główna klasa aplikacji VoiceChatApp.</span>
 
-<span class="sd">    Zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu</span>
+<span class="sd">    Klasa zarządza interfejsem graficznym, rozpoznawaniem mowy, przetwarzaniem tekstu</span>
 <span class="sd">    oraz integracją z modułem medycznym.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Inicjalizuje aplikację.</span>
+<span class="sd">        Inicjalizuje aplikację VoiceChatApp, konfigurując komponenty GUI, rozpoznawania mowy</span>
+<span class="sd">        oraz przetwarzania tekstu.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            debug (bool): Flaga określająca, czy włączyć tryb debugowania.</span>
+<span class="sd">            debug (bool): Flaga określająca, czy włączyć tryb debugowania logów.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Konfiguracja loggera</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
-        <span class="c1"># Inicjalizacja komponentów</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="n">ChatGUI</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lector</span> <span class="o">=</span> <span class="n">SoundEngine</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">medic</span> <span class="o">=</span> <span class="n">MedicalChat</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># Konfiguracja rozpoznawania mowy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="s2">&quot;VoiceChatApp/model&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">PyAudio</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
@@ -132,7 +129,9 @@
 <div class="viewcode-block" id="VoiceChatApp.start">
 <a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.start">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sekwencja startowa w której między innymi jest uruchamiany interfejs graficzny aplikacji.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sekwencja startowa, która uruchamia aplikację i interfejs graficzny.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie start&quot;</span><span class="p">)</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">start_response</span><span class="p">()</span>
@@ -144,43 +143,56 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="VoiceChatApp.ev_speaking_button">
+<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_speaking_button">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ev_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Obsługuje przycisk mówienia.</span>
+<span class="sd">        Obsługuje zdarzenie kliknięcia przycisku mówienia.</span>
+
+<span class="sd">        Jeśli nagrywanie mowy nie jest aktywne, uruchamia nasłuchiwanie w nowym wątku.</span>
+<span class="sd">        W przeciwnym razie zatrzymuje nagrywanie i aktualizuje elementy GUI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie speaking_button&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start_speaking_button</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;nasłuchiwanie&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;sprawdź i potwierdź&quot;</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="VoiceChatApp.start_speaking_button">
+<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.start_speaking_button">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Obsługuje rozpoczęcie mówienia.</span>
+<span class="sd">        Rozpoczyna nasłuchiwanie mowy w nowym wątku.</span>
 
-<span class="sd">        Tworzy nowy wątek odpowiedzialny za rozpoznawanie mowy.</span>
+<span class="sd">        Tworzy nowy wątek odpowiedzialny za odczyt dźwięku z mikrofonu i jego przetwarzanie.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie start_speaking_button&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice_partial</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="c1"># Aktualizacja ikony po zmianie stanu</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">)</span>
 
             <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hear</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="VoiceChatApp.stop_speaking_button">
 <a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.stop_speaking_button">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obsługuje zatrzymanie nagrywania mowy.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Zatrzymuje nasłuchiwanie mowy.</span>
+
+<span class="sd">        Aktualizuje odpowiednie elementy GUI oraz zatrzymuje przetwarzanie strumienia audio.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie stop_speaking_button&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="c1"># Aktualizacja ikony po zmianie stanu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">)</span>
 
         <span class="c1"># Pobierz rozpoznany tekst z pola tekstowego i zaktualizuj pole edycji - Wielka zagadka Szymka</span>
@@ -194,9 +206,9 @@
 <a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.hear">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">hear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Wątek nasłuchujący, odpowiedzialny za przetwarzanie dźwięku na tekst.</span>
+<span class="sd">        Wątek odpowiedzialny za nasłuchiwanie i przetwarzanie mowy na tekst.</span>
 
-<span class="sd">        Dane są odczytywane z mikrofonu i rozpoznawane przy użyciu modelu VOSK.</span>
+<span class="sd">        Dane są odczytywane z mikrofonu i przetwarzane przez model VOSK.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie hear&quot;</span><span class="p">)</span>
         <span class="n">recognized_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -232,23 +244,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;hear zakończył działanie&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="VoiceChatApp.ev_confirm_button">
+<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_confirm_button">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ev_confirm_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Obsługa przycisku &#39;Potwierdź&#39;</span>
+<span class="sd">        Obsługuje zdarzenie kliknięcia przycisku &#39;Potwierdź&#39;.</span>
+
+<span class="sd">        Zatrzymuje nasłuchiwanie, przetwarza wprowadzony tekst użytkownika</span>
+<span class="sd">        oraz generuje odpowiedź, która jest wyświetlana w GUI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice_partial</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Aby rozpocząć mówienie wciśnij ikonę mikrofonu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;mówię do ciebie&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">process_text</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_audio_status_thread</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="VoiceChatApp.process_text">
 <a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.process_text">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">process_text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Przetwarza tekst wprowadzony przez użytkownika i wyświetla odpowiedź.</span>
+<span class="sd">        Przetwarza tekst wprowadzony przez użytkownika, generuje odpowiedź</span>
+<span class="sd">        oraz wyświetla ją w GUI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie process_text&quot;</span><span class="p">)</span>
-        <span class="c1"># Pobierz tekst z pola edycji i przekształć go na małe litery dla lepszej zgodności</span>
         <span class="n">user_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user_text</span><span class="p">:</span>
@@ -261,7 +281,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wyświetlono tekst użytkownika: &#39;Ty: </span><span class="si">{</span><span class="n">user_text</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Sprawdź, czy użytkownik chce zresetować rozmowę</span>
         <span class="k">if</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">is_reset_command</span><span class="p">(</span><span class="n">user_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Otrzymano komendę resetowania rozmowy.&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">medic</span><span class="o">.</span><span class="n">reset_conversation</span><span class="p">()</span>
@@ -272,31 +291,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;MedykBot: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wyświetlono odpowiedź bota: &#39;MedykBot: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-            <span class="c1"># Odtworzenie odpowiedzi</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lector</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="c1"># Czyszczenie pola tekstowego po potwierdzeniu</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="c1"># Przetwarzanie tekstu przez moduł medyczny</span>
         <span class="n">result</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">medic</span><span class="o">.</span><span class="n">analyze_symptoms</span><span class="p">(</span><span class="n">user_text</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Przetworzono tekst użytkownika przez MedicalChat: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Wyświetlenie odpowiedzi bota w czacie</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;MedykBot: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">see</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wyświetlono odpowiedź bota: &#39;MedykBot: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Odtworzenie odpowiedzi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lector</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="c1"># Czyszczenie pola tekstowego po potwierdzeniu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Pole tekstowe zostało wyczyszczone.&quot;</span><span class="p">)</span></div>
-
-
 
 
 <div class="viewcode-block" id="VoiceChatApp.on_closing">
@@ -304,6 +315,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">on_closing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Zamyka aplikację i zwalnia zasoby.</span>
+
+<span class="sd">        Kończy działanie strumieni, zamyka wątki i zwalnia zasoby audio.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie on_closing&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span> <span class="o">=</span> <span class="kc">False</span>
@@ -319,51 +332,12 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Destruktor klasy, wywołuje funkcję on_closing w celu zwolnienia zasobów.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Destruktor klasy.</span>
+
+<span class="sd">        Wywołuje funkcję on_closing w celu zwolnienia zasobów przed usunięciem obiektu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">on_closing</span><span class="p">()</span>
-
-<div class="viewcode-block" id="VoiceChatApp.ev_speaking_button">
-<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_speaking_button">[dokumentacja]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ev_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie speaking_button&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">start_speaking_button</span><span class="p">()</span>
-            <span class="c1"># Ustawiamy status na &quot;mówię&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;nasłuchiwanie&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span>
-            <span class="c1"># Ustawiamy status na &quot;czekam na odpowiedź&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;sprawdź i potwierdź&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="VoiceChatApp.start_speaking_button">
-<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.start_speaking_button">[dokumentacja]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">start_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie start_speaking_button&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice_partial</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_speaking</span><span class="p">)</span>
-            <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hear</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="VoiceChatApp.ev_confirm_button">
-<a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.ev_confirm_button">[dokumentacja]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ev_confirm_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stop_speaking_button</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice_partial</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Aby rozpocząć mówienie wciśnij ikonę mikrofonu&quot;</span><span class="p">)</span>
-        <span class="c1"># Ustaw status od razu</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;mówię do ciebie&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">process_text</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">)</span>
-        <span class="c1"># sprawdzanie statusu wątku odtwarzania dźwięku</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_audio_status_thread</span><span class="p">()</span></div>
-
 
 <div class="viewcode-block" id="VoiceChatApp.check_audio_status_thread">
 <a class="viewcode-back" href="../../VoiceChatApp.html#VoiceChatApp.VoiceChatApp.VoiceChatApp.check_audio_status_thread">[dokumentacja]</a>
@@ -375,11 +349,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lector</span><span class="o">.</span><span class="n">current_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">lector</span><span class="o">.</span><span class="n">current_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_audio_status_thread</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Gdy wątek zakończył działanie, ustaw status na</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">update_status_label</span><span class="p">(</span><span class="s2">&quot;możesz teraz mówić&quot;</span><span class="p">)</span></div>
 </div>
-
-
 
 </pre></div>
 

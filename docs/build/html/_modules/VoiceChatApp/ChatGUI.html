@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -48,7 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
 </ul>
 
         </div>
@@ -87,10 +86,27 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ChatGUI</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.</span>
-<span class="sd">    Obsługuje wyświetlanie wiadomości, rozpoznanego tekstu oraz przyciski do sterowania nagrywaniem.</span>
+
+<span class="sd">    Zapewnia funkcjonalności, takie jak:</span>
+
+<span class="sd">    - Wyświetlanie historii wiadomości.</span>
+
+<span class="sd">    - Edycja i podgląd rozpoznanego tekstu.</span>
+
+<span class="sd">    - Sterowanie nagrywaniem za pomocą przycisków.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicjalizuje obiekt ChatGUI i konfiguruje środowisko GUI i ładuje wymagane zasoby.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (VoiceChatApp): Instancja klasy VoiceChatApp, która zarządza logiką aplikacji.</span>
+<span class="sd">            debug (bool, optional): Jeśli True, włącza tryb debugowania w logach. Domyślnie False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: Jeśli `parent` nie jest instancją klasy VoiceChatApp.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">VoiceChatApp</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceChatApp</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">VoiceChatApp</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -110,30 +126,41 @@
 <a class="viewcode-back" href="../../ChatGUI.html#VoiceChatApp.ChatGUI.ChatGUI.create_widgets">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna.</span>
+<span class="sd">        Tworzy wszystkie widżety interfejsu użytkownika i dodaje je do głównego okna aplikacji.</span>
+
+<span class="sd">        Widżety obejmują:</span>
+<span class="sd">        - Pole tekstowe do wyświetlania historii wiadomości czatu.</span>
+
+<span class="sd">        - Pole edycyjne do wprowadzania tekstu rozpoznanego przez system.</span>
+
+<span class="sd">        - Etykiety do wyświetlania stanu systemu oraz rozpoznanego tekstu.</span>
+
+<span class="sd">        - Przycisk mikrofonu do sterowania nagrywaniem.</span>
+
+<span class="sd">        - Przycisk potwierdzenia tekstu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Rozpoczynam tworzenie widżetów GUI&quot;</span><span class="p">)</span>
 
-        <span class="c1"># Pole do wyświetlania czatu</span>
+        <span class="c1"># Pole tekstowe do wyświetlania historii wiadomości czatu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat_display</span> <span class="o">=</span> <span class="n">scrolledtext</span><span class="o">.</span><span class="n">ScrolledText</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">WORD</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat_display</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-        <span class="c1"># Pole tekstowe do edycji rozpoznanego tekstu</span>
+        <span class="c1"># Pole edycyjne do wprowadzania tekstu rozpoznanego przez system</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_input_voice</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">WORD</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">2</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">END</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_input_voice</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-        <span class="c1"># Etykieta do wyświetlania częściowo rozpoznanego tekstu</span>
+        <span class="c1"># Etykieta do wyświetlania rozpoznanego tekstu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_input_voice_partial</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Aby rozpocząć mówienie wciśnij przycisk mikrofonu&quot;</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user_input_voice_partial</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-        <span class="c1">#etykieta do wyświetlenia stanu systemu</span>
+        <span class="c1"># Etykieta do wyświetlania stanu systemu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_status</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="s2">&quot;rozpoczęcie rozmowy&quot;</span><span class="p">,</span>
@@ -142,7 +169,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_status</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="c1"># Przycisk mikrofonu - start/stop nagrywania</span>
+        <span class="c1"># Przycisk mikrofonu do sterowania nagrywaniem - start/stop nagrywania</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speaking_button</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">green_mic_image</span><span class="p">,</span>
@@ -167,10 +194,10 @@
 <a class="viewcode-back" href="../../ChatGUI.html#VoiceChatApp.ChatGUI.ChatGUI.update_status_label">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_status_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Aktualizuje znacznik stanu systemu w GUI.</span>
+<span class="sd">        Aktualizuje etykietę stanu systemu w GUI.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            status (str): Tekst stanu</span>
+<span class="sd">            status (str): Tekst reprezentujący aktualny stan systemu.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_status</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">status</span><span class="p">)</span></div>
 
@@ -179,10 +206,10 @@
 <a class="viewcode-back" href="../../ChatGUI.html#VoiceChatApp.ChatGUI.ChatGUI.update_speaking_button">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_speaking_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_speaking</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Aktualizuje ikonę przycisku mówienia w zależności od stanu nagrywania.</span>
+<span class="sd">        Aktualizuje ikonę przycisku mikrofonu w zależności od stanu nagrywania.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            is_speaking (bool): True jeśli aktualnie nagrywamy, False jeśli nagrywanie jest wyłączone.</span>
+<span class="sd">            is_speaking (bool): True, jeśli nagrywanie jest aktywne, False w przeciwnym przypadku.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">is_speaking</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">speaking_button</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">red_mic_image</span><span class="p">)</span>
@@ -193,12 +220,20 @@
 <div class="viewcode-block" id="ChatGUI.start">
 <a class="viewcode-back" href="../../ChatGUI.html#VoiceChatApp.ChatGUI.ChatGUI.start">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Rozpoczyna główną pętlę aplikacji GUI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ChatGUI.generate_icons">
 <a class="viewcode-back" href="../../ChatGUI.html#VoiceChatApp.ChatGUI.ChatGUI.generate_icons">[dokumentacja]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_icons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ładuje ikony przycisków mikrofonu z plików graficznych.</span>
+
+<span class="sd">        Obsługuje błędy ładowania ikon i loguje odpowiednie informacje.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">green_mic_image</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;green_mic.png&quot;</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">red_mic_image</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;red_mic.png&quot;</span><span class="p">))</span>
@@ -209,6 +244,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obsługuje zamykanie GUI i wywołuje zdarzenie zamknięcia w klasie nadrzędnej.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Zamykanie GUI&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">on_closing</span><span class="p">()</span></div>

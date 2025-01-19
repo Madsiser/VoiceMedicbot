@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Spis treści:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
@@ -48,7 +48,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
 </ul>
 
         </div>
@@ -80,7 +79,6 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">gtts</span><span class="w"> </span><span class="kn">import</span> <span class="n">gTTS</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pygame</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
@@ -99,15 +97,14 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            lang (str): Kod języka (np. &#39;pl&#39; dla polskiego, &#39;en&#39; dla angielskiego).</span>
-<span class="sd">            debug (bool): Flaga określająca, czy włączyć tryb debugowania.</span>
+<span class="sd">            debug (bool): Flaga włączająca tryb debugowania logów. Domyślnie False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Konfiguracja loggera</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>  <span class="c1"># Katalog tymczasowy dla plików audio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Aktualny wątek odtwarzania</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
         <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
@@ -122,12 +119,12 @@
 <span class="sd">            text (str): Tekst do wymówienia.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Wywołanie say&quot;</span><span class="p">)</span>
-        <span class="c1"># Zatrzymaj aktywne odtwarzanie, jeśli istnieje wątek odtwarzania</span>
+        <span class="c1"># Zatrzymywanie aktywnego odtwarzania, jeśli istnieje wątek odtwarzania</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
             <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
 
-        <span class="c1"># Utwórz nowy wątek do odtwarzania dźwięku</span>
+        <span class="c1"># Tworzenie nowego wątku do odtwarzania dźwięku</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_play_sound</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">text</span><span class="p">,),</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
@@ -140,21 +137,14 @@
 <span class="sd">            text (str): Tekst do wygenerowania i odtworzenia.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Ścieżka tymczasowego pliku audio</span>
-            <span class="n">temp_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_dir</span><span class="p">,</span> <span class="s2">&quot;temp_sound.mp3&quot;</span><span class="p">)</span>
-
-            <span class="c1"># Generowanie pliku audio za pomocą gTTS</span>
             <span class="n">tts</span> <span class="o">=</span> <span class="n">gTTS</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lang</span><span class="p">)</span>
             <span class="n">mp3</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
             <span class="n">tts</span><span class="o">.</span><span class="n">write_to_fp</span><span class="p">(</span><span class="n">mp3</span><span class="p">)</span>
             <span class="n">mp3</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-
-            <span class="c1"># Odtwarzanie pliku audio za pomocą Pygame</span>
             <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mp3</span><span class="p">)</span>
             <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 
-            <span class="c1"># Czekaj, aż odtwarzanie zostanie zakończone</span>
             <span class="k">while</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">get_busy</span><span class="p">():</span>
                 <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
