@@ -67,10 +67,6 @@ class VoiceChatApp:
 
         Jeśli nagrywanie mowy nie jest aktywne, uruchamia nasłuchiwanie w nowym wątku.
         W przeciwnym razie zatrzymuje nagrywanie i aktualizuje elementy GUI.
-
-        Zmiany w GUI:
-        - Aktualizuje ikonę przycisku mówienia.
-        - Ustawia odpowiedni status w interfejsie graficznym.
         """
         self.logger.debug("Wywołanie speaking_button")
         if not self.is_speaking:

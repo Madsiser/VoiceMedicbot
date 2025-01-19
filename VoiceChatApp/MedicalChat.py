@@ -9,8 +9,11 @@ class MedicalChat:
     oraz rekomendacji medycznych.
 
     Funkcjonalności:
+
     - Analiza początkowego monologu użytkownika w celu identyfikacji objawów.
+
     - Tworzenie pytań uzupełniających na podstawie brakujących danych.
+
     - Generowanie diagnoz i rekomendacji medycznych za pomocą wbudowanych reguł lub modelu AI.
     """
 

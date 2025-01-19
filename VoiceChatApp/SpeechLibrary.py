@@ -6,8 +6,11 @@ class SpeechLibrary:
     Klasa SpeechLibrary obsługuje logikę rozmów w aplikacji medycznej.
 
     Funkcjonalności:
+
     - Przechowywanie tabeli chorób wraz z objawami i zaleceniami.
+
     - Obsługa odpowiedzi użytkownika na pytania dotyczące objawów.
+
     - Generowanie losowych pytań oraz odpowiedzi na podstawie danych wejściowych.
     """
 

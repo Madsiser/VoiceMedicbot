@@ -9,8 +9,11 @@ class ChatGUI:
     Klasa ChatGUI odpowiada za zarządzanie graficznym interfejsem użytkownika (GUI) aplikacji czatu głosowego.
 
     Zapewnia funkcjonalności, takie jak:
+
     - Wyświetlanie historii wiadomości.
+
     - Edycja i podgląd rozpoznanego tekstu.
+
     - Sterowanie nagrywaniem za pomocą przycisków.
     """
 
@@ -46,9 +49,13 @@ class ChatGUI:
 
         Widżety obejmują:
         - Pole tekstowe do wyświetlania historii wiadomości czatu.
+
         - Pole edycyjne do wprowadzania tekstu rozpoznanego przez system.
+
         - Etykiety do wyświetlania stanu systemu oraz rozpoznanego tekstu.
+
         - Przycisk mikrofonu do sterowania nagrywaniem.
+
         - Przycisk potwierdzenia tekstu.
         """
         self.logger.debug("Rozpoczynam tworzenie widżetów GUI")

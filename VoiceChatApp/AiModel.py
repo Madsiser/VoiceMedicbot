@@ -17,12 +17,17 @@ class AiModel:
         Inicjalizuje obiekt AiModel i konfiguruje klienta OpenAI.
 
         Proces inicjalizacji obejmuje:
+
         - Wczytanie zmiennych środowiskowych z pliku `.env`.
+
         - Utworzenie klienta OpenAI za pomocą podanych danych uwierzytelniających.
 
         Zmienne środowiskowe:
+
         - OPENAI_ORGANIZATION: Organizacja OpenAI.
+
         - OPENAI_PROJECT: Projekt OpenAI.
+
         - OPENAI_API_KEY: Klucz API dla OpenAI.
         """
         load_dotenv()
