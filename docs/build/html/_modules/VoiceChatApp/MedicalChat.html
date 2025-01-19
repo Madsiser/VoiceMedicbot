@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pl" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceChatApp.MedicalChat &mdash; VoiceMedicBot  - dokumentacja</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9893e7ba"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=4c397337"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Indeks" href="../../genindex.html" />
+    <link rel="search" title="Szukaj" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            VoiceMedicBot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Szukaj" aria-label="Szukaj" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MedicalChat.html">MedicalChat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">VoiceMedicBot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Kod modułu</a></li>
+      <li class="breadcrumb-item active">VoiceChatApp.MedicalChat</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Kod źródłowy modułu VoiceChatApp.MedicalChat</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SpeechLibrary</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeechLibrary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.AiModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiModel</span>
+
+
+<div class="viewcode-block" id="MedicalChat">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat">[dokumentacja]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MedicalChat</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Klasa MedicalChat odpowiada za analizę objawów zgłaszanych przez użytkownika,</span>
+<span class="sd">    zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicjalizuje obiekt klasy MedicalChat.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            debug (bool): Flaga określająca, czy włączyć tryb debugowania.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Konfiguracja loggera</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+        <span class="c1"># Inicjalizacja zmiennych</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symptoms_table</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">symptoms_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">required_symptoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">synonyms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai_model</span> <span class="o">=</span> <span class="n">AiModel</span><span class="p">()</span>
+        <span class="c1"># Flaga wskazująca, czy przekazaliśmy już diagnozę i czekamy na odpowiedź</span>
+        <span class="c1"># na pytanie &quot;Czy mogę coś dla ciebie zrobić?&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="MedicalChat.reset_conversation">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.reset_conversation">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_conversation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Rozpoczęto nową rozmowę medyczną.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MedicalChat.analyze_monolog">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.analyze_monolog">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_monolog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_input (str): Wprowadzenie użytkownika z potencjalnymi objawami.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">symptom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span><span class="p">:</span>
+            <span class="c1"># Domyślnie ustawiamy, że objawu nie wykryto.</span>
+            <span class="n">symptom_present</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># Sprawdzamy, czy dokładna fraza kluczowa znajduje się w monologu.</span>
+            <span class="k">if</span> <span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">user_input</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">symptom_present</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Jeśli nie – sprawdzamy synonimy.</span>
+                <span class="n">symptom_key_lower</span> <span class="o">=</span> <span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">syn_key</span><span class="p">,</span> <span class="n">syn_list</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">syn_key</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">symptom_key_lower</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">syn_list</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">user_input</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                                <span class="n">symptom_present</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">break</span>
+                        <span class="k">break</span>  <span class="c1"># Koniec, gdy znaleziono dopasowanie.</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="p">[</span><span class="n">symptom</span><span class="p">]</span> <span class="o">=</span> <span class="n">symptom_present</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="p">[</span><span class="n">symptom</span><span class="p">]</span> <span class="o">=</span> <span class="n">symptom_present</span>
+
+            <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">no_other_symptoms_phrases</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">user_input</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wykryto frazę sugerującą brak innych objawów: &#39;</span><span class="si">{</span><span class="n">phrase</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">symptom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="p">[</span><span class="n">symptom</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span></div>
+
+
+<div class="viewcode-block" id="MedicalChat.analyze_symptoms">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.analyze_symptoms">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">analyze_symptoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Główna funkcja analizy objawów użytkownika.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_input (str): Wprowadzenie użytkownika do analizy.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: (bool, str)</span>
+<span class="sd">                - bool: Czy wszystkie etapy analizy zostały zakończone.</span>
+<span class="sd">                - str: Wiadomość zwrotna do użytkownika.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Jeżeli po diagnozie czekamy na odpowiedź na pytanie &quot;Czy przejsc caly proces od nowa?&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_agree</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">answer</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="c1"># Użytkownik nie jest zadowolony – resetujemy rozmowę</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset_conversation</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">reset_response</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">answer</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># Użytkownik nie potrzebuje dalszej pomocy – kończymy rozmowę</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">end_response</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Brak jednoznacznej odpowiedzi – pytamy jeszcze raz</span>
+                <span class="k">return</span> <span class="kc">False</span><span class="p">,</span>
+
+        <span class="c1"># Standardowa analiza objawów</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">analyze_monolog</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">answer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">does_agree</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">answer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="p">]</span> <span class="o">=</span> <span class="n">answer</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sprawdzone objawy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Objawy użytkownika: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="c1"># Jeśli wszystkie objawy są znane – generujemy rekomendację</span>
+            <span class="n">i_know</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_recommendation</span><span class="p">()</span>
+            <span class="c1"># Ustawiamy flagę, aby po przekazaniu diagnozy poczekać na odpowiedź</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">waiting_post_diagnosis</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i_know</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ask_missing_symptom</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">first_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_info_pack</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">i_know</span><span class="p">,</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="MedicalChat.does_agree">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.does_agree">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">does_agree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): Odpowiedź użytkownika.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool lub None: True dla potwierdzenia, False dla zaprzeczenia, None gdy odpowiedź jest niejednoznaczna.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analiza odpowiedzi: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Poprzednie pytanie: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">response_yes_no_pattern</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="MedicalChat.ask_missing_symptom">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.ask_missing_symptom">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask_missing_symptom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pyta użytkownika o brakujące lub niejednoznaczne objawy.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Pytanie o brakujące objawy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">symptom</span><span class="p">,</span> <span class="n">present</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_syndroms</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">present</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="n">symptom</span>
+                <span class="k">return</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">ask_first</span><span class="p">(</span><span class="n">symptom</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">present</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="n">symptom</span>
+                <span class="k">return</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">ask_error</span><span class="p">(</span><span class="n">symptom</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_question</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">ask_error</span><span class="p">(</span><span class="s2">&quot;objawy&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MedicalChat.get_recommendation">
+<a class="viewcode-back" href="../../MedicalChat.html#VoiceChatApp.MedicalChat.MedicalChat.get_recommendation">[dokumentacja]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_recommendation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie</span>
+<span class="sd">        po przedstawieniu diagnozy.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Komunikat z diagnozą(Zalecenia lub odpowiedź modelu AI) i pytaniem o dalszą pomoc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diagnosis</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">disease</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symptoms_table</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="n">disease</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">symptom</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">symptom</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">symptom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">required_symptoms</span>
+            <span class="p">):</span>
+                <span class="n">diagnosis</span> <span class="o">=</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">find_disease</span><span class="p">(</span><span class="n">disease</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">diagnosis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">diagnosis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_model</span><span class="o">.</span><span class="n">ask</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Jaka to może być choroba i jakie zalecenia mi dasz. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Odpowiedz bardzo krótko w dwóch zdaniach. Objawy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user_symptoms</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Dodajemy pytanie o dalszą pomoc.</span>
+        <span class="n">diagnosis</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Czy spełniłem twoje oczekiwania?&quot;</span>
+        <span class="k">return</span> <span class="n">diagnosis</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Prawa zastrzeżone 2025, Kamil Biłos, Krystian Madej, Mateusz Drużny, Szymon Jędrzejczak.</p>
+  </div>
+
+  Zbudowano w <a href="https://www.sphinx-doc.org/">Sphinx</a> używając
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    dostarczone przez <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

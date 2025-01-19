@@ -1,7 +1,0 @@
-SpeechLibrary module
-====================
-
-.. automodule:: SpeechLibrary
-   :members:
-   :undoc-members:
-   :show-inheritance:

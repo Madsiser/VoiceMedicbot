@@ -1,0 +1,916 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="pl" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoiceChatApp.SpeechLibrary &mdash; VoiceMedicBot  - dokumentacja</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9893e7ba"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=4c397337"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Indeks" href="../../genindex.html" />
+    <link rel="search" title="Szukaj" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            VoiceMedicBot
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Szukaj" aria-label="Szukaj" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../AiModel.html">AiModel module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ChatGUI.html">ChatGUI module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../MedicalChat.html">MedicalChat module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../SoundEngine.html">SoundEngine module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../SpeechLibrary.html">SpeechLibrary module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../VoiceChatApp.html">VoiceChatApp module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">main module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">VoiceMedicBot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Kod modułu</a></li>
+      <li class="breadcrumb-item active">VoiceChatApp.SpeechLibrary</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Kod źródłowy modułu VoiceChatApp.SpeechLibrary</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<div class="viewcode-block" id="SpeechLibrary">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary">[dokumentacja]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpeechLibrary</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Biblioteka obsługująca logikę rozmów w aplikacji medycznej, w tym:</span>
+<span class="sd">    - Tabelę chorób z objawami i zaleceniami.</span>
+<span class="sd">    - Obsługę odpowiedzi użytkownika na pytania o objawy.</span>
+<span class="sd">    - Generowanie odpowiedzi i pytań opartych na danych wejściowych.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Model wzorów chorobowych</span>
+    <span class="n">symptoms_table</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Grypa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Internista&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Odpoczynek, nawadnianie, leki przeciwgorączkowe&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Zapalenie płuc&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Pulmonolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Antybiotyki, nawadnianie, odpoczynek&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Zapalenie wyrostka&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Chirurg ogólny&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Natychmiastowa pomoc medyczna, operacja&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Migrena&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Neurolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Leki przeciwbólowe, unikanie czynników wywołujących&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Infekcja wirusowa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Internista&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Odpoczynek, nawadnianie, leki objawowe&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Choroby autoimmunologiczne&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Reumatolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Leki immunosupresyjne, regularne kontrole&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Nowotwory&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Onkolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Diagnostyka, leczenie onkologiczne&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Zatrucie pokarmowe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Internista&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Nawadnianie, dieta lekkostrawna&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Cukrzyca&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Diabetolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Monitorowanie poziomu cukru, dieta, leki&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Choroby tarczycy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Endokrynolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Badania hormonalne, leczenie hormonalne&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Zespół przewlekłego zmęczenia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Internista&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Odpoczynek, terapia, zmiana stylu życia&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Astma&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Pulmonolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Leki rozszerzające oskrzela, unikanie alergenów&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Wrzody żołądka&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Gastroenterolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Leki zobojętniające, dieta, unikanie stresu&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Mononukleoza&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Internista&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Odpoczynek, nawadnianie, leki przeciwbólowe&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Choroba&quot;</span><span class="p">:</span> <span class="s2">&quot;Zespół jelita drażliwego&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;Specjalista&quot;</span><span class="p">:</span> <span class="s2">&quot;Gastroenterolog&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zalecenia&quot;</span><span class="p">:</span> <span class="s2">&quot;Dieta, leki przeciwbólowe, terapia psychologiczna&quot;</span>
+        <span class="p">},</span>
+
+        <span class="c1"># Możliwość rozszerzenia o kolejne choroby</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Lista zwrotów do zakończenia rozmowy</span>
+    <span class="n">end_speech_phrases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;koniec&quot;</span><span class="p">,</span> <span class="s2">&quot;dziękuję&quot;</span><span class="p">,</span> <span class="s2">&quot;do widzenia&quot;</span>
+    <span class="p">]</span>
+
+
+    <span class="c1"># Lista zwrotów do resetowania rozmowy</span>
+    <span class="n">reset_speech_phrases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;zacznijmy od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy jeszcze raz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chcę zacząć od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy ponownie&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zrestartujmy rozmowę&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zróbmy to jeszcze raz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy od początku&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chciałbym zacząć od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rozpocznijmy ponownie&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;przeładujmy rozmowę&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy wszystko od początku&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zrestartujmy naszą rozmowę&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy jeszcze raz od początku&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;proszę zacząć od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;proszę rozpocząć ponownie&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy od nowa proszę&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zróbmy to od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy naszą rozmowę od nowa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;powtórzmy rozmowę od początku&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;chcę zacząć jeszcze raz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;zacznijmy rozmowę jeszcze raz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;restart&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rozpocznij ponownie&quot;</span>
+    <span class="p">]</span>
+
+
+    <span class="c1"># Lista objawów do odpytania</span>
+    <span class="n">required_symptoms</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Ból głowy&quot;</span><span class="p">,</span> <span class="s2">&quot;Wymioty&quot;</span><span class="p">,</span> <span class="s2">&quot;Gorączka&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Nudności&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">,</span> <span class="s2">&quot;Kaszel&quot;</span><span class="p">,</span> <span class="s2">&quot;Duszności&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">,</span> <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">,</span> <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">,</span> <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">,</span><span class="s2">&quot;Dreszcze&quot;</span>
+    <span class="p">]</span>
+
+    <span class="c1"># słownik synonimów</span>
+    <span class="n">synonyms</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Ból głowy&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;boli mnie głowa&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;głowa mnie boli&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ból głowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;migrena&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pulsuje mi w głowie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pulsujący ból głowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ścisk w skroniach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;napięciowy ból głowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ćmiący ból głowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rozpierający ból głowy&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Wymioty&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;rzyganie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zwracam treść pokarmową&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chce mi się wymiotować&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wymiotuję&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nudności z wymiotami&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rzucam pawia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zwymiotowałem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;odruch wymiotny&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wyrzucam z siebie jedzenie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mdłości z torsjami&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Gorączka&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;temperatura 38&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;wysoka temperatura&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam ponad 37 stopni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam gorączkę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jestem rozpalony&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję, że mam podwyższoną temperaturę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gorączkuję&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam stan podgorączkowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;piecze mnie skóra&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję gorąco w ciele&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Ból kości i stawów&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;łamanie w kościach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stawy mnie bolą&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;przeskakiwanie w stawach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bóle reumatyczne&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kłujący ból w stawach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sztywność stawów&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;trzeszczenie w stawach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bóle kostne&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ciągnie mnie w kościach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ból podczas ruchu&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Nudności&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;mdłości&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jest mi niedobrze&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zbiera mi się na wymioty&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję się słabo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ścisnęło mnie w żołądku&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;żołądek mi się przewraca&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam zawroty głowy i mdłości&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;odrzuca mnie od jedzenia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brzydzi mnie zapach jedzenia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mdli mnie&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Ból brzucha&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;boli mnie brzuch&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ból w okolicy żołądka&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kłuje mnie w brzuchu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;skurcze brzucha&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bóle żołądkowe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ciągnie mnie w żołądku&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję ucisk w brzuchu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rozpierający ból w brzuchu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;piekący ból w żołądku&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ból jelitowy&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Kaszel&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;kaszlę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pokasłuję&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam suchy kaszel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kaszel mokry&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;drażniący kaszel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;krztuszę się&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;odchrząkuję&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;napad kaszlu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kaszel odrywający&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;kaszel duszący&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Duszności&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;ciężko mi oddychać&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brakuje mi tchu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;łapię powietrze&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nie mogę złapać oddechu&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję ucisk w klatce piersiowej&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;świszczący oddech&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję się przytłoczony&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam zadyszkę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;krótkie oddechy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;duszę się&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Zmęczenie&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;jestem wyczerpany&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;brak mi energii&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję się słabo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam totalny spadek energii&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jestem ospały&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nie mam sił&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;padam z nóg&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję się wyczerpany psychicznie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jestem przemęczony&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję się bez życia&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Utrata wagi&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;schudłem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chudnę ostatnio&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;straciłem na wadze&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ważę mniej&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ubytki masy ciała&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;spadek wagi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zmniejszyłem swoją wagę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;widać po mnie, że schudłem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zaczynam być chudy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zmalała mi waga&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Problemy ze snem&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;bezsenność&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ciężko mi zasnąć&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nie mogę spać&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;budzę się w nocy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;śpię niespokojnie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam płytki sen&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;przewracam się z boku na bok&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nie mogę się wyspać&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;senność w ciągu dnia&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jestem niewyspany&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Ból mięśni&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;mięśnie mnie bolą&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zakwasy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ciągnie mnie w mięśniach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sztywność mięśni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam ból mięśniowy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;nadwyrężenie mięśni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;skurcze mięśni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;piekący ból mięśni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;uczucie zmęczenia mięśni&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mięśnie mi sztywnieją&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Dreszcze&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;mam dreszcze&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;trzęsie mnie&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;zimno mi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam gęsią skórkę&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;drżę z zimna&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję wewnętrzne dreszcze&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jest mi lodowato&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;czuję, jakby coś mnie mroziło&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ciągle mi zimno&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mam niekontrolowane drżenie ciała&quot;</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Wzorce odpowiedzi użytkownika (tak/nie) - kolejność od najbardziej zaawansowanej</span>
+    <span class="n">response_yes_no_pattern</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Odpowiedzi pozytywne</span>
+        <span class="s2">&quot;tak&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;oczywiście&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;występują&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;mają miejsce&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;potwierdzam&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;prawda&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;bez wątpienia&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;pewnie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;zdecydowanie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;z całą pewnością&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;zgadzam się&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;to prawda&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;dokładnie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;absolutnie&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;tak jest&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;na pewno&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;zdecydowanie tak&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+
+        <span class="c1"># Odpowiedzi negatywne</span>
+        <span class="s2">&quot;zdecydowanie nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie, dziękuję&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie występuje&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;brak&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie ma&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie potwierdzam&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;absolutnie nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;zdecydowanie nie&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie zgadzam się&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;to nieprawda&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;niewystępują&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie do końca&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;nie jestem pewien&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;nie wiem&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;trudno powiedzieć&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;nie jestem pewna&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;nie jestem przekonany&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Słownik odpowiedzi systemu</span>
+    <span class="n">responses</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;reset&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;Rozumiem, tak więc opisz mi jeszcze raz, co Ci dolega.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;W porządku. Możesz jeszcze raz opisać, co Cię trapi?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Jasne, zatem co Cię konkretnie boli?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Rozpoczynamy od nowa. Jak się czujesz i co Cię boli?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OK, opowiedz mi ponownie, co Ci dolega.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zaczynamy od początku. Co Cię niepokoi?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Powiedz mi raz jeszcze, co Ci doskwiera.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Spróbujmy ponownie. Co Ci dolega?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Chcę dobrze zrozumieć. Opisz jeszcze raz swoje objawy.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Przejdźmy przez to od nowa. Jak się dziś czujesz?&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;Dzień dobry, co Ci dolega?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Hej! Co się dzieje? Jak mogę pomóc?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Hej! Czy mógłbyś powiedzieć co ci dolega?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Witaj! Co jest nie tak?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Dzień dobry! opowiedz mi o swoich dolegliwościach&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cześć! Jakie masz dziś dolegliwości?&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;Do widzenia, życzę zdrowia!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Trzymaj się, mam nadzieję, że czujesz się lepiej.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zdrówka, do usłyszenia!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Dbaj o siebie i wracaj do zdrowia!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Życzę Ci szybkiego powrotu do zdrowia!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Do usłyszenia! Wszystkiego dobrego!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Powodzenia, życzę dużo zdrowia!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Trzymaj się ciepło, zdrowiej!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Miłego dnia, dbaj o siebie!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Cześć i wracaj szybko do formy!&quot;</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;ask_first&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;Czy występują u Ciebie objawy takie jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Zastanawiam się, czy dokucza Ci coś takiego jak</span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Czy zauważyłeś ostatnio, że masz coś co mogłoby sie objawiać jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Mógłbyś powiedzieć, czy symptom taki jak </span><span class="si">{symptom}</span><span class="s2"> wystąpił u ciebie ostatnio?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;a </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Czy zdarza Ci się doświadczać czegoś jak </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Czy może jeden z twoich objawów to </span><span class="si">{symptom}</span><span class="s2">?&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Lista skrótów</span>
+    <span class="n">additional_yes_no_abbreviations</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="c1">#frazy mówiące o braku innych objawów</span>
+    <span class="n">no_other_symptoms_phrases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;żadne inne objawy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nie mam więcej objawów&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nic więcej mnie nie boli&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;to wszystkie objawy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;to koniec objawów&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nie występują inne objawy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;to wszystko&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nic innego mi nie dolega&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;to już wszystkie objawy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nie mam innych dolegliwości&quot;</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Integracja dodatkowych skrótów</span>
+    <span class="n">response_yes_no_pattern</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">additional_yes_no_abbreviations</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="SpeechLibrary.is_reset_command">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.is_reset_command">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_reset_command</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Sprawdza, czy wiadomość użytkownika jest komendą resetującą rozmowę.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                message (str): Wiadomość użytkownika.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                bool: True jeśli jest komendą resetującą, False w przeciwnym razie.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">reset</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">reset_speech_phrases</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">reset</span></div>
+
+    
+
+<div class="viewcode-block" id="SpeechLibrary.first_response">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.first_response">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">first_response</span><span class="p">(</span><span class="n">user_symptoms</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje pierwszą odpowiedź po monologu użytkownika.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_symptoms (dict): Słownik z objawami użytkownika (objaw: True/False).</span>
+<span class="sd">            message (str): Komunikat bazowy.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Sformatowana odpowiedź.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">active_symptoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">symptom</span> <span class="k">for</span> <span class="n">symptom</span><span class="p">,</span> <span class="n">has_symptom</span> <span class="ow">in</span> <span class="n">user_symptoms</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">has_symptom</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">active_symptoms</span><span class="p">:</span>
+            <span class="n">symptoms_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">active_symptoms</span><span class="p">)</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Rozumiem. Czyli twoje objawy to: </span><span class="si">{</span><span class="n">symptoms_str</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Rozumiem. </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.ask_first">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.ask_first">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask_first</span><span class="p">(</span><span class="n">symptom</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje losowe pytanie o określony objaw.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symptom (str): Nazwa objawu.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Pytanie o objaw.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Losujemy jeden z szablonów pytań z klucza &quot;ask_first&quot;</span>
+        <span class="n">question_template</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;ask_first&quot;</span><span class="p">])</span>
+        <span class="c1"># Wstawiamy objaw w miejsce {symptom}, zamieniając np. &quot;Ból głowy&quot; -&gt; &quot;ból głowy&quot;</span>
+        <span class="k">return</span> <span class="n">question_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symptom</span><span class="o">=</span><span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.ask_error">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.ask_error">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ask_error</span><span class="p">(</span><span class="n">symptom</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje pytanie ponowne o określony objaw w przypadku niezrozumienia.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symptom (str): Nazwa objawu.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Ponowne pytanie o objaw.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Czy możesz powtórzyć? Czy występują u Ciebie objawy takie jak </span><span class="si">{</span><span class="n">symptom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">?&quot;</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.error">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.error">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje komunikat błędu.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Komunikat błędu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Coś poszło nie tak :(&quot;</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.find_disease">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.find_disease">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_disease</span><span class="p">(</span><span class="n">disease</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje odpowiedź z zaleceniami i specjalistą dla zidentyfikowanej choroby.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            disease (dict): Dane choroby.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Odpowiedź z zaleceniami.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Najprawdopodobniej dolega ci </span><span class="si">{</span><span class="n">disease</span><span class="p">[</span><span class="s1">&#39;Choroba&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Zalecany specjalista: </span><span class="si">{</span><span class="n">disease</span><span class="p">[</span><span class="s1">&#39;Specjalista&#39;</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Zalecenia: </span><span class="si">{</span><span class="n">disease</span><span class="p">[</span><span class="s1">&#39;Zalecenia&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.not_find_disease">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.not_find_disease">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">not_find_disease</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generuje odpowiedź w przypadku, gdy nie można zidentyfikować choroby.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Komunikat o braku jednoznacznej diagnozy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Nie mogę jednoznacznie stwierdzić, co to za choroba.&quot;</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.is_end_of_conversation">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.is_end_of_conversation">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_end_of_conversation</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sprawdza, czy użytkownik chce zakończyć rozmowę.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): Wiadomość użytkownika.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True, jeśli rozmowa powinna się zakończyć; w przeciwnym razie False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">end_speech_phrases</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.reset_conversation">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.reset_conversation">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_conversation</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sprawdza, czy użytkownik chce zresetować rozmowę i zacząć od nowa.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): Wiadomość użytkownika.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True, jeśli użytkownik chce zresetować rozmowę, w przeciwnym razie False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">phrase</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">reset_speech_phrases</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.reset_response">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.reset_response">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_response</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Odpowiedź po zresetowaniu rozmowy.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Komunikat o rozpoczęciu nowej rozmowy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;reset&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.start_response">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.start_response">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_response</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Zwraca losowo wybraną odpowiedź przy rozpoczęciu rozmowy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.end_response">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.end_response">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_response</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Zwraca losowo wybraną odpowiedź przy zakończeniu rozmowy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SpeechLibrary.get_symptom_confirmation_status">
+<a class="viewcode-back" href="../../SpeechLibrary.html#VoiceChatApp.SpeechLibrary.SpeechLibrary.get_symptom_confirmation_status">[dokumentacja]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_symptom_confirmation_status</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sprawdza, czy wiadomość użytkownika zawiera odpowiedź twierdzącą lub przeczącą.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (str): Wiadomość użytkownika.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool or None: True/False w przypadku odpowiedzi, None jeśli brak rozpoznania.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">SpeechLibrary</span><span class="o">.</span><span class="n">response_yes_no_pettern</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Prawa zastrzeżone 2025, Kamil Biłos, Krystian Madej, Mateusz Drużny, Szymon Jędrzejczak.</p>
+  </div>
+
+  Zbudowano w <a href="https://www.sphinx-doc.org/">Sphinx</a> używając
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    dostarczone przez <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,7 +1,0 @@
-VoiceChatApp module
-===================
-
-.. automodule:: VoiceChatApp
-   :members:
-   :undoc-members:
-   :show-inheritance:
