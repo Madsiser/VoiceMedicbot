@@ -2,7 +2,6 @@ from io import BytesIO
 
 from gtts import gTTS
 import pygame
-import os
 import tempfile
 import threading
 import logging
@@ -19,15 +18,14 @@ class SoundEngine:
 
         Args:
             lang (str): Kod języka (np. 'pl' dla polskiego, 'en' dla angielskiego).
-            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
+            debug (bool): Flaga włączająca tryb debugowania logów. Domyślnie False.
         """
-        # Konfiguracja loggera
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
 
         self.lang = lang
-        self.temp_dir = tempfile.gettempdir()  # Katalog tymczasowy dla plików audio
-        self.current_thread = None  # Aktualny wątek odtwarzania
+        self.temp_dir = tempfile.gettempdir()
+        self.current_thread = None
         pygame.init()
         pygame.mixer.init()
 
@@ -40,12 +38,12 @@ class SoundEngine:
             text (str): Tekst do wymówienia.
         """
         self.logger.debug("Wywołanie say")
-        # Zatrzymaj aktywne odtwarzanie, jeśli istnieje wątek odtwarzania
+        # Zatrzymywanie aktywnego odtwarzania, jeśli istnieje wątek odtwarzania
         if self.current_thread and self.current_thread.is_alive():
             pygame.mixer.music.stop()
             self.current_thread.join()
 
-        # Utwórz nowy wątek do odtwarzania dźwięku
+        # Tworzenie nowego wątku do odtwarzania dźwięku
         self.current_thread = threading.Thread(target=self._play_sound, args=(text,), daemon=True)
         self.current_thread.start()
 
@@ -57,21 +55,14 @@ class SoundEngine:
             text (str): Tekst do wygenerowania i odtworzenia.
         """
         try:
-            # Ścieżka tymczasowego pliku audio
-            temp_file = os.path.join(self.temp_dir, "temp_sound.mp3")
-
-            # Generowanie pliku audio za pomocą gTTS
             tts = gTTS(text=text, lang=self.lang)
             mp3 = BytesIO()
             tts.write_to_fp(mp3)
             mp3.seek(0)
 
-
-            # Odtwarzanie pliku audio za pomocą Pygame
             pygame.mixer.music.load(mp3)
             pygame.mixer.music.play()
 
-            # Czekaj, aż odtwarzanie zostanie zakończone
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
 
