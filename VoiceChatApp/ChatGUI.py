@@ -53,26 +53,26 @@ class ChatGUI:
         """
         self.logger.debug("Rozpoczynam tworzenie widżetów GUI")
 
-        #Pole tekstowe do wyświetlania historii wiadomości czatu
+        # Pole tekstowe do wyświetlania historii wiadomości czatu
         self.chat_display = scrolledtext.ScrolledText(
             self.root, wrap=tk.WORD, width=50, height=20, state='normal'
         )
         self.chat_display.pack(padx=10, pady=10)
 
-        #Pole edycyjne do wprowadzania tekstu rozpoznanego przez system
+        # Pole edycyjne do wprowadzania tekstu rozpoznanego przez system
         self.user_input_voice = tk.Text(
             self.root, wrap=tk.WORD, width=50, height=2
         )
         self.user_input_voice.insert(tk.END, "")
         self.user_input_voice.pack(padx=10, pady=10)
 
-        #Etykieta do wyświetlania rozpoznanego tekstu
+        # Etykieta do wyświetlania rozpoznanego tekstu
         self.user_input_voice_partial = tk.Label(
             self.root, width=50, text="Aby rozpocząć mówienie wciśnij przycisk mikrofonu", anchor="w"
         )
         self.user_input_voice_partial.pack(padx=10, pady=10)
 
-        #Etykieta do wyświetlania stanu systemu
+        # Etykieta do wyświetlania stanu systemu
         self.system_status = tk.Label(
             self.root,
             text="rozpoczęcie rozmowy",
@@ -81,7 +81,7 @@ class ChatGUI:
         )
         self.system_status.pack(padx=10, pady=5)
 
-        #Przycisk mikrofonu do sterowania nagrywaniem - start/stop nagrywania
+        # Przycisk mikrofonu do sterowania nagrywaniem - start/stop nagrywania
         self.speaking_button = tk.Button(
             self.root,
             image=self.green_mic_image,
@@ -90,7 +90,7 @@ class ChatGUI:
         )
         self.speaking_button.pack(padx=10, pady=5)
 
-        #Przycisk potwierdzenia tekstu
+        # Przycisk potwierdzenia tekstu
         self.confirm_button = tk.Button(
             self.root,
             text="Potwierdź",

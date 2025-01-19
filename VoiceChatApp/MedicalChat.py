@@ -6,22 +6,25 @@ from .AiModel import AiModel
 
 class MedicalChat:
     """
-    Klasa MedicalChat odpowiada za analizę objawów zgłaszanych przez użytkownika,
-    zarządzanie pytaniami pomocniczymi oraz generowanie rekomendacji medycznych.
+    Klasa MedicalChat obsługuje analizę zgłoszonych objawów, generowanie pytań uzupełniających
+    oraz rekomendacji medycznych.
+
+    Funkcjonalności:
+    - Analiza początkowego monologu użytkownika w celu identyfikacji objawów.
+    - Tworzenie pytań uzupełniających na podstawie brakujących danych.
+    - Generowanie diagnoz i rekomendacji medycznych za pomocą wbudowanych reguł lub modelu AI.
     """
 
     def __init__(self, debug=False):
         """
-        Inicjalizuje obiekt klasy MedicalChat.
+        Inicjalizuje obiekt klasy MedicalChat, konfigurując logger i zmienne pomocnicze.
 
         Args:
-            debug (bool): Flaga określająca, czy włączyć tryb debugowania.
+            debug (bool): Flaga włączająca tryb debugowania. Domyślnie False.
         """
-        # Konfiguracja loggera
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
 
-        # Inicjalizacja zmiennych
         self.symptoms_table = SpeechLibrary.symptoms_table
         self.required_symptoms = SpeechLibrary.required_symptoms
         self.synonyms = SpeechLibrary.synonyms
@@ -30,13 +33,12 @@ class MedicalChat:
         self.first_info_pack = True
         self.prev_question = None
         self.ai_model = AiModel()
-        # Flaga wskazująca, czy przekazaliśmy już diagnozę i czekamy na odpowiedź
-        # na pytanie "Czy mogę coś dla ciebie zrobić?"
         self.waiting_post_diagnosis = False
 
     def reset_conversation(self):
         """
-        Resetuje stan analizy objawów, aby rozpocząć nową rozmowę.
+        Resetuje wszystkie zmienne związane z analizą objawów, przygotowując system
+        do rozpoczęcia nowej rozmowy medycznej.
         """
         self.user_symptoms = {}
         self.check_syndroms = {}
@@ -47,10 +49,11 @@ class MedicalChat:
 
     def analyze_monolog(self, user_input):
         """
-        Analizuje początkowy monolog użytkownika i identyfikuje obecne objawy.
+        Analizuje początkowy monolog użytkownika, identyfikując obecne objawy oraz potencjalne
+        frazy wskazujące na brak innych dolegliwości.
 
         Args:
-            user_input (str): Wprowadzenie użytkownika z potencjalnymi objawami.
+            user_input (str): Tekstowy monolog użytkownika zawierający informacje o objawach.
         """
         for symptom in self.required_symptoms:
             # Domyślnie ustawiamy, że objawu nie wykryto.
@@ -60,7 +63,6 @@ class MedicalChat:
             if symptom.lower() in user_input.lower():
                 symptom_present = True
             else:
-                # Jeśli nie – sprawdzamy synonimy.
                 symptom_key_lower = symptom.lower()
                 for syn_key, syn_list in self.synonyms.items():
                     if syn_key.lower() == symptom_key_lower:
@@ -68,7 +70,7 @@ class MedicalChat:
                             if s.lower() in user_input.lower():
                                 symptom_present = True
                                 break
-                        break  # Koniec, gdy znaleziono dopasowanie.
+                        break
 
             self.check_syndroms[symptom] = symptom_present
             self.user_symptoms[symptom] = symptom_present
@@ -82,15 +84,15 @@ class MedicalChat:
 
     def analyze_symptoms(self, user_input):
         """
-        Główna funkcja analizy objawów użytkownika.
+        Główna funkcja analizująca objawy użytkownika i generująca odpowiedź.
 
         Args:
-            user_input (str): Wprowadzenie użytkownika do analizy.
+            user_input (str): Tekstowa odpowiedź użytkownika zawierająca objawy.
 
         Returns:
             tuple: (bool, str)
-                - bool: Czy wszystkie etapy analizy zostały zakończone.
-                - str: Wiadomość zwrotna do użytkownika.
+                - bool: Flaga wskazująca, czy analiza została zakończona.
+                - str: Wiadomość zwrotna, w tym pytania uzupełniające lub rekomendacje.
         """
         # Jeżeli po diagnozie czekamy na odpowiedź na pytanie "Czy przejsc caly proces od nowa?"
         if self.waiting_post_diagnosis:
@@ -107,7 +109,6 @@ class MedicalChat:
                 # Brak jednoznacznej odpowiedzi – pytamy jeszcze raz
                 return False,
 
-        # Standardowa analiza objawów
         if self.first_info_pack:
             self.analyze_monolog(user_input)
         else:
@@ -124,9 +125,7 @@ class MedicalChat:
         self.logger.info(f"Objawy użytkownika: {self.user_symptoms}")
 
         if all(self.check_syndroms.values()):
-            # Jeśli wszystkie objawy są znane – generujemy rekomendację
             i_know, message = True, self.get_recommendation()
-            # Ustawiamy flagę, aby po przekazaniu diagnozy poczekać na odpowiedź
             self.waiting_post_diagnosis = True
         else:
             i_know, message = False, self.ask_missing_symptom()
@@ -139,13 +138,14 @@ class MedicalChat:
 
     def does_agree(self, message):
         """
-        Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył.
+        Sprawdza, czy użytkownik odpowiedział twierdząco lub zaprzeczył na pytanie.
 
         Args:
             message (str): Odpowiedź użytkownika.
 
         Returns:
-            bool lub None: True dla potwierdzenia, False dla zaprzeczenia, None gdy odpowiedź jest niejednoznaczna.
+            bool | None: True, jeśli odpowiedź jest twierdząca; False, jeśli zaprzeczająca;
+                         None, jeśli odpowiedź jest niejednoznaczna.
         """
         self.logger.info(f"Analiza odpowiedzi: {message}")
         self.logger.info(f"Poprzednie pytanie: {self.prev_question}")
@@ -174,11 +174,13 @@ class MedicalChat:
 
     def get_recommendation(self):
         """
-        Generuje rekomendacje na podstawie zgłoszonych objawów oraz dodaje pytanie
-        po przedstawieniu diagnozy.
+        Generuje rekomendacje medyczne na podstawie zgłoszonych objawów.
+
+        Jeśli nie można dopasować diagnozy na podstawie zdefiniowanych reguł,
+        metoda korzysta z modelu AI do wygenerowania odpowiedzi.
 
         Returns:
-            str: Komunikat z diagnozą(Zalecenia lub odpowiedź modelu AI) i pytaniem o dalszą pomoc.
+            str: Komunikat zawierający diagnozę, zalecenia oraz pytanie o dalszą pomoc.
         """
         diagnosis = None
         for disease in self.symptoms_table:
@@ -195,6 +197,5 @@ class MedicalChat:
                 f"Odpowiedz bardzo krótko w dwóch zdaniach. Objawy: {self.user_symptoms}"
             )
 
-        # Dodajemy pytanie o dalszą pomoc.
         diagnosis += "\nCzy spełniłem twoje oczekiwania?"
         return diagnosis

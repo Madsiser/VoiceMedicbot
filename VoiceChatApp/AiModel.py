@@ -25,7 +25,7 @@ class AiModel:
         - OPENAI_PROJECT: Projekt OpenAI.
         - OPENAI_API_KEY: Klucz API dla OpenAI.
         """
-        load_dotenv()  # Wczytanie zmiennych środowiskowych z pliku .env
+        load_dotenv()
         self.client = OpenAI(
             organization=os.getenv('OPENAI_ORGANIZATION'),
             project=os.getenv('OPENAI_PROJECT'),
@@ -52,7 +52,6 @@ class AiModel:
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
-            # Logowanie i zwrócenie opisu błędu
             error_message = f"Error podczas komunikacji z API: {e}"
-            print(error_message)  # Można zastąpić logowaniem, np. logging.error(error_message)
+            print(error_message)
             return error_message
