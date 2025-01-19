@@ -95,17 +95,17 @@ class MedicalChat:
         # Jeżeli po diagnozie czekamy na odpowiedź na pytanie "Czy przejsc caly proces od nowa?"
         if self.waiting_post_diagnosis:
             answer = self.does_agree(user_input)
-            if answer is True:
-                # Użytkownik akceptuje – resetujemy rozmowę
+            if answer is False:
+                # Użytkownik nie jest zadowolony – resetujemy rozmowę
                 self.reset_conversation()
                 return True, SpeechLibrary.reset_response()
-            elif answer is False:
+            elif answer is True:
                 # Użytkownik nie potrzebuje dalszej pomocy – kończymy rozmowę
                 self.waiting_post_diagnosis = False
                 return True, SpeechLibrary.end_response()
             else:
                 # Brak jednoznacznej odpowiedzi – pytamy jeszcze raz
-                return False, "Czy mogę coś dla Ciebie zrobić? Proszę odpowiedz 'tak' lub 'nie'."
+                return False,
 
         # Standardowa analiza objawów
         if self.first_info_pack:
