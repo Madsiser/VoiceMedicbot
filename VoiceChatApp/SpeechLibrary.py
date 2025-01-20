@@ -356,9 +356,12 @@ class SpeechLibrary:
         ],
         "Gorączka": [
             "temperatura 38",
+            "wysoką temperaturę",
+            "wysoką temperature",
             "wysoka temperatura",
             "mam ponad 37 stopni",
             "mam gorączkę",
+            "mam gorączke",
             "jestem rozpalony",
             "czuję, że mam podwyższoną temperaturę",
             "gorączkuję",
@@ -368,6 +371,7 @@ class SpeechLibrary:
         ],
         "Ból kości i stawów": [
             "łamanie w kościach",
+            "łamie mnie w kościach",
             "stawy mnie bolą",
             "przeskakiwanie w stawach",
             "bóle reumatyczne",
