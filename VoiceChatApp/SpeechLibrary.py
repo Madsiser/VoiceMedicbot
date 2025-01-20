@@ -346,6 +346,7 @@ class SpeechLibrary:
             "zwracam treść pokarmową",
             "chce mi się wymiotować",
             "wymiotuję",
+            "wymiotuje",
             "nudności z wymiotami",
             "rzucam pawia",
             "zwymiotowałem",
